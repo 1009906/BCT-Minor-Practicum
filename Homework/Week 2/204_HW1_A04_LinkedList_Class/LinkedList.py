@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Leco Hendriks 0993233
+# Bram Vermeer 1009906
 """Linked List -> Extended Linked List Implementation: Homework
 
 The goal of this homework is to implement a singly linked list data structure with additional functionalities. 
@@ -30,28 +33,94 @@ class LinkedList:
 
     #TODO 1: Insert at the beginning of the list
     def insertBeg(self, new_data):
-        pass
+        if (self.head == None):
+            self.head = Node(new_data)
+            return
+
+        head = self.head
+        self.head = Node(new_data)
+        self.head.next = head
     
     #TODO 2: Insert at the end
     def insertEnd(self, new_data):
-        pass
+        if (self.head == None):
+            self.head = Node(new_data)
+            return
+        node = self.head
+        while (node.next != None):
+            node = node.next
+        node.next = Node(new_data)
+
+
 
     #TODO 3: Insert after a specific node
     def insertAfter(self, data, new_data):
-        pass
+        node = self.head
+        if(node == None):
+            return
+        while (node.data != data):
+            node = node.next
+        nextNode = node.next
+        node.next = Node(new_data)
+        node.next.next = nextNode
+        
 
     #TODO 4: Deleting a node at a specific index
     def deleteIndex(self, index):
-        pass
+        node = self.head
+        if (node == None):
+            return
+        x = 0
+        while (x < index-1):
+            node = node.next
+            x += 1
+        nodeToDelete = node.next
+        node.next = nodeToDelete.next
+        nodeToDelete = None
+
+            
 
     #TODO 5: Search an element
     def find(self, key):
+        node = self.head
+        counter = 0
+        if(node == None):
+            return -1
+        while (node.next != None):
+            if(node.data == key):
+                return counter
+            node = node.next
+            counter += 1
         return -1
 
     #TODO 6: Sort the linked list
     def sort(self, head):
-        pass
+        node = head
+        index = None
+
+        if(self.head == None):
+            return
+        else:
+            while(node != None):
+                #Node index will point to node next to node
+                index = node.next
+
+                while(index != None):
+                    #If node node's data is greater than index's node data, swap the data between them
+                    if(node.data > index.data):
+                        temp = node.data
+                        node.data = index.data
+                        index.data = temp
+                    index = index.next
+                node = node.next
+
+            
 
     #TODO 7: Print the linked list
     def printList(self):
-        pass
+        head = self.head
+        if (head == None):
+            return
+        while (head):
+            print(head.data)
+            head = head.next 

@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Leco Hendriks 0993233
+# Bram Vermeer 1009906
 """Linked Lists -> Song List Implementation: Exercise 1
 
 The goal of this exercise is to learn how to create a custom linked list for songs.
@@ -27,9 +30,23 @@ class SongList:
     def __init__(self):  
         self.head = None
     # TODO 1: Traverse through the list and print every song titles
-    def printSongs(self): 
-        print("Nothing is printed")
+    def printSongs(self):
+        head = self.head
+        if (head == None):
+            return
+        while (head):
+            print(head.song_title)
+            head = head.next 
 
     # TODO 2: Insert a new song title to the end of the list
     def AddNewSong(self, new_song_title):
-        pass
+        currentNode = self.head
+        if (currentNode == None):
+            self.head = SongNode(new_song_title)
+            return
+        if (currentNode.next == None):
+            currentNode.next = SongNode(new_song_title)
+            return
+        while (currentNode.next != None):
+            currentNode = currentNode.next
+        currentNode.next = SongNode(new_song_title)

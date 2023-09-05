@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Leco Hendriks 0993233
+# Bram Vermeer 1009906
 """
 This test case will verify if the provided homework solution by a student for LinkedList.py is correct.
 """
