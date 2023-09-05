@@ -58,11 +58,16 @@ class LinkedList:
         node = self.head
         if(node == None):
             return
-        while (node.data != data):
+        while (node.next != None):
+            if (node.data == data):
+                nextNode = node.next
+                node.next = Node(new_data)
+                node.next.next = nextNode
+                return
             node = node.next
-        nextNode = node.next
-        node.next = Node(new_data)
-        node.next.next = nextNode
+        return
+            
+
         
 
     #TODO 4: Deleting a node at a specific index
@@ -73,6 +78,8 @@ class LinkedList:
         x = 0
         while (x < index-1):
             node = node.next
+            if(node == None):
+                return
             x += 1
         nodeToDelete = node.next
         node.next = nodeToDelete.next
