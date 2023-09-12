@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Leco Hendriks 0993233
+# Bram Vermeer 1009906
 """Asymmetric Cryptography -> Digital Signature: Exercise 1
 
 The goal of this exercise is to learn how to sign and verify messages using asymmetric keys.
@@ -18,25 +20,52 @@ Notes:
     * visit this url for more information on this topic:
     https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/
 """
+from cryptography.exceptions import *
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
 
 # TODO 1: Generate first a private key, then a public key. As a result return both values.
 # Make sure you generate the keys in the correct order. 
 # Use recommended algorithms values where possible
 def generate_keys():
-    private = 'private'
-    public = 'public'
+    private = rsa.generate_private_key(65537, 2048)
+    public = private.public_key()
     return private, public
 
 # TODO 2: Sign a passed message using the passed private key
 # Signing and verifying algorithms must be the same
 def sign(message, private):
-    sig = 'signature'
-    return sig
+    try:
+        signature = private.sign(
+            message,
+            padding.PSS(
+                mgf=padding.MGF1(hashes.SHA256()),
+                salt_length=padding.PSS.MAX_LENGTH
+            ),
+            hashes.SHA256()
+        )
+        return signature
+    except:
+        return None
 
 
 # TODO 3: Verify a signature for a message with the passed public key
 # Signing and verifying algorithms values must be the same
 # Make sure to handle exception properly if verification fails 
 def verify(message, sig, public):
-    return False
+    try:
+        public.verify(
+            sig,
+            message,
+            padding.PSS(
+                mgf=padding.MGF1(hashes.SHA256()),
+                salt_length=padding.PSS.MAX_LENGTH
+                ),
+            hashes.SHA256()
+            )
+        return True
+    except:
+        return False
+
 
