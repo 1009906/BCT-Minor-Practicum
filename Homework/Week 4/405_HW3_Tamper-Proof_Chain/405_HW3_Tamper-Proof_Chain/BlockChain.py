@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Leco Hendriks 0993233
+# Bram Vermeer 1009906
 """Block Integrity -> Tamper Proof Chain: Homework
 
 The goal of this homework is to extend the behavior of a block to created a chain and securely link  
@@ -25,24 +28,51 @@ Notes:
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 
-class CBlock:
+class CBlock:    
+    previousBlock = None
+    previousHash = None
+    data = None
+    nonce = 0
+    blockHash = None
+
     # TODO 1: Initialize the values of a block
     # Make sure you distinguish between the genesis block and other blocks
-    def __init__(self, data, previousBlock):
-        pass
+    def __init__(self, data, previousBlock=None):
+        self.data = data
+        self.previousBlock = previousBlock
+        self.nonce = 0
+        self.blockHash = self.computeHash()
+        # self.data = data
+        # self.previousBlock = previousBlock
+        # if previousBlock != None:
+        #     self.previousHash = previousBlock.computeHash()
+        # self.blockHash = self.computeHash()
+
         
     # TODO 2: Compute the cryptographic hash of the current block. 
     # Be sure which values must be considered to compute the hash properly.
     # return the digest value
-    def computeHash(self):    
-        pass
+    def computeHash(self):
+        digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
+        digest.update(self.data.encode())
+        if self.previousBlock is not None:
+            digest.update(self.previousBlock.blockHash)
+        digest.update(bytes(str(self.nonce), 'utf-8'))
+        return digest.finalize()    
+        # digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
+        # digest.update(self.data if isinstance(self.data, bytes) else str(self.data).encode('utf-8'))
+        # if(self.previousHash != None):
+        #     digest.update(self.previousHash.encode('utf-8'))
+        # return digest.finalize().hex()
     
     # TODO 3: Mine the current value of a block
     # Calculates a digest based on required values from the block, such as:
     # data, previousHash, nonce
     # Make sure to compute the hash value of the current block and store it properly 
     def mine(self, leading_zeros):
-        pass
+        while int(self.blockHash.hex()[0:leading_zeros]) != 0:
+            self.nonce += 1
+            self.blockHash = self.computeHash()
     
     # TODO 4: Check if the current block contains valid hash digest values 
     # Make sure to distinguish between the genesis block and other blocks
@@ -51,4 +81,7 @@ class CBlock:
     # The stored digest of the previous block
     # return the result of all comparisons as a boolean value 
     def is_valid_hash(self):
-        pass
+        if self.previousBlock is None:
+            return True
+        else:
+            return self.previousBlock.blockHash == self.computeHash()

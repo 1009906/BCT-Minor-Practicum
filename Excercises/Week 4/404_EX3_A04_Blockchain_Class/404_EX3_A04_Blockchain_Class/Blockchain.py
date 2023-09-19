@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Leco Hendriks 0993233
+# Bram Vermeer 1009906
 """Block Integrity -> Blockchain Data Structure: Exercise 1
 
 The goal of this exercise is to learn how a simple blockchain can be created and securely linked 
@@ -31,9 +34,17 @@ class CBlock:
     # TODO 1: Initialize a block
     # Make sure you initialize the genesis block and transaction blocks differently
     def __init__(self, data, previousBlock):
-        pass        
-    
+        self.data = data
+        self.previousBlock = previousBlock
+        if previousBlock != None:
+            self.previousHash = previousBlock.computeHash() 
+
+
     # TODO 2: Compute the hash of a the current block
     # Make sure you include all required data
     def computeHash(self):
-        return 'aaa'
+        digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
+        digest.update(self.data if isinstance(self.data, bytes) else str(self.data).encode('utf-8'))
+        if(self.previousHash != None):
+            digest.update(self.previousHash.encode('utf-8'))
+        return digest.finalize().hex()
