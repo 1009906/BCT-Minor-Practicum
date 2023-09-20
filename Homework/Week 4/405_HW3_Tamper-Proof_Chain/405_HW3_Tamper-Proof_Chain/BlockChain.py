@@ -40,13 +40,10 @@ class CBlock:
     def __init__(self, data, previousBlock=None):
         self.data = data
         self.previousBlock = previousBlock
-        self.nonce = 0
+        if previousBlock != None:
+            self.previousHash = (CBlock)(previousBlock).computeHash()
+
         self.blockHash = self.computeHash()
-        # self.data = data
-        # self.previousBlock = previousBlock
-        # if previousBlock != None:
-        #     self.previousHash = previousBlock.computeHash()
-        # self.blockHash = self.computeHash()
 
         
     # TODO 2: Compute the cryptographic hash of the current block. 
@@ -54,25 +51,34 @@ class CBlock:
     # return the digest value
     def computeHash(self):
         digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
-        digest.update(self.data.encode())
-        if self.previousBlock is not None:
-            digest.update(self.previousBlock.blockHash)
-        digest.update(bytes(str(self.nonce), 'utf-8'))
-        return digest.finalize()    
-        # digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
-        # digest.update(self.data if isinstance(self.data, bytes) else str(self.data).encode('utf-8'))
-        # if(self.previousHash != None):
-        #     digest.update(self.previousHash.encode('utf-8'))
-        # return digest.finalize().hex()
+        digest.update(str(self.data).encode('utf-8'))
+
+        if(self.previousHash != None):
+            digest.update(str(self.previousHash).encode('utf-8'))
+
+        digest.update(str(self.nonce).encode('utf-8'))
+        return digest.finalize()
     
     # TODO 3: Mine the current value of a block
     # Calculates a digest based on required values from the block, such as:
     # data, previousHash, nonce
     # Make sure to compute the hash value of the current block and store it properly 
     def mine(self, leading_zeros):
-        while int(self.blockHash.hex()[0:leading_zeros]) != 0:
+        # nonce = 0
+        # while True:
+        #     hashTry = self.computeHash()
+        #     if hashTry.startswith(b'0' * leading_zeros):
+        #         print(f"Found Hash With Nonce: {nonce}")
+        #         return hashTry
+            
+        #     nonce = nonce + 1
+
+        digest = self.computeHash()
+        while not digest.startswith(b'0' * leading_zeros):
             self.nonce += 1
-            self.blockHash = self.computeHash()
+            digest = self.computeHash()
+        self.blockHash = digest
+        print(self.nonce)
     
     # TODO 4: Check if the current block contains valid hash digest values 
     # Make sure to distinguish between the genesis block and other blocks
@@ -81,7 +87,4 @@ class CBlock:
     # The stored digest of the previous block
     # return the result of all comparisons as a boolean value 
     def is_valid_hash(self):
-        if self.previousBlock is None:
-            return True
-        else:
-            return self.previousBlock.blockHash == self.computeHash()
+        return self.computeHash() == self.blockHash and (self.previousHash == None or self.previousBlock.is_valid_hash())
