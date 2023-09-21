@@ -43,20 +43,21 @@ class CBlock:
         if previousBlock != None:
             self.previousHash = (CBlock)(previousBlock).computeHash()
 
-        self.blockHash = self.computeHash()
 
-        
     # TODO 2: Compute the cryptographic hash of the current block. 
     # Be sure which values must be considered to compute the hash properly.
     # return the digest value
     def computeHash(self):
         digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
-        digest.update(str(self.data).encode('utf-8'))
+        digest.update(self.data if isinstance(self.data, bytes) else str(self.data).encode('utf-8'))
 
-        if(self.previousHash != None):
+        if (self.previousHash != None):
             digest.update(str(self.previousHash).encode('utf-8'))
+        else:
+            digest.update("Genesis".encode('utf-8'))
 
         digest.update(str(self.nonce).encode('utf-8'))
+
         return digest.finalize()
     
     # TODO 3: Mine the current value of a block
@@ -64,21 +65,14 @@ class CBlock:
     # data, previousHash, nonce
     # Make sure to compute the hash value of the current block and store it properly 
     def mine(self, leading_zeros):
-        # nonce = 0
-        # while True:
-        #     hashTry = self.computeHash()
-        #     if hashTry.startswith(b'0' * leading_zeros):
-        #         print(f"Found Hash With Nonce: {nonce}")
-        #         return hashTry
+        while True:
+            hashTry = self.computeHash()
+            if hashTry.startswith(b'0' * leading_zeros):
+                print(self.nonce)
+                self.blockHash = hashTry
+                return hashTry
             
-        #     nonce = nonce + 1
-
-        digest = self.computeHash()
-        while not digest.startswith(b'0' * leading_zeros):
             self.nonce += 1
-            digest = self.computeHash()
-        self.blockHash = digest
-        print(self.nonce)
     
     # TODO 4: Check if the current block contains valid hash digest values 
     # Make sure to distinguish between the genesis block and other blocks
