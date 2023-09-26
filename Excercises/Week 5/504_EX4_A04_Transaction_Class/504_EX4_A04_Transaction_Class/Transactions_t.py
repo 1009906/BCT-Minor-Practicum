@@ -1,7 +1,8 @@
 """
 This test case will verify if the provided exercise solution by a student for the Transaction.py is correct.
 """
-
+# Leco Hendriks 0993233
+# Bram Vermeer 1009906
 from Signature import *
 
 from Transaction import *

@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# Leco Hendriks 0993233
+# Bram Vermeer 1009906
 """
 Transaction Class 
 
@@ -34,10 +37,11 @@ class Tx:
     # These two methods are already done in the previous tutorials
     # you can copy and paste the previous codes here 
     def add_input(self, from_addr, amount):
-        pass
+        self.inputs.append((from_addr,amount))
 
     def add_output(self, to_addr, amount):
-        pass
+        self.outputs.append((to_addr, amount))
+
 
 
     # TODO 2: Complete the method
@@ -48,5 +52,10 @@ class Tx:
     # It is good idea to create a seperate private or protected method to collect all data of 
     # transaction before signing it.
     def sign(self, private):
-        pass
-
+        data = []
+        data.append(self.inputs)
+        data.append(self.outputs)
+        data.append(self.reqd)
+        
+        sig = sign(data, private)
+        self.sigs.append(sig)
