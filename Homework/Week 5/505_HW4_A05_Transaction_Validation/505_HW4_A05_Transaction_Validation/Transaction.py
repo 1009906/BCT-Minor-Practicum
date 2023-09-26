@@ -32,6 +32,7 @@ class Tx:
     def __init__(self):
         self.inputs = []
         self.outputs = []
+        self.data = []
         self.sigs = []
         self.reqd = []      # A placeholder for any other extra required signature (e.g. escrow)
 
@@ -54,15 +55,14 @@ class Tx:
     # This method is also already done in the previous tutorials.
     # you can copy and paste the previous codes here     
     def sign(self, private):
-        data = []
-        data.append(self.inputs)
-        data.append(self.outputs)
-        data.append(self.reqd)
+        self.data = []
+        self.data.append(self.inputs)
+        self.data.append(self.outputs)
+        self.data.append(self.reqd)
 
         # Step 2: Sign the data and add it to sigs
-        sig = sign(data, private)
+        sig = sign(self.data, private)
         self.sigs.append(sig)
-
 
     # TODO 4: Complete the method
     # This method is used to validate a transaction.
@@ -77,14 +77,19 @@ class Tx:
         #         return False
         for i, (from_addr, amount) in enumerate(self.inputs):
           for sig in self.sigs:
-              if verify(amount, sig, from_addr):
-                  return True  
+              if not verify(self.data, sig, from_addr):
+                  return False  
 
         # Step 2: If an extra required signature is needed, verify it
         for addr in self.reqd:
+            found
             for sig in self.sigs:
-                if verify(amount, sig, addr):
-                    return True
+                if verify(self.data, sig, addr):
+                    found = True
+            if not found:
+                return False    
+
+
 
         # Step 3: Verify that the total amount of outputs does not exceed the total amount of inputs
         total_input_amount = sum(amount for _, amount in self.inputs)
