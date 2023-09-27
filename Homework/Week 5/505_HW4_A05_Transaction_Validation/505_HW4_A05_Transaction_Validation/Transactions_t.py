@@ -1,3 +1,6 @@
+# Bram Vermeer 1009906
+# Leco Hendriks 0993233
+
 """
 This test case will verify if the provided exercise solution by a student for the Transaction.py is correct.
 """

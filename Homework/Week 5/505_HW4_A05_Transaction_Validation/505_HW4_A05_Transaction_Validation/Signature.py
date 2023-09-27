@@ -1,3 +1,6 @@
+# Bram Vermeer 1009906
+# Leco Hendriks 0993233
+
 from cryptography.exceptions import *
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import hashes

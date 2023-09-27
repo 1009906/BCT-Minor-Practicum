@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+
+# Bram Vermeer 1009906
+# Leco Hendriks 0993233
+
 """
 Transaction Class 
 
@@ -23,6 +27,7 @@ from Signature import *
 class Tx:
     inputs = None
     outputs =None
+    data = None
     sigs = None
     reqd = None
 
@@ -50,18 +55,17 @@ class Tx:
     def add_reqd(self, addr):
         self.reqd.append(addr) 
 
-
     # TODO 3: Complete the method
     # This method is also already done in the previous tutorials.
-    # you can copy and paste the previous codes here     
+    # you can copy and paste the previous codes here  
     def sign(self, private):
-        self.data = []
-        self.data.append(self.inputs)
-        self.data.append(self.outputs)
-        self.data.append(self.reqd)
-
-        # Step 2: Sign the data and add it to sigs
-        sig = sign(self.data, private)
+        data = []
+        data.append(self.inputs)
+        data.append(self.outputs)
+        data.append(self.reqd)
+        
+        sig = sign(data, private)
+        self.data.append(data)
         self.sigs.append(sig)
 
     # TODO 4: Complete the method
@@ -71,27 +75,39 @@ class Tx:
     #   2 -  If an extra required signature is needed, the signature need to be verified too, and
     #   3 -  The total amount of outputs must not exceed the total amount of inputs.
     def is_valid(self):
-    # Step 1: Verify that every input is signed by the relevant sender
-        # for i, (from_addr, amount) in enumerate(self.inputs):
-        #     if not verify(amount, self.sigs[i], from_addr):
-        #         return False
-        for i, (from_addr, amount) in enumerate(self.inputs):
-          for sig in self.sigs:
-              if not verify(self.data, sig, from_addr):
-                  return False  
+        for (from_addr, amount) in self.inputs:
+            valid = False
+            for index, sig in enumerate(self.sigs):
+                if verify(self.data[index], sig, from_addr):
+                    valid = True
+                    break
+            if not valid:
+                return False
+        
+        for reqd_addr in self.reqd:
+            valid = False
+            for index, sig in enumerate(self.sigs):
+                if verify(self.data[index], sig, reqd_addr):
+                    valid = True
+                    break
+            if not valid:
+                return False
 
-        # Step 2: If an extra required signature is needed, verify it
-        for addr in self.reqd:
-            found
-            for sig in self.sigs:
-                if verify(self.data, sig, addr):
-                    found = True
-            if not found:
-                return False    
+        return self.__verifyAmounts()
 
+    def __verifyAmounts(self):
+        total_input_amount = 0.0
+        for (from_addr, amount) in self.inputs:
+            total_input_amount = total_input_amount + float(amount)
 
+        total_output_amount = 0.0
+        for (to_addr, amount) in self.outputs:
+            total_output_amount = total_output_amount + float(amount)
+            
+        if total_input_amount < 0.0 or total_output_amount < 0.0:
+            return False #TODO Checken of dat deze lijn nodig is.
 
-        # Step 3: Verify that the total amount of outputs does not exceed the total amount of inputs
-        total_input_amount = sum(amount for _, amount in self.inputs)
-        total_output_amount = sum(amount for _, amount in self.outputs)
-        return total_output_amount <= total_input_amount
+        if total_output_amount > total_input_amount:
+            return False
+        
+        return True
