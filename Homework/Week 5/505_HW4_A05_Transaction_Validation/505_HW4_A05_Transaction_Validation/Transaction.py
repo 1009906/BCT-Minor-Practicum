@@ -105,7 +105,7 @@ class Tx:
             total_output_amount = total_output_amount + float(amount)
             
         if total_input_amount < 0.0 or total_output_amount < 0.0:
-            return False #TODO Checken of dat deze lijn nodig is.
+            return False
 
         if total_output_amount > total_input_amount:
             return False
