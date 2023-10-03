@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+#Leco Hendriks 0993233
+#Bram Vermeer 1009906
 """
 This test case will verify if the provided solution by a student for TxBlock.py is correct.
 In this test scenario 6 blocks will be created (1 genesis and 5 child blocks). 

@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+#Leco Hendriks 0993233
+#Bram Vermeer 1009906
 """ 
 The goal of this exercise is to complete the transaction module.
 In this exercise you need to add a __repr__() function that will be used
@@ -88,4 +91,41 @@ class Tx:
     # for the desired format, check the 'output.txt' file.
 
     def __repr__(self):
-        pass
+
+        repr_string = ""
+        repr_string += "INPUTS:\n"
+        for addr, amount in self.inputs:
+            repr_string += f"{amount} from {addr}\n"
+
+        repr_string += "OUTPUTS:\n"
+        for addr, amount in self.outputs:
+            repr_string += f"{amount} to {addr}\n"
+
+        repr_string += "EXTRA REQUIRED SIGNATURES:\n"
+        for addr in self.reqd:
+            repr_string += f"{addr}\n"
+
+        repr_string += "SIGNATURES:\n"
+        for sig in self.sigs:
+            repr_string += f"{sig}\n"
+
+        return repr_string
+
+        # result =  "INPUTS: \n"
+        # for(from_addr, amount) in self.inputs:
+        #     result = result + str(amount) + " from " + str(from_addr).encode('utf-8') + "\n"
+
+        # result = result + "OUTPUTS: \n"
+        # for(to_addr, amount) in self.outputs:
+        #     result = result + str(amount) + " to " + str(to_addr).encode('utf-8') + "\n"
+
+        # result = result + "REQUIRED SIGNATURES: \n"
+        # for(addr) in self.reqd:
+        #     result = result + addr + "\n"
+        
+        # result = result + "SIGNATURES: \n"
+        # for(sig) in self.sigs:
+        #     result = result + sig + "\n"
+
+        # return result
+        

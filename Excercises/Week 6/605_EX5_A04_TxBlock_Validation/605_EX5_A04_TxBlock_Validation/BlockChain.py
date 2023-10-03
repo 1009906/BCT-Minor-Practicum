@@ -1,6 +1,7 @@
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
-
+#Leco Hendriks 0993233
+#Bram Vermeer 1009906
 class CBlock:
 
     data = None

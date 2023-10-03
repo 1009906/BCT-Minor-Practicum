@@ -19,7 +19,8 @@ Notes:
     * do not change class structure or method signature to not break unit tests
     * Check previous tutorials for more information on this topic
 """
-
+#Leco Hendriks 0993233
+#Bram Vermeer 1009906
 from BlockChain import CBlock
 from Signature import generate_keys, sign, verify
 
@@ -30,14 +31,25 @@ class TxBlock (CBlock):
     # TODO 1: Initialize the block
     # Each block contains a list for the data and a hash value to previous block
     def __init__(self, previousBlock):
-        pass
+        self.data = []
+        self.previousBlock = previousBlock
+        if previousBlock != None:
+            self.previousHash = previousBlock.computeHash()
 
     # TODO 2: Append the transaction to the data list
     def addTx(self, Tx_in):
-        pass
+        self.data.append(Tx_in)
+
 
     # TODO 3: Check the validity of each transaction in the data list 
     # and check the validity of other blocks in the chain to make the cchain tamper-proof
     # Expected return value is true or false
     def is_valid(self):
-        return False
+        for i in self.data:
+            if not i.is_valid():
+                return False
+
+        if self.previousBlock != None and self.previousBlock.computeHash() != self.previousHash:
+            return False
+    
+        return True

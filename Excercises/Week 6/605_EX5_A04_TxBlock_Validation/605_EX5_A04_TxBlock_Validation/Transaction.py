@@ -1,4 +1,6 @@
 from Signature import *
+#Leco Hendriks 0993233
+#Bram Vermeer 1009906
 
 class Tx:
     inputs = None
