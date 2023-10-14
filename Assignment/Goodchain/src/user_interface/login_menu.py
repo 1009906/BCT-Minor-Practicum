@@ -3,7 +3,6 @@ from src.system.security.login import login, try_login_user, SUCCESSFUL_LOGIN, L
 from .util.form import prompt_input
 from .util.safe_input import safe_input
 
-
 class LoginMenu(Menu):
     def run(self):
         self._title(f"Login")
@@ -18,10 +17,10 @@ class LoginMenu(Menu):
             if data[0] == SUCCESSFUL_LOGIN:
                 break
             elif data[0] == LOGIN_ATTEMPTS_EXCEEDED:
-                return exit("Too many login attempts. Action logged.")
+                return exit("Too many login attempts.")
             else:
                 print("Incorrect username or password, please try again:")
                 login_attempt += 1
                 continue
 
-        login(data[1][0], data[1][1], data[1][3])
+        login(data[1][0], data[1][1], data[1][3], data[1][4])
