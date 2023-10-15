@@ -4,6 +4,10 @@ from .util.form import prompt_input
 from .util.safe_input import safe_input
 
 class LoginMenu(Menu):
+    _previous_menu = None
+    def __init__(self, previous_menu):
+        self._previous_menu = previous_menu
+
     def run(self):
         self._title(f"Login")
         login_attempt = 1
@@ -23,4 +27,4 @@ class LoginMenu(Menu):
                 login_attempt += 1
                 continue
 
-        login(data[1][0], data[1][1], data[1][3], data[1][4])
+        login(data[1][0], data[1][1], data[1][3], data[1][4], self._previous_menu)

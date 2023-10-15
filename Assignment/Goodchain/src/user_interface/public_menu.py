@@ -19,14 +19,14 @@ class PublicMenu(Menu):
         self._read_input()
     
     def login(self):
-        login = LoginMenu()
+        login = LoginMenu(self)
         login.run()
 
     def explore_blockchain(self):
         pass
 
     def sign_up(self):
-        register_menu = RegisterMenu()
+        register_menu = RegisterMenu(self)
         register_menu.run()
 
     def exit(self):
