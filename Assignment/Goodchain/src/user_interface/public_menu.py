@@ -1,3 +1,4 @@
+from src.user_interface.register_menu import RegisterMenu
 from src.system.services.public_menu_service import create_user
 from src.user_interface.login_menu import LoginMenu
 from src.user_interface.menu import Menu
@@ -25,11 +26,8 @@ class PublicMenu(Menu):
         pass
 
     def sign_up(self):
-        #TODO Input opvragen vanuit de console.
-
-        result = create_user("admin", "123", "private_key", "public_key")
-        print(result[1])
-        pass
+        register_menu = RegisterMenu()
+        register_menu.run()
 
     def exit(self):
         exit("Exiting the application!")
