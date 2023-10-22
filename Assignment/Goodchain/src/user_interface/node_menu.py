@@ -1,4 +1,6 @@
 import time
+from src.user_interface.util.form import prompt_input
+from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
 from src.user_interface.menu import Menu
 
@@ -23,6 +25,10 @@ class NodeMenu(Menu):
         self._read_input()
 
     def transfer_coins(self):
+        # Aantal coins en username van de ontvanger en transaction fee
+        receiver = prompt_input(lambda: safe_input("Please enter the receiver:"))
+        amountCoins = prompt_input(lambda: safe_input("Please enter the amount of coins:"))
+        transactionFee = prompt_input(lambda: safe_input("Please enter the transaction fee:"))
         pass
 
     def check_balance(self):
