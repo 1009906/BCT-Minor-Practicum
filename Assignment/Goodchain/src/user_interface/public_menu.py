@@ -3,7 +3,8 @@ from src.user_interface.register_menu import RegisterMenu
 from src.system.services.public_menu_service import create_user
 from src.user_interface.login_menu import LoginMenu
 from src.user_interface.menu import Menu
-from src.user_interface.util.colors import print_header
+from src.user_interface.util.colors import convert_to_bold, print_header
+from src.system.security.hashing import save_hashes_to_file
 
 class PublicMenu(Menu):
     def __init__(self):
@@ -36,4 +37,5 @@ class PublicMenu(Menu):
 
     def exit(self):
         Context.db_connection.close()
-        exit("Exiting the application!")
+        save_hashes_to_file()
+        exit(convert_to_bold("Exiting the application!"))

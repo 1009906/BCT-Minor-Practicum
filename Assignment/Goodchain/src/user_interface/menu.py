@@ -1,7 +1,7 @@
 import os
 from abc import abstractmethod
 
-from src.user_interface.util.colors import bcolors
+from src.user_interface.util.colors import convert_to_bold
 from .util.safe_input import safe_input
 from src.system.security.validation import is_digit
 
@@ -25,7 +25,7 @@ class Menu:  # abstract class
 
     def _back(self):
         """ Usually ran after a certain task is completed, takes the user back a step"""
-        safe_input(f"\n{bcolors.BOLD}Press Enter to go back to the Menu.{bcolors.ENDC}")
+        safe_input(convert_to_bold(f"\nPress Enter to go back to the Menu."))
         self.run()
 
     def _add_label(self, display):

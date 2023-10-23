@@ -17,3 +17,6 @@ def print_success(message):
 
 def print_header(message):
     print(f"{bcolors.HEADER}{message}{bcolors.ENDC}")
+
+def convert_to_bold(message):
+    return f"{bcolors.BOLD}{message}{bcolors.ENDC}"
