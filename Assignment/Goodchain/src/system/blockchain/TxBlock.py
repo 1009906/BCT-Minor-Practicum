@@ -1,5 +1,5 @@
-from BlockChain import CBlock
-from Signature import generate_keys, sign, verify
+from src.system.blockchain.BlockChain import CBlock
+from src.system.blockchain.Signature import generate_keys, sign, verify
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 

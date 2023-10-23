@@ -1,3 +1,4 @@
+from src.system.context import Context
 from src.user_interface.register_menu import RegisterMenu
 from src.system.services.public_menu_service import create_user
 from src.user_interface.login_menu import LoginMenu
@@ -30,4 +31,5 @@ class PublicMenu(Menu):
         register_menu.run()
 
     def exit(self):
+        Context.db_connection.close()
         exit("Exiting the application!")

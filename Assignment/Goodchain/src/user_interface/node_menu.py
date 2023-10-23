@@ -1,4 +1,5 @@
 import time
+from src.system.services.node_menu_service import transfer_coins
 from src.user_interface.util.form import prompt_input
 from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
@@ -25,11 +26,16 @@ class NodeMenu(Menu):
         self._read_input()
 
     def transfer_coins(self):
-        # Aantal coins en username van de ontvanger en transaction fee
         receiver = prompt_input(lambda: safe_input("Please enter the receiver:"))
         amountCoins = prompt_input(lambda: safe_input("Please enter the amount of coins:"))
         transactionFee = prompt_input(lambda: safe_input("Please enter the transaction fee:"))
-        pass
+
+        result = transfer_coins(receiver, amountCoins, transactionFee)
+
+        if result:
+            print("Transaction is valid! (added to the pool)")
+        else:
+            print("Transaction is invalid! (not added to the pool)")
 
     def check_balance(self):
         pass

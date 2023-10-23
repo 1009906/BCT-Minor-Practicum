@@ -6,7 +6,7 @@ REWARD_VALUE = 25.0
 NORMAL = 0
 REWARD = 1
 
-from Signature import *
+from src.system.blockchain.Signature import *
 
 class Tx:
     def __init__(self, type = NORMAL):
