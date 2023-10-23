@@ -5,6 +5,7 @@ from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
 from src.user_interface.menu import Menu
 from src.system.security.validation import is_digit
+from src.user_interface.util.colors import print_error, print_header, print_success
 
 class NodeMenu(Menu):
     _previous_menu = None
@@ -27,29 +28,50 @@ class NodeMenu(Menu):
         self._read_input()
 
     def transfer_coins(self):
+        self._clear()
+        print_header("Transfer coins")
         receiver = prompt_input(lambda: safe_input("Please enter the receiver:"))
         amountCoins = prompt_input(lambda: safe_input("Please enter the amount of coins:", is_digit))
         transactionFee = prompt_input(lambda: safe_input("Please enter the transaction fee:", is_digit))
 
         result = transfer_coins(receiver, int(amountCoins), int(transactionFee)) #TODO Mogen hier ook komma getallen gegeven worden? Anders float gebruiken? Ook in de validator aanpassen
 
-        print(result[1])
+        if result[0]:
+            print_success(result[1])
+        else:
+            print_error(result[1])
+
         self._back()
 
     def check_balance(self):
-        pass
+        self._clear()
+        print_header("Check balance")
+        #TODO Code here!
+        self._back()
 
     def explore_chain(self):
-        pass
+        self._clear()
+        print_header("Explore chain")
+        #TODO Code here!
+        self._back()
 
     def check_pool(self):
-        pass
+        self._clear()
+        print_header("Check pool")
+        #TODO Code here!
+        self._back()
         
     def cancel_transaction(self):
-        pass
+        self._clear()
+        print_header("Cancel transaction")
+        #TODO Code here!
+        self._back()
 
     def mine_block(self):
-        pass
+        self._clear()
+        print_header("Mine block")
+        #TODO Code here!
+        self._back()
 
     def log_out(self):
         Context.user_id = None

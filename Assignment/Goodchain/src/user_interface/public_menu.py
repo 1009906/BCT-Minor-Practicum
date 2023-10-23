@@ -3,6 +3,7 @@ from src.user_interface.register_menu import RegisterMenu
 from src.system.services.public_menu_service import create_user
 from src.user_interface.login_menu import LoginMenu
 from src.user_interface.menu import Menu
+from src.user_interface.util.colors import print_header
 
 class PublicMenu(Menu):
     def __init__(self):
@@ -24,7 +25,10 @@ class PublicMenu(Menu):
         login.run()
 
     def explore_blockchain(self):
-        pass
+        self._clear()
+        print_header("Explore blockchain")
+        #TODO Code here!
+        self._back()        
 
     def sign_up(self):
         register_menu = RegisterMenu(self)
