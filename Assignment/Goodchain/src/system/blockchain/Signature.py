@@ -15,6 +15,7 @@ def generate_keys():
 
 def sign(message, private_key):
     message = bytes(str(message), 'utf-8')
+    private_key = serialization.load_pem_private_key(private_key, password=None)
     signature = private_key.sign(
         message,
         padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH),

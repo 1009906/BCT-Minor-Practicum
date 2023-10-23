@@ -21,17 +21,6 @@ is_password = Validator(
     "must have a combination of at least one lowercase letter, one uppercase letter, "
     "one digit, and one special character such as ~!@#$%&_-+=`|\(){}[]:;'<>,.?/")
 
-is_phone_number = Validator(
-    lambda string: match_regex("^[0-9]{8}$", string), "Error: Incorrect phone format. Format must be DDDDDDDD")
-
-is_email = Validator(
-    lambda string: match_regex("^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$", string),
-    "Error: Incorrect email format. Example: sample@email.com")
-
-is_zipcode = Validator(
-    lambda string: match_regex("^[0-9]{4}[A-Z]{2}$", string),
-    "Error: Incorrect zipcode format. Format must be DDDDXX")
-
 not_empty = Validator(
     lambda string: string,
     "Error: Input is empty. Please enter a valid input")
