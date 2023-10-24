@@ -1,6 +1,8 @@
+import os
 from src.system.context import Context
 from src.system.blockchain.Transaction import Tx
 import pickle
+import uuid
 
 def transfer_coins(recieverName, amountCoins, transactionFee):
     #Check if receiver exists.
@@ -13,8 +15,9 @@ def transfer_coins(recieverName, amountCoins, transactionFee):
         return False, "You can't send coins to yourself!"
     
     #TODO Check of de sender genoeg coins heeft
-    
-    newTx = Tx()
+    transaction_id = generate_random_transaction_id()
+
+    newTx = Tx(transaction_id, Context.user_name)
     newTx.add_input(Context.public_key, amountCoins)
     newTx.add_output(find_receiver[1], amountCoins) #TODO Moet de reciever hier de public key van de receiver zijn?
     newTx.sign(Context.private_key)
@@ -40,6 +43,9 @@ def get_receiver_public_key(recieverName):
     else:
         return False, None
     
+def generate_random_transaction_id():
+    return uuid.uuid1()
+    
 def check_pool():
     transactions = []
     try:
@@ -50,5 +56,25 @@ def check_pool():
     except EOFError:
         # No more lines to read from file.
         pass
-    
+
     return transactions
+
+def remove_transaction_from_pool(transaction_id):
+    transaction_is_removed = False
+    with open(Context.pool_path, "rb") as original_file, open(Context.temp_pool_path, "wb") as temp_file:
+        try:
+            while True:
+                transaction = pickle.load(original_file)
+                if str(transaction.id) == transaction_id and transaction.owner == Context.user_name:
+                    # Skip this transaction
+                    transaction_is_removed = True
+                    continue
+                pickle.dump(transaction, temp_file)
+        except EOFError:
+            pass
+        
+    # Replace the original pool file with the temporary file
+    os.remove(Context.pool_path)
+    os.rename(Context.temp_pool_path, Context.pool_path)
+
+    return transaction_is_removed

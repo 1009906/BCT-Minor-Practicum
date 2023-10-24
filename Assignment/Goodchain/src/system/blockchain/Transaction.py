@@ -9,8 +9,9 @@ REWARD = 1
 from src.system.blockchain.Signature import *
 
 class Tx:
-    def __init__(self, type = NORMAL):
-        
+    def __init__(self,id ,owner, type = NORMAL):
+        self.id = id
+        self.owner = owner
         self.type = type
         self.inputs = []
         self.outputs = []
@@ -78,8 +79,9 @@ class Tx:
         return data
 
     def __repr__(self):
-
-        repr_str = "INPUTS:\n"
+        repr_str = "Id: " + str(self.id) + "\n"
+        repr_str += "Owner: " + str(self.owner) + "\n"
+        repr_str += "INPUTS:\n"
         for addr, amt in self.inputs:
             repr_str = repr_str + str(amt) + "from" + str(addr) + "\n"
 

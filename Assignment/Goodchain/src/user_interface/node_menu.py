@@ -1,5 +1,5 @@
 import time
-from src.system.services.node_menu_service import check_pool, transfer_coins
+from src.system.services.node_menu_service import check_pool, remove_transaction_from_pool, transfer_coins
 from src.user_interface.util.form import prompt_input
 from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
@@ -73,6 +73,14 @@ class NodeMenu(Menu):
         self._clear()
         print_header("Cancel transaction")
         #TODO Code here!
+        transaction_id = prompt_input(lambda: safe_input("Please enter the transaction id:"))
+        result = remove_transaction_from_pool(transaction_id)
+
+        if result:
+            print_success("Transaction is found and removed from the pool!")
+        else:
+            print_error("Transaction is not found in the pool!")
+
         self._back()
 
     def mine_block(self):
