@@ -1,11 +1,11 @@
 import time
-from src.system.services.node_menu_service import transfer_coins
+from src.system.services.node_menu_service import check_pool, transfer_coins
 from src.user_interface.util.form import prompt_input
 from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
 from src.user_interface.menu import Menu
 from src.system.security.validation import is_digit
-from src.user_interface.util.colors import print_error, print_header, print_success
+from src.user_interface.util.colors import convert_to_bold, print_error, print_header, print_success
 
 class NodeMenu(Menu):
     _previous_menu = None
@@ -58,7 +58,15 @@ class NodeMenu(Menu):
     def check_pool(self):
         self._clear()
         print_header("Check pool")
+
         #TODO Code here!
+        result = check_pool()
+        if result:
+            for transaction in result:
+                print(transaction)
+        else:
+            print_error("No transactions in the pool!")
+
         self._back()
         
     def cancel_transaction(self):
@@ -79,7 +87,7 @@ class NodeMenu(Menu):
         Context.private_key = None
         Context.public_key = None
 
-        print("You have been logged out.")
-        print("Redirecting to public menu in 2 seconds...")
+        print_success("You have been logged out.")
+        print(convert_to_bold("Redirecting to public menu in 2 seconds..."))
         time.sleep(2)
         self._previous_menu.run()

@@ -21,8 +21,7 @@ def transfer_coins(recieverName, amountCoins, transactionFee):
 
     if newTx.is_valid():
         #Transaction is valid
-        # savefile = open("src\pool\pooltx.dat", "wb") #TODO Lijkt alsof we een append nodig hebben
-        savefile = open("src\pool\pooltx.dat", "ab")
+        savefile = open(Context.pool_path, "ab")
         pickle.dump(newTx, savefile)
         savefile.close()
         return True, "Transaction is valid! (added to the pool)"
@@ -40,3 +39,16 @@ def get_receiver_public_key(recieverName):
         return True, user_result[3]
     else:
         return False, None
+    
+def check_pool():
+    transactions = []
+    try:
+        with open(Context.pool_path, "rb") as f:
+            while True:
+                transaction = pickle.load(f)
+                transactions.append(transaction)
+    except EOFError:
+        # No more lines to read from file.
+        pass
+    
+    return transactions
