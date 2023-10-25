@@ -19,7 +19,7 @@ def transfer_coins(recieverName, amountCoins, transactionFee):
 
     newTx = Tx(transaction_id, Context.user_name)
     newTx.add_input(Context.public_key, amountCoins)
-    newTx.add_output(find_receiver[1], amountCoins) #TODO Moet de reciever hier de public key van de receiver zijn?
+    newTx.add_output(find_receiver[1], amountCoins) 
     newTx.sign(Context.private_key)
 
     if newTx.is_valid():
@@ -59,6 +59,19 @@ def check_pool():
 
     return transactions
 
+def explore_chain():
+    blocks = []
+    try:
+        with open(Context.ledger_path, "rb") as f:
+            while True:
+                block = pickle.load(f)
+                blocks.append(block)
+    except EOFError:
+        # No more lines to read from file.
+        pass
+
+    return blocks
+
 def remove_transaction_from_pool(transaction_id):
     transaction_is_removed = False
     with open(Context.pool_path, "rb") as original_file, open(Context.temp_pool_path, "wb") as temp_file:
@@ -78,3 +91,4 @@ def remove_transaction_from_pool(transaction_id):
     os.rename(Context.temp_pool_path, Context.pool_path)
 
     return transaction_is_removed
+

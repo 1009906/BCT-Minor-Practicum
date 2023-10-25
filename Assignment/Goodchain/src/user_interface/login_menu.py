@@ -1,3 +1,4 @@
+from src.user_interface.util.colors import *
 from .menu import Menu
 from src.system.security.login import login, try_login_user, SUCCESSFUL_LOGIN, LOGIN_ATTEMPTS_EXCEEDED
 from .util.form import prompt_input
@@ -23,7 +24,7 @@ class LoginMenu(Menu):
             elif data[0] == LOGIN_ATTEMPTS_EXCEEDED:
                 return exit("Too many login attempts.")
             else:
-                print("Incorrect username or password, please try again:")
+                print_error("Incorrect username or password, please try again.")
                 login_attempt += 1
                 continue
 

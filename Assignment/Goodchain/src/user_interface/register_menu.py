@@ -18,7 +18,6 @@ class RegisterMenu(Menu):
             password = prompt_input(lambda: safe_input("Please input your Password:"))
 
             data = create_user(username, password)
-
             if data[0] == True:
                 #Register is succesfull
                 print_success(data[1])

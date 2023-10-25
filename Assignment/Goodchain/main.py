@@ -29,7 +29,7 @@ def check_file_integrity():
         exit(convert_to_bold("Exiting the application!"))
 
 if __name__ == "__main__":
-    check_file_integrity() #TODO Maybe comment this line during development.
+    # check_file_integrity() #TODO Maybe comment this line during development.
     Context.db_connection = get_connection()
     public_menu = PublicMenu()
     public_menu.run()

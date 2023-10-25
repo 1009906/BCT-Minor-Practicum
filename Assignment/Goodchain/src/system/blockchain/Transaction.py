@@ -3,8 +3,10 @@ from operator import truediv
 from optparse import AmbiguousOptionError
 
 REWARD_VALUE = 25.0
-NORMAL = 0
-REWARD = 1
+NORMAL = "NORMAL"
+REWARD = "REWARD"
+SIGNUP = "SIGNUP"
+SIGNUP_REWARD = 50
 
 from src.system.blockchain.Signature import *
 
@@ -81,19 +83,20 @@ class Tx:
     def __repr__(self):
         repr_str = "Id: " + str(self.id) + "\n"
         repr_str += "Owner: " + str(self.owner) + "\n"
-        repr_str += "INPUTS:\n"
+        repr_str += "Type: " + str(self.type) + "\n"
+        repr_str += "INPUTS: \n"
         for addr, amt in self.inputs:
-            repr_str = repr_str + str(amt) + "from" + str(addr) + "\n"
+            repr_str = repr_str + str(amt) + " from " + str(addr) + "\n"
 
-        repr_str += "OUTPUTS:\n"
+        repr_str += "OUTPUTS: \n"
         for addr, amt in self.outputs:
-            repr_str = repr_str + str(amt) + "to" + str(addr) + "\n"
+            repr_str = repr_str + str(amt) + " to " + str(addr) + "\n"
 
-        repr_str += "EXTRA REQUIRED SIGNATURES:\n"     
+        repr_str += "EXTRA REQUIRED SIGNATURES: \n"     
         for req_sig in self.reqd:
             repr_str = repr_str + str(req_sig) + "\n"
 
-        repr_str += "SIGNATURES:\n"     
+        repr_str += "SIGNATURES: \n"     
         for sig in self.sigs:
             repr_str = repr_str + str(sig) + "\n"
 

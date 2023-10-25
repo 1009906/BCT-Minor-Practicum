@@ -12,7 +12,7 @@ next_char_limit = 20
 class TxBlock (CBlock):
 
     def __init__(self, previousBlock):
-        self.nonce = "A random nonce"
+        self.nonce = "A random nonce" # TODO kijken of deze nonce nodig is
         super(TxBlock, self).__init__([], previousBlock)
 
     def addTx(self, Tx_in):
