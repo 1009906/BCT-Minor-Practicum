@@ -36,11 +36,6 @@ def create_user(user_name, password):
 
     except IntegrityError:
         return False, "User already exists."
-    
-def generate_keys():
-    private_key = rsa.generate_private_key(public_exponent=65537,key_size=2048)
-    public_key = private_key.public_key()
-    return private_key, public_key
 
 def signup_reward(user_name, public_key):
     #creat transaction user gets 50 coins
@@ -50,6 +45,3 @@ def signup_reward(user_name, public_key):
     savefile = open(Context.pool_path, "ab")
     pickle.dump(tx, savefile)
     savefile.close()
-
-
-

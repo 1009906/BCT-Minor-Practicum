@@ -1,3 +1,4 @@
+import os
 import time
 from src.system.services.node_menu_service import check_pool, remove_transaction_from_pool, transfer_coins
 from src.user_interface.util.form import prompt_input
@@ -12,6 +13,7 @@ class NodeMenu(Menu):
     def __init__(self, previous_menu=None):
         super().__init__()
         self._previous_menu = previous_menu
+        self.term_size = os.get_terminal_size()
         self._add_label("Welcome to goodChain node")
         self._add_menu_option(self.transfer_coins, "Transfer Coins")
         self._add_menu_option(self.check_balance, "Check the Balance")
@@ -64,6 +66,7 @@ class NodeMenu(Menu):
         if result:
             for transaction in result:
                 print(transaction)
+                print('─' * self.term_size.columns)
         else:
             print_error("No transactions in the pool!")
 

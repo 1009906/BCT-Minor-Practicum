@@ -7,11 +7,7 @@ from cryptography.hazmat.primitives import serialization
 def generate_keys():
     private_key = rsa.generate_private_key(public_exponent=65537,key_size=2048)
     public_key = private_key.public_key()
-
-    pbc_ser = public_key.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo)
-    return private_key, pbc_ser
+    return private_key, public_key
 
 def sign(message, private_key):
     message = bytes(str(message), 'utf-8')
