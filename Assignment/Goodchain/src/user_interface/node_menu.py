@@ -1,6 +1,6 @@
 import os
 import time
-from src.system.services.node_menu_service import check_pool, remove_transaction_from_pool, transfer_coins
+from src.system.services.node_menu_service import check_pool, explore_chain, remove_transaction_from_pool, transfer_coins
 from src.user_interface.util.form import prompt_input
 from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
@@ -55,6 +55,13 @@ class NodeMenu(Menu):
         self._clear()
         print_header("Explore chain")
         #TODO Code here!
+        result = explore_chain()
+        if result:
+            for block in result:
+                print(block)
+                print('─' * self.term_size.columns)
+        else:
+            print_error("No blocks in the ledger!")
         self._back()
 
     def check_pool(self):

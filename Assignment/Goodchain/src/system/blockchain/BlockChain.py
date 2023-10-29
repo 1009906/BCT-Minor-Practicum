@@ -26,3 +26,8 @@ class CBlock:
         if self.previousBlock == None:
             return True
         return self.previousBlock.computeHash() == self.previousHash
+    
+    def __repr__(self):
+        #TODO: Implement this function to return the data stored inside the block.
+        pass
+    

@@ -3,8 +3,9 @@ from src.user_interface.register_menu import RegisterMenu
 from src.system.services.public_menu_service import create_user
 from src.user_interface.login_menu import LoginMenu
 from src.user_interface.menu import Menu
-from src.user_interface.util.colors import convert_to_bold, print_header
+from src.user_interface.util.colors import convert_to_bold, print_error, print_header
 from src.system.security.hashing import save_hashes_to_file
+from src.system.services.node_menu_service import explore_chain
 
 class PublicMenu(Menu):
     def __init__(self):
@@ -29,6 +30,13 @@ class PublicMenu(Menu):
         self._clear()
         print_header("Explore blockchain")
         #TODO Code here!
+        result = explore_chain()
+        if result:
+            for block in result:
+                print(block)
+                print('─' * self.term_size.columns)
+        else:
+            print_error("No blocks in the ledger!")
         self._back()        
 
     def sign_up(self):
