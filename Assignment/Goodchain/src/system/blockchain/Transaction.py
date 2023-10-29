@@ -19,6 +19,7 @@ class Tx:
         self.outputs = []
         self.sigs = []
         self.reqd = []
+        # TODO IsValidTransaction boolean toevoegen aan de Tx class
 
     def add_input(self, from_addr, amount):
         self.inputs.append((from_addr, amount))
