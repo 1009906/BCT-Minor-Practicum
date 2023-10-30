@@ -17,13 +17,14 @@ def transfer_coins(recieverName, amountCoins, transactionFee):
     #TODO Check of de sender genoeg coins heeft
     transaction_id = generate_random_transaction_id()
 
-    newTx = Tx(transaction_id, Context.user_name)
+    newTx = Tx(transaction_id, Context.user_name, transaction_fee = transactionFee)
     newTx.add_input(Context.public_key, amountCoins)
     newTx.add_output(find_receiver[1], amountCoins) 
     newTx.sign(Context.private_key)
 
     if newTx.is_valid():
         #Transaction is valid
+        newTx.set_valid()
         savefile = open(Context.pool_path, "ab")
         pickle.dump(newTx, savefile)
         savefile.close()

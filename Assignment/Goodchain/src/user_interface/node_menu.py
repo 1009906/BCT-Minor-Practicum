@@ -96,7 +96,39 @@ class NodeMenu(Menu):
     def mine_block(self):
         self._clear()
         print_header("Mine block")
-        #TODO Code here!
+        available_transaction_ids = []
+
+        get_transactions_pool = check_pool()
+
+        if len(get_transactions_pool) < 5: #TODO Maybe comment this out for testing purposes
+            print_error("There are not enough transactions in the pool! Please try again later.")
+            self._back()
+        
+        if get_transactions_pool:
+            print("Transactions in the pool:")
+            for transaction in get_transactions_pool:
+                available_transaction_ids.append(str(transaction.id))
+                print(f"\t-> Transaction id: {transaction.id} | Owner: {transaction.owner} | Fee: {transaction.transaction_fee}")
+        else:
+            print_error("No transactions in the pool!")
+
+        print("\nEnter the transaction id's you want to add to the block.")
+        print("When you are done, type 'done'.\n")
+
+        transaction_ids = []
+        while True:
+            transaction_id = prompt_input(lambda: safe_input("Please enter the transaction id: "))
+            if transaction_id == "done":
+                break
+            #Check if transaction id is in the pool
+            if transaction_id not in available_transaction_ids:
+                print_error(f"Id: {transaction_id} is not in the pool! Please enter a valid id.")
+                continue
+            else:
+                transaction_ids.append(transaction_id)
+
+        #TODO Implement mining function that mines a block with the given transaction id's
+
         self._back()
 
     def log_out(self):

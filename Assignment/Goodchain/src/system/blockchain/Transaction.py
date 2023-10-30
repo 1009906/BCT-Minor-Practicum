@@ -11,7 +11,7 @@ SIGNUP_REWARD = 50
 from src.system.blockchain.Signature import *
 
 class Tx:
-    def __init__(self,id ,owner, type = NORMAL):
+    def __init__(self,id ,owner, type = NORMAL, transaction_fee = 0):
         self.id = id
         self.owner = owner
         self.type = type
@@ -20,6 +20,8 @@ class Tx:
         self.sigs = []
         self.reqd = []
         # TODO IsValidTransaction boolean toevoegen aan de Tx class
+        self.is_valid_transaction = False
+        self.transaction_fee = transaction_fee
 
     def add_input(self, from_addr, amount):
         self.inputs.append((from_addr, amount))
@@ -73,6 +75,14 @@ class Tx:
                 # print("Outputs exceed inputs")
                 return False        
             return True
+        
+    def set_valid(self):
+        self.is_valid_transaction = True
+        return
+    
+    def set_invalid(self):
+        self.is_valid_transaction = False
+        return
 
     def __gather(self):
         data=[]
@@ -85,6 +95,8 @@ class Tx:
         repr_str = "Id: " + str(self.id) + "\n"
         repr_str += "Owner: " + str(self.owner) + "\n"
         repr_str += "Type: " + str(self.type) + "\n"
+        repr_str += "Is Valid: " + str(self.is_valid_transaction) + "\n"
+        repr_str += "Fee: " + str(self.transaction_fee) + "\n"
         repr_str += "INPUTS: \n"
         for addr, amt in self.inputs:
             repr_str = repr_str + str(amt) + " from " + str(addr) + "\n"
