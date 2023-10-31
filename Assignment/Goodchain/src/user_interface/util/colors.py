@@ -15,6 +15,9 @@ def print_error(message):
 def print_success(message):
     print(f"{bcolors.OKGREEN}{message}{bcolors.ENDC}")
 
+def print_warning(message):
+    print(f"{bcolors.WARNING}{message}{bcolors.ENDC}")
+
 def print_header(message):
     print(f"{bcolors.HEADER}{message}{bcolors.ENDC}")
 

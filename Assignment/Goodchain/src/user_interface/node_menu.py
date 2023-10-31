@@ -1,12 +1,13 @@
 import os
 import time
-from src.system.services.node_menu_service import check_pool, explore_chain, remove_transaction_from_pool, transfer_coins
+from src.system.services.node_menu_service import check_pool, check_pool_valid_transactions, explore_chain, mine_new_block, remove_transaction_from_pool, transfer_coins
 from src.user_interface.util.form import prompt_input
 from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
 from src.user_interface.menu import Menu
 from src.system.security.validation import is_digit
-from src.user_interface.util.colors import convert_to_bold, print_error, print_header, print_success
+from src.user_interface.util.colors import convert_to_bold, print_error, print_header, print_success, print_warning
+from src.user_interface.util.stopwatch import Stopwatch
 
 class NodeMenu(Menu):
     _previous_menu = None
@@ -98,11 +99,11 @@ class NodeMenu(Menu):
         print_header("Mine block")
         available_transaction_ids = []
 
-        get_transactions_pool = check_pool()
+        get_transactions_pool = check_pool_valid_transactions() #TODO Check for valid transactions in the pool, not all transactions
 
-        if len(get_transactions_pool) < 5: #TODO Maybe comment this out for testing purposes
-            print_error("There are not enough transactions in the pool! Please try again later.")
-            self._back()
+        # if len(get_transactions_pool) < 5: #TODO Maybe comment this out for testing purposes
+        #     print_error("There are not enough transactions in the pool! Please try again later.")
+        #     self._back()
         
         if get_transactions_pool:
             print("Transactions in the pool:")
@@ -111,7 +112,8 @@ class NodeMenu(Menu):
                 print(f"\t-> Transaction id: {transaction.id} | Owner: {transaction.owner} | Fee: {transaction.transaction_fee}")
         else:
             print_error("No transactions in the pool!")
-
+            self._back()
+            
         print("\nEnter the transaction id's you want to add to the block.")
         print("When you are done, type 'done'.\n")
 
@@ -120,14 +122,30 @@ class NodeMenu(Menu):
             transaction_id = prompt_input(lambda: safe_input("Please enter the transaction id: "))
             if transaction_id == "done":
                 break
-            #Check if transaction id is in the pool
-            if transaction_id not in available_transaction_ids:
+            if len(transaction_ids) == 10:
+                print_warning("Maximum of 10 transactions reached!")
+                break
+            if transaction_id not in available_transaction_ids: #Check if transaction id is in the pool
                 print_error(f"Id: {transaction_id} is not in the pool! Please enter a valid id.")
                 continue
-            else:
+            if transaction_id not in transaction_ids: #Check if transaction id is not already added
                 transaction_ids.append(transaction_id)
+            else:
+                print_error(f"Id: {transaction_id} is already added!")
 
         #TODO Implement mining function that mines a block with the given transaction id's
+        print(transaction_ids) #TODO Remove this line
+
+        print(convert_to_bold("Mining block..."))
+        stopwatch = Stopwatch()
+        stopwatch.start()
+
+        result = mine_new_block(transaction_ids)
+
+        stopwatch.stop()
+        stopwatch.print_elapsed_time()
+
+        #TODO Do someting with the result
 
         self._back()
 

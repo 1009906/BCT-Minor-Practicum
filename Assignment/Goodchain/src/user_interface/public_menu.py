@@ -1,3 +1,4 @@
+import os
 from src.system.context import Context
 from src.user_interface.register_menu import RegisterMenu
 from src.system.services.public_menu_service import create_user
@@ -10,6 +11,7 @@ from src.system.services.node_menu_service import explore_chain
 class PublicMenu(Menu):
     def __init__(self):
         super().__init__()
+        self.term_size = os.get_terminal_size()
         self._add_label("Menu for sign up in Goodchain")
         self._add_menu_option(self.login, "Login")
         self._add_menu_option(self.explore_blockchain, "Explore blockchain")

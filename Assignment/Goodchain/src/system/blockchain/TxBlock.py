@@ -1,4 +1,4 @@
-from BlockChain import CBlock
+from src.system.blockchain.BlockChain import CBlock
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 
@@ -77,7 +77,7 @@ class TxBlock (CBlock):
     
     def __repr__(self):
         #TODO Check what we want to represent
-        repr_str = super.__repr__(self)
+        repr_str = super().__repr__()
         repr_str += "Nonce: " + str(self.nonce) + "\n"
         repr_str += "END\n"
         return repr_str
