@@ -121,6 +121,26 @@ def remove_transaction_from_pool(transaction_id):
 
     return transaction_is_removed
 
+def set_transaction_to_invalid_in_pool(transaction_id):
+    transaction_set_invalid = False
+    with open(Context.pool_path, "rb") as original_file, open(Context.temp_pool_path, "wb") as temp_file:
+        try:
+            while True:
+                transaction = pickle.load(original_file)
+                if str(transaction.id) == transaction_id:
+                    # Set transaction to invalid
+                    transaction.set_invalid()
+                    transaction_set_invalid = True
+                pickle.dump(transaction, temp_file)
+        except EOFError:
+            pass
+        
+    # Replace the original pool file with the temporary file
+    os.remove(Context.pool_path)
+    os.rename(Context.temp_pool_path, Context.pool_path)
+
+    return transaction_set_invalid
+
 def mine_new_block(transaction_ids):
     # During this process, a miner will check the transactions and validate them.
     # Any invalid transaction must be flagged as invalid, in the pool. 
@@ -140,16 +160,22 @@ def mine_new_block(transaction_ids):
                 transactions_to_add.append(transaction)
                 transactions_to_remove.append(str(transaction.id))
             else:
-                transactions_to_set_invalid.append(transaction) #TODO Hele transactie of alleen id?
+                transactions_to_set_invalid.append(str(transaction.id)) #TODO Hele transactie of alleen id?
         else:
             #TODO Transaction not found
             pass
 
     #TODO Check if there are enough transactions in transactions_to_add, otherwise add from pool?
-    #TODO Check if there is a previousBlock in the chain. If not, create a genesis block.
 
-    #TODO Create new block
-    newBlock = TxBlock(None)
+    #TODO Check if there is a previousBlock in the chain. If not, create a genesis block.
+    get_chain = explore_chain()
+    if len(get_chain) == 0:
+        #Create genesis block
+        newBlock = TxBlock(None)
+    else:
+        last_block = get_chain[-1]
+        #Create new block
+        newBlock = TxBlock(last_block)
 
     #TODO Add transactions to block
     for transaction in transactions_to_add:
@@ -168,4 +194,5 @@ def mine_new_block(transaction_ids):
         remove_transaction_from_pool(transaction_id)
     
     #TODO Set transactions to invalid in pool
-    
+    for transaction_id in transactions_to_set_invalid:
+        set_transaction_to_invalid_in_pool(transaction_id)
