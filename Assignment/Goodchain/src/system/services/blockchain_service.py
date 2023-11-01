@@ -1,6 +1,7 @@
+import os
 import pickle
 from src.system.context import Context
-from src.system.blockchain.TxBlock import TxBlock
+from src.system.blockchain.TxBlock import PENDING, TxBlock
 from src.system.services.pool_service import load_transaction_by_id, remove_transaction_from_pool, set_transaction_to_invalid_in_pool
 
 def explore_chain():
@@ -16,7 +17,23 @@ def explore_chain():
 
     return blocks
 
+def find_blocks_to_validate():
+    blocks_to_validate = []
+    try:
+        with open(Context.ledger_path, "rb") as f:
+            while True:
+                block = pickle.load(f)
+                if block.status == PENDING:
+                    blocks_to_validate.append(block)
+    except EOFError:
+        # No more lines to read from file.
+        pass
+
+    return blocks_to_validate
+
+
 def mine_new_block(transaction_ids):
+    total_fee_for_miner = 0
     transactions_to_add = [] #Add to block
     transactions_to_remove = [] #Remove from pool
     transactions_to_set_invalid = [] #Set invalid in pool
@@ -28,6 +45,7 @@ def mine_new_block(transaction_ids):
             if transaction.is_valid():
                 transactions_to_add.append(transaction)
                 transactions_to_remove.append(str(transaction.id))
+                total_fee_for_miner += transaction.transaction_fee
             else:
                 transactions_to_set_invalid.append(str(transaction.id))
 
@@ -48,6 +66,12 @@ def mine_new_block(transaction_ids):
     #Find nonce for block
     newBlock.find_nonce()
 
+    #Set miner of the block
+    newBlock.miner_of_block = Context.user_name
+
+    #Set total fee for miner
+    newBlock.total_fee_for_miner = total_fee_for_miner
+
     #Add block to ledger
     savefile = open(Context.ledger_path, "ab")
     pickle.dump(newBlock, savefile)
@@ -60,3 +84,28 @@ def mine_new_block(transaction_ids):
     #Set transactions to invalid in pool
     for transaction_id in transactions_to_set_invalid:
         set_transaction_to_invalid_in_pool(transaction_id)
+
+def update_block_in_chain(updated_block):
+    block_updated = False
+    try:
+        with open(Context.ledger_path, "rb") as original_file, open(Context.temp_ledger_path, "wb") as temp_file:
+            try:
+                while True:
+                    block = pickle.load(original_file)
+                    if str(block.blockHash) == str(updated_block.blockHash):
+                        # Update the block
+                        pickle.dump(updated_block, temp_file)
+                        block_updated = True
+                    else:
+                        pickle.dump(block, temp_file)
+            except EOFError:
+                pass
+    except EOFError:
+        # No more lines to read from file.
+        pass
+
+    # Replace the original ledger file with the temporary file
+    os.remove(Context.ledger_path)
+    os.rename(Context.temp_ledger_path, Context.ledger_path)
+
+    return block_updated

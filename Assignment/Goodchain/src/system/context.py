@@ -11,6 +11,7 @@ class Context:
 
     database_path = "src/database/database.db"
     ledger_path = "src/ledger/ledger.dat"
+    temp_ledger_path = "src/ledger/templedger.dat"
     pool_path = "src/pool/pooltx.dat"
     temp_pool_path = "src/pool/temppooltx.dat"
     hash_file_path = "src/hash_file.txt"

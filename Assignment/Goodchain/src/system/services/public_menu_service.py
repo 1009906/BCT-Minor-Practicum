@@ -31,16 +31,17 @@ def create_user(user_name, password):
             "VALUES (?, ?, ?, ?)",
             (user_name, hashed_password, prv_ser, pbc_ser))
         con.commit()
-        signup_reward(user_name, pbc_ser)
+        signup_reward(pbc_ser)
         return True, f"{user_name} Added to the system."
 
     except IntegrityError:
         return False, "User already exists."
 
-def signup_reward(user_name, public_key):
-    #creat transaction user gets 50 coins
+def signup_reward(public_key):
+    #Create transaction user gets 50 coins
     tx = Tx(generate_random_transaction_id(), None, SIGNUP)
     tx.add_output(public_key, SIGNUP_REWARD)
+    tx.set_valid()
 
     savefile = open(Context.pool_path, "ab")
     pickle.dump(tx, savefile)

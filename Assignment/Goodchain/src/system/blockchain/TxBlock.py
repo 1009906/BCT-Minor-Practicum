@@ -29,6 +29,7 @@ class TxBlock (CBlock):
         self.assigned_to_previous_block = False
         # TODO MinerOfBlock toevoegen aan de TxBlock class string, die kan je pakken uit context.user_name
         self.miner_of_block = None
+        self.total_fee_for_miner = 0
         # TODO Creation date of block toevoegen aan de TxBlock class
         self.creation_date = datetime.now()
 
@@ -92,7 +93,9 @@ class TxBlock (CBlock):
         repr_str = super().__repr__()
         repr_str += "Nonce: " + str(self.nonce) + "\n"
         repr_str += "Creation date: " + str(self.creation_date) + "\n"
-        repr_str += "END\n"
+        repr_str += "Status: " + str(self.status) + "\n"
+        repr_str += "Miner of block: " + str(self.miner_of_block) + "\n"
+        repr_str += "Total fee for miner: " + str(self.total_fee_for_miner) + "\n"
         return repr_str
         
 

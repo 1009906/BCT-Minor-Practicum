@@ -6,6 +6,7 @@ REWARD_VALUE = 25.0
 NORMAL = "NORMAL"
 REWARD = "REWARD"
 SIGNUP = "SIGNUP"
+MINERREWARD = "MINERREWARD"
 SIGNUP_REWARD = 50
 
 from src.system.blockchain.Signature import *
