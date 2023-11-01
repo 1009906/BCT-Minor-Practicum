@@ -6,7 +6,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from src.system.blockchain.Transaction import *
 
-from src.system.services.node_menu_service import generate_random_transaction_id
+from src.system.services.pool_service import generate_random_transaction_id
 
 def create_user(user_name, password):
     con = Context.db_connection

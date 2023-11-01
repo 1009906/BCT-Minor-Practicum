@@ -1,6 +1,6 @@
 import os
 import time
-from src.system.services.node_menu_service import check_pool, check_pool_valid_transactions, explore_chain, mine_new_block, cancel_transaction_from_pool, transfer_coins, update_last_login_date
+from src.system.services.pool_service import check_pool, check_pool_valid_transactions, cancel_transaction_from_pool, transfer_coins
 from src.user_interface.util.form import prompt_input
 from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
@@ -8,6 +8,8 @@ from src.user_interface.menu import Menu
 from src.system.security.validation import is_digit
 from src.user_interface.util.colors import convert_to_bold, print_error, print_header, print_success, print_warning
 from src.user_interface.util.stopwatch import Stopwatch
+from src.system.services.node_menu_service import update_last_login_date
+from src.system.services.blockchain_service import explore_chain, mine_new_block
 
 class NodeMenu(Menu):
     _previous_menu = None

@@ -32,7 +32,7 @@ def try_login_user(username, password, attempt):
 
 
 def login(user_id, user_name, private_key, public_key, last_login_date, previous_menu):
-    last_login_date = datetime.strptime(last_login_date, '%Y-%m-%d %H:%M:%S.%f')
+    last_login_date = datetime.strptime(last_login_date, '%Y-%m-%d %H:%M:%S.%f') if last_login_date != None else None
     Context.user_id = user_id
     Context.user_name = user_name
     Context.private_key = private_key
