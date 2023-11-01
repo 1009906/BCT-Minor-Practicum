@@ -30,11 +30,12 @@ def try_login_user(username, password, attempt):
         return INCORRECT_LOGIN, None
 
 
-def login(user_id, user_name, private_key, public_key, previous_menu):
+def login(user_id, user_name, private_key, public_key, last_login_date, previous_menu):
     Context.user_id = user_id
     Context.user_name = user_name
     Context.private_key = private_key
     Context.public_key = public_key
+    Context.last_login_date = last_login_date
 
     node_menu = NodeMenu(previous_menu)
     node_menu.run()

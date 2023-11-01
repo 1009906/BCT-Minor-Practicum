@@ -1,9 +1,31 @@
+from datetime import datetime
 import os
+from sqlite3 import IntegrityError
 from src.system.context import Context
 from src.system.blockchain.Transaction import Tx
 from src.system.blockchain.TxBlock import TxBlock
 import pickle
 import uuid
+
+def update_last_login_date():
+    con = Context.db_connection
+    c = con.cursor()
+
+    try:
+        c.execute(
+            "UPDATE users "
+            "SET    LastLogin = ? "
+            "WHERE Name = ?"
+            , (datetime.now(), Context.user_name))
+
+        if c.rowcount == 1:
+            con.commit()
+            return True, "User updated."
+        else:
+            return False, "Error: Could not update user."
+
+    except IntegrityError as e:
+        return False, str(e)
 
 def transfer_coins(recieverName, amountCoins, transactionFee):
     #Check if receiver exists.

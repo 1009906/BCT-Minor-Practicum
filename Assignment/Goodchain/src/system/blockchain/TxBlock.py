@@ -1,6 +1,7 @@
 from src.system.blockchain.BlockChain import CBlock
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
+from datetime import datetime
 
 REWARD_VALUE = 25.0
 leading_zeros = 2
@@ -16,10 +17,15 @@ class TxBlock (CBlock):
         self.valid_counter = 0
         # TODO toevoegen van een counter voor het aantal keer validaten door ingelogde gebruikers (invalid counter)
         self.invalid_counter = 0
+        # TODO toevoegen van een list met ingelogde gebruikers die al gevalideerd hebben (validated by)
+        self.validated_by = []
         # TODO AssignedToPreviousBlock toevoegen aan de TxBlock class boolean
         self.assigned_to_previous_block = False
         # TODO MinerOfBlock toevoegen aan de TxBlock class string, die kan je pakken uit context.user_name
         self.miner_of_block = None
+        # TODO Creation date of block toevoegen aan de TxBlock class
+        self.creation_date = datetime.now()
+
 
     def addTx(self, Tx_in):
         self.data.append(Tx_in)
@@ -79,6 +85,7 @@ class TxBlock (CBlock):
         #TODO Check what we want to represent
         repr_str = super().__repr__()
         repr_str += "Nonce: " + str(self.nonce) + "\n"
+        repr_str += "Creation date: " + str(self.creation_date) + "\n"
         repr_str += "END\n"
         return repr_str
         

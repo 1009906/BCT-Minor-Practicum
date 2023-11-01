@@ -1,6 +1,6 @@
 import os
 import time
-from src.system.services.node_menu_service import check_pool, check_pool_valid_transactions, explore_chain, mine_new_block, cancel_transaction_from_pool, transfer_coins
+from src.system.services.node_menu_service import check_pool, check_pool_valid_transactions, explore_chain, mine_new_block, cancel_transaction_from_pool, transfer_coins, update_last_login_date
 from src.user_interface.util.form import prompt_input
 from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
@@ -15,6 +15,7 @@ class NodeMenu(Menu):
         super().__init__()
         self._previous_menu = previous_menu
         self.term_size = os.get_terminal_size()
+        self.shownotifications = True
         self._add_label("Welcome to goodChain node")
         self._add_menu_option(self.transfer_coins, "Transfer Coins")
         self._add_menu_option(self.check_balance, "Check the Balance")
@@ -28,7 +29,21 @@ class NodeMenu(Menu):
     def run(self):
         self._title(f"Node Menu, Username: {Context.user_name}")
         self._display_options()
+        if self.shownotifications:
+            self.show_notifications()
         self._read_input()
+
+    def show_notifications(self):
+        self._clear()
+        print_header("Notifications")
+        if Context.last_login_date is None:
+            print("This is your first login, no notifications to show!")
+        else:
+            print(f"Last login date: {Context.last_login_date}")
+
+        self.shownotifications = False
+        update_last_login_date()
+        self._back()
 
     def transfer_coins(self):
         self._clear()
@@ -99,7 +114,7 @@ class NodeMenu(Menu):
         print_header("Mine block")
         available_transaction_ids = []
 
-        get_transactions_pool = check_pool_valid_transactions() #TODO Check for valid transactions in the pool, not all transactions
+        get_transactions_pool = check_pool_valid_transactions()
 
         if len(get_transactions_pool) < 5: #TODO Maybe comment this out for testing purposes
             print_error("There are not enough transactions in the pool! Please try again later.")
@@ -136,13 +151,13 @@ class NodeMenu(Menu):
             else:
                 print_error(f"Id: {transaction_id} is already added!")
 
-        #TODO Implement mining function that mines a block with the given transaction id's
         print(transaction_ids) #TODO Remove this line
 
         print(convert_to_bold("Mining block..."))
         stopwatch = Stopwatch()
         stopwatch.start()
 
+        #TODO Implement mining function that mines a block with the given transaction id's
         result = mine_new_block(transaction_ids)
 
         stopwatch.stop()
