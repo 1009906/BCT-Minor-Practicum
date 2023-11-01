@@ -97,21 +97,21 @@ class Tx:
         repr_str += "Type: " + str(self.type) + "\n"
         repr_str += "Is Valid: " + str(self.is_valid_transaction) + "\n"
         repr_str += "Fee: " + str(self.transaction_fee) + "\n"
-        repr_str += "INPUTS: \n"
-        for addr, amt in self.inputs:
-            repr_str = repr_str + str(amt) + " from " + str(addr) + "\n"
+        # repr_str += "INPUTS: \n"
+        # for addr, amt in self.inputs:
+        #     repr_str = repr_str + str(amt) + " from " + str(addr) + "\n"
 
-        repr_str += "OUTPUTS: \n"
-        for addr, amt in self.outputs:
-            repr_str = repr_str + str(amt) + " to " + str(addr) + "\n"
+        # repr_str += "OUTPUTS: \n"
+        # for addr, amt in self.outputs:
+        #     repr_str = repr_str + str(amt) + " to " + str(addr) + "\n"
 
-        repr_str += "EXTRA REQUIRED SIGNATURES: \n"     
-        for req_sig in self.reqd:
-            repr_str = repr_str + str(req_sig) + "\n"
+        # repr_str += "EXTRA REQUIRED SIGNATURES: \n"     
+        # for req_sig in self.reqd:
+        #     repr_str = repr_str + str(req_sig) + "\n"
 
-        repr_str += "SIGNATURES: \n"     
-        for sig in self.sigs:
-            repr_str = repr_str + str(sig) + "\n"
+        # repr_str += "SIGNATURES: \n"     
+        # for sig in self.sigs:
+        #     repr_str = repr_str + str(sig) + "\n"
 
         repr_str += "END\n"
         
