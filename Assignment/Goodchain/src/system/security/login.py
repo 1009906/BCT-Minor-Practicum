@@ -1,3 +1,4 @@
+from datetime import datetime
 from src.system.security.hashing import hash_password
 from src.user_interface.node_menu import NodeMenu
 from src.system.context import Context
@@ -31,6 +32,7 @@ def try_login_user(username, password, attempt):
 
 
 def login(user_id, user_name, private_key, public_key, last_login_date, previous_menu):
+    last_login_date = datetime.strptime(last_login_date, '%Y-%m-%d %H:%M:%S.%f')
     Context.user_id = user_id
     Context.user_name = user_name
     Context.private_key = private_key

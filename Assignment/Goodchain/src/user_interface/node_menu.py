@@ -172,6 +172,7 @@ class NodeMenu(Menu):
         Context.user_name = None
         Context.private_key = None
         Context.public_key = None
+        Context.last_login_date = None
 
         print_success("You have been logged out.")
         print(convert_to_bold("Redirecting to public menu in 2 seconds..."))
