@@ -7,6 +7,10 @@ REWARD_VALUE = 25.0
 leading_zeros = 2
 next_char_limit = 20
 
+VALID = "VALID"
+INVALID = "INVALID"
+PENDING = "PENDING"
+
 class TxBlock (CBlock):
 
     def __init__(self, previousBlock):
@@ -19,6 +23,8 @@ class TxBlock (CBlock):
         self.invalid_counter = 0
         # TODO toevoegen van een list met ingelogde gebruikers die al gevalideerd hebben (validated by)
         self.validated_by = []
+        # TODO Status toevoegen aan de block class string (Valid, Invalid, Pending)
+        self.status = PENDING
         # TODO AssignedToPreviousBlock toevoegen aan de TxBlock class boolean
         self.assigned_to_previous_block = False
         # TODO MinerOfBlock toevoegen aan de TxBlock class string, die kan je pakken uit context.user_name

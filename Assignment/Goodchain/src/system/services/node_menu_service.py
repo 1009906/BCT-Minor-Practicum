@@ -5,16 +5,18 @@ from src.system.context import Context
 def update_last_login_date():
     con = Context.db_connection
     c = con.cursor()
+    datetime_now = datetime.now()
 
     try:
         c.execute(
             "UPDATE users "
             "SET    LastLogin = ? "
             "WHERE Name = ?"
-            , (datetime.now(), Context.user_name))
+            , (datetime_now, Context.user_name))
 
         if c.rowcount == 1:
             con.commit()
+            Context.last_login_date = datetime_now
             return True, "User updated."
         else:
             return False, "Error: Could not update user."

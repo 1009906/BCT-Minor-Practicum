@@ -2,6 +2,8 @@ from datetime import datetime
 from src.system.security.hashing import hash_password
 from src.user_interface.node_menu import NodeMenu
 from src.system.context import Context
+from src.system.initialize_check import check_pool_for_invalid_transactions_of_logged_in_user
+from src.user_interface.util.colors import print_success
 
 LOGIN_MAX_ATTEMPTS = 3
 
@@ -38,6 +40,11 @@ def login(user_id, user_name, private_key, public_key, last_login_date, previous
     Context.private_key = private_key
     Context.public_key = public_key
     Context.last_login_date = last_login_date
+
+    #TODO Do initialize checks here
+    print("Checking pool for invalid transactions...")
+    check_pool_for_invalid_transactions_of_logged_in_user()
+    print_success("Done checking pool for invalid transactions...")
 
     node_menu = NodeMenu(previous_menu)
     node_menu.run()

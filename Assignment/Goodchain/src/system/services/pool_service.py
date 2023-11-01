@@ -67,13 +67,27 @@ def check_pool_valid_transactions():
         with open(Context.pool_path, "rb") as f:
             while True:
                 transaction = pickle.load(f)
-                if transaction.is_valid_transaction and transaction.is_valid():
+                if transaction.is_valid_transaction and transaction.is_valid(): #TODO Moet dit een and zijn of een or?
                     valid_transactions.append(transaction)
     except EOFError:
         # No more lines to read from file.
         pass
 
     return valid_transactions
+
+def check_pool_invalid_transactions():
+    invalid_transactions = []
+    try:
+        with open(Context.pool_path, "rb") as f:
+            while True:
+                transaction = pickle.load(f)
+                if not transaction.is_valid_transaction or not transaction.is_valid():
+                    invalid_transactions.append(transaction)
+    except EOFError:
+        # No more lines to read from file.
+        pass
+
+    return invalid_transactions
 
 def load_transaction_by_id(transaction_id):
     try:

@@ -25,8 +25,8 @@ class NodeMenu(Menu):
         self._add_menu_option(self.check_pool, "Check the pool")
         self._add_menu_option(self.cancel_transaction, "Cancel a transaction")
         self._add_menu_option(self.mine_block, "Mine a block")
+        self._add_menu_option(self.show_profile, "Show profile")
         self._add_menu_option(self.log_out, "Log out")
-
 
     def run(self):
         self._title(f"Node Menu, Username: {Context.user_name}")
@@ -167,6 +167,12 @@ class NodeMenu(Menu):
 
         #TODO Do someting with the result
 
+        self._back()
+
+    def show_profile(self):
+        self._clear()
+        print_header("Profile")
+        print(Context.__repr__(Context))
         self._back()
 
     def log_out(self):
