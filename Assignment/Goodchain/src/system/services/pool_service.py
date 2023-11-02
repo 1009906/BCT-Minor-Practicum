@@ -102,6 +102,15 @@ def load_transaction_by_id(transaction_id):
 
     return None
 
+def add_transaction_to_pool(transaction):
+    try:
+        savefile = open(Context.pool_path, "ab")
+        pickle.dump(transaction, savefile)
+        savefile.close()
+        return True
+    except:
+        return False
+
 def cancel_transaction_from_pool(transaction_id):
     transaction_is_removed = False
     with open(Context.pool_path, "rb") as original_file, open(Context.temp_pool_path, "wb") as temp_file:
@@ -170,6 +179,7 @@ def create_mining_reward(miner_of_block_name, total_fee_for_miner):
     #Create transaction give miner reward
     tx = Tx(generate_random_transaction_id(), None, MINERREWARD)
     tx.add_output(find_receiver[1], total_fee_for_miner)
+    tx.set_valid()
 
     savefile = open(Context.pool_path, "ab")
     pickle.dump(tx, savefile)

@@ -6,7 +6,7 @@ from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
 from src.user_interface.menu import Menu
 from src.system.security.validation import is_digit
-from src.user_interface.util.colors import convert_to_bold, print_error, print_header, print_success, print_warning
+from src.user_interface.util.colors import convert_to_bold, convert_to_purple, print_error, print_header, print_success, print_warning
 from src.user_interface.util.stopwatch import Stopwatch
 from src.system.services.node_menu_service import update_last_login_date
 from src.system.services.blockchain_service import explore_chain, mine_new_block
@@ -124,9 +124,12 @@ class NodeMenu(Menu):
         
         if get_transactions_pool:
             print("Transactions in the pool:")
-            for transaction in get_transactions_pool:
+            for i, transaction in enumerate(get_transactions_pool):
                 available_transaction_ids.append(str(transaction.id))
-                print(f"\t-> Transaction id: {transaction.id} | Owner: {transaction.owner} | Fee: {transaction.transaction_fee}")
+                if i % 2 == 0:
+                    print(f"\t-> Transaction id: {transaction.id} | Owner: {transaction.owner} | Fee: {transaction.transaction_fee}")
+                else:
+                    print(convert_to_purple(f"\t-> Transaction id: {transaction.id} | Owner: {transaction.owner} | Fee: {transaction.transaction_fee}"))
         else:
             print_error("No transactions in the pool!")
             self._back()

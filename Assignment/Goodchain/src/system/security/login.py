@@ -2,7 +2,7 @@ from datetime import datetime
 from src.system.security.hashing import hash_password
 from src.user_interface.node_menu import NodeMenu
 from src.system.context import Context
-from src.system.initialize_check import check_pool_for_invalid_transactions_of_logged_in_user
+from src.system.initialize_check import check_blockchain_for_blocks_to_validate, check_pool_for_invalid_transactions_of_logged_in_user
 from src.user_interface.util.colors import print_success
 
 LOGIN_MAX_ATTEMPTS = 3
@@ -45,6 +45,10 @@ def login(user_id, user_name, private_key, public_key, last_login_date, previous
     print("Checking pool for invalid transactions...")
     check_pool_for_invalid_transactions_of_logged_in_user()
     print_success("Done checking pool for invalid transactions...")
+
+    # print("Checking blockchain for blocks to validate...")
+    # check_blockchain_for_blocks_to_validate()
+    # print_success("Done checking blockchain for blocks to validate...")
 
     node_menu = NodeMenu(previous_menu)
     node_menu.run()

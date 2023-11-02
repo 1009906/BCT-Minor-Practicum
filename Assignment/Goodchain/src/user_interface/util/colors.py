@@ -23,3 +23,6 @@ def print_header(message):
 
 def convert_to_bold(message):
     return f"{bcolors.BOLD}{message}{bcolors.ENDC}"
+
+def convert_to_purple(message):
+    return f"{bcolors.HEADER}{message}{bcolors.ENDC}"

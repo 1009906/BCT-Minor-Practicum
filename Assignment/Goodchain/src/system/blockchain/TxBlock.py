@@ -93,6 +93,9 @@ class TxBlock (CBlock):
         repr_str = super().__repr__()
         repr_str += "Nonce: " + str(self.nonce) + "\n"
         repr_str += "Creation date: " + str(self.creation_date) + "\n"
+        repr_str += "Valid counter: " + str(self.valid_counter) + "\n"
+        repr_str += "Invalid counter: " + str(self.invalid_counter) + "\n"
+        repr_str += "Validated by: " + str(self.validated_by) + "\n"
         repr_str += "Status: " + str(self.status) + "\n"
         repr_str += "Miner of block: " + str(self.miner_of_block) + "\n"
         repr_str += "Total fee for miner: " + str(self.total_fee_for_miner) + "\n"
