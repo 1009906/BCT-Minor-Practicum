@@ -13,19 +13,6 @@ def check_pool_for_invalid_transactions_of_logged_in_user():
             #The invalid transaction is not from the logged in user.
             continue
 
-"""
-TODO:
-Once a block is created by a node, the next three logged in users (nodes) must check the validity of the created block. 
-These nodes will fully check the block to ensure a valid block is created by the miner. If the block is valid, they flag it as valid, otherwise they flag it as invalid.
-
-■ If the new block is flagged as valid by these three nodes (three different logged in users), then the third validator node is responsible to create a new transaction to reward the miner of the block. 
-This reward transaction could be included in the next mining process. If a block successfully got validated by three other nodes, it does not need to be validated by any other nodes later. 
-(Note that the block cannot be validated by the creator of the block.)
-
-■ If the new block is flagged as invalid (rejected) by at least three other nodes, before getting three valid flags, then the third rejector node is also responsible to return all the transactions of the rejected block back to the pool. 
-In this case, if the block is rejected because of some invalid transactions, those invalid transactions must be also flagged as invalid on the pool to be nullified by the creator of the transaction upon login. 
-Other valid transactions in the rejected block must be returned to the pool, waiting for the next mining process to be included in a new block again. 
-"""
 def check_blockchain_for_blocks_to_validate():
     blocks_to_validate = find_blocks_to_validate()
 

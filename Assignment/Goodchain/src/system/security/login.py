@@ -42,6 +42,7 @@ def login(user_id, user_name, private_key, public_key, last_login_date, previous
     Context.last_login_date = last_login_date
 
     #TODO Do initialize checks here
+    #TODO Add return to the initialize checks and pass that to menu.run function to show in the notifications what is done.
     print("Checking pool for invalid transactions...")
     check_pool_for_invalid_transactions_of_logged_in_user()
     print_success("Done checking pool for invalid transactions...")

@@ -20,7 +20,6 @@ class Tx:
         self.outputs = []
         self.sigs = []
         self.reqd = []
-        # TODO IsValidTransaction boolean toevoegen aan de Tx class
         self.is_valid_transaction = False
         self.transaction_fee = transaction_fee
 

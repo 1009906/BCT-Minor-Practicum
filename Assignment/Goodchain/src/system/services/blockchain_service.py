@@ -33,6 +33,7 @@ def find_blocks_to_validate():
 
 
 def mine_new_block(transaction_ids):
+    #TODO Toevoegen van een try catch block als het goed gaat return true, bij exception return false
     total_fee_for_miner = 0
     transactions_to_add = [] #Add to block
     transactions_to_remove = [] #Remove from pool

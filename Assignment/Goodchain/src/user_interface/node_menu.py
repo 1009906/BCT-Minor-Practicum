@@ -72,7 +72,6 @@ class NodeMenu(Menu):
     def explore_chain(self):
         self._clear()
         print_header("Explore chain")
-        #TODO Code here!
         result = explore_chain()
         if result:
             for block in result:
@@ -86,7 +85,6 @@ class NodeMenu(Menu):
         self._clear()
         print_header("Check pool")
 
-        #TODO Code here!
         result = check_pool()
         if result:
             for transaction in result:
@@ -100,7 +98,7 @@ class NodeMenu(Menu):
     def cancel_transaction(self):
         self._clear()
         print_header("Cancel transaction")
-        #TODO Code here!
+
         transaction_id = prompt_input(lambda: safe_input("Please enter the transaction id:"))
         result = cancel_transaction_from_pool(transaction_id)
 
@@ -162,13 +160,10 @@ class NodeMenu(Menu):
             else:
                 print_error(f"Id: {transaction_id} is already added!")
 
-        print(transaction_ids) #TODO Remove this line
-
         print(convert_to_bold("Mining block..."))
         stopwatch = Stopwatch()
         stopwatch.start()
 
-        #TODO Implement mining function that mines a block with the given transaction id's
         result = mine_new_block(transaction_ids)
 
         stopwatch.stop()

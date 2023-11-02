@@ -30,7 +30,7 @@ class PublicMenu(Menu):
     def explore_blockchain(self):
         self._clear()
         print_header("Explore blockchain")
-        #TODO Code here!
+
         result = explore_chain()
         if result:
             for block in result:
