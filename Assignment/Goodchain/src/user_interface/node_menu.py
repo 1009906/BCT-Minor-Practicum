@@ -9,7 +9,7 @@ from src.system.security.validation import is_digit
 from src.user_interface.util.colors import convert_to_bold, convert_to_purple, print_error, print_header, print_success, print_warning
 from src.user_interface.util.stopwatch import Stopwatch
 from src.system.services.node_menu_service import update_last_login_date
-from src.system.services.blockchain_service import explore_chain, mine_new_block
+from src.system.services.blockchain_service import explore_chain, find_blocks_to_validate, mine_new_block
 
 class NodeMenu(Menu):
     _previous_menu = None
@@ -114,8 +114,14 @@ class NodeMenu(Menu):
     def mine_block(self):
         self._clear()
         print_header("Mine block")
-        available_transaction_ids = []
 
+        #Add check if there are no blocks in pending state
+        find_pending_blocks = find_blocks_to_validate()
+        if len(find_pending_blocks) > 0:
+            print_error("There are still blocks in pending state! Please wait until they are validated.")
+            self._back()
+
+        available_transaction_ids = []
         get_transactions_pool = check_pool_valid_transactions()
 
         if len(get_transactions_pool) < 5: #TODO Maybe comment this out for testing purposes

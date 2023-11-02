@@ -109,3 +109,24 @@ def update_block_in_chain(updated_block):
     os.rename(Context.temp_ledger_path, Context.ledger_path)
 
     return block_updated
+
+def remove_block_in_chain(block_to_remove):
+    block_removed = False
+    try:
+        with open(Context.ledger_path, "rb") as original_file, open(Context.temp_ledger_path, "wb") as temp_file:
+            while True:
+                block = pickle.load(original_file)
+                if str(block.blockHash) == str(block_to_remove.blockHash):
+                    # Skip this block
+                    block_removed = True
+                    continue
+                pickle.dump(block, temp_file)
+    except EOFError:
+        # No more lines to read from file.
+        pass
+
+    # Replace the original ledger file with the temporary file
+    os.remove(Context.ledger_path)
+    os.rename(Context.temp_ledger_path, Context.ledger_path)
+
+    return block_removed

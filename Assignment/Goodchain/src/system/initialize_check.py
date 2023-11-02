@@ -1,6 +1,6 @@
 from src.system.services.pool_service import add_transaction_to_pool, check_pool_invalid_transactions, create_mining_reward, remove_transaction_from_pool
 from src.system.context import Context
-from src.system.services.blockchain_service import find_blocks_to_validate, update_block_in_chain
+from src.system.services.blockchain_service import find_blocks_to_validate, remove_block_in_chain, update_block_in_chain
 from src.system.blockchain.TxBlock import INVALID, VALID
 
 #Check the pool for invalid transactions of the logged in user and remove those from the pool.
@@ -33,7 +33,7 @@ def check_blockchain_for_blocks_to_validate():
     if len(blocks_to_validate) <= 0:
         return
     
-    for block in blocks_to_validate:
+    for block in blocks_to_validate: #TODO Check if this for loop is needed, because it is one block?
         block_needs_to_be_removed = False
         updated_block = block
 
@@ -69,10 +69,10 @@ def check_blockchain_for_blocks_to_validate():
                 updated_block.status = INVALID
                 block_needs_to_be_removed = True
 
-            #TODO If the block is set to invalid 3 times, remove the block from the ledger. LET OP! Het kan zijn dat er al een ander block vast zit aan dit block dat verwijderd wordt. Dus dat gaat dan fout met de hash van previousblock en previousblock variable.
             if block_needs_to_be_removed:
-                #TODO Remove the block from the ledger and set transactions back to pool
+                #Remove the block from the ledger and set transactions back to pool
                 updated_block = set_transactions_back_to_pool(updated_block)
+                remove_block_in_chain(updated_block)
             else:
                 #Update the block in the ledger with the new status and other data
                 update_block_in_chain(updated_block)
