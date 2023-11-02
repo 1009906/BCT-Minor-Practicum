@@ -42,4 +42,5 @@ TODO:
     - Check balance functie afgemaakt worden.
     - Goed testen en assignment test cases afwerken.
     - Kijken of er onnodige code is en deze verwijderen.
+    - Moet het async zijn? Er staat async goodchain in de assignment deliverables.
 """

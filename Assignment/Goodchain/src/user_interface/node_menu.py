@@ -9,7 +9,7 @@ from src.system.security.validation import is_digit
 from src.user_interface.util.colors import convert_to_bold, convert_to_purple, print_error, print_header, print_success, print_warning
 from src.user_interface.util.stopwatch import Stopwatch
 from src.system.services.node_menu_service import update_last_login_date
-from src.system.services.blockchain_service import explore_chain, find_blocks_to_validate, mine_new_block
+from src.system.services.blockchain_service import explore_chain, explore_chain_since_date, find_blocks_to_validate, get_information_of_chain, mine_new_block
 
 class NodeMenu(Menu):
     _previous_menu = None
@@ -28,20 +28,51 @@ class NodeMenu(Menu):
         self._add_menu_option(self.show_profile, "Show profile")
         self._add_menu_option(self.log_out, "Log out")
 
-    def run(self):
+    def run(self, rejected_transactions_list = []):
         self._title(f"Node Menu, Username: {Context.user_name}")
         self._display_options()
         if self.shownotifications:
-            self.show_notifications()
+            self.show_notifications(rejected_transactions_list)
         self._read_input()
 
-    def show_notifications(self):
+    def show_notifications(self, rejected_transactions_list):
+        """
+        ● General information of the blockchain (the size of blockchain, number of transactions, etc.) -> Done
+        ● Users mined block status (if a user already mined a block and the block was on pending for verification by other nodes
+        ● Any block which was on pending and is confirmed or rejected by this user after login
+        ● Reward notification if there was any reward pending for confirmation from other nodes
+        ● New added block(s) since the last login (already confirmed by other nodes or waiting for a confirmation) -> Done
+        ● Rejected transactions of the user -> Done
+        ● Successful transactions of the user
+        """	
         self._clear()
         print_header("Notifications")
+
+        chain_info = get_information_of_chain()
+        blocks_added_since_last_login = explore_chain_since_date(Context.last_login_date)
+
+        print(f"Size of blockchain | Blocks: {chain_info[0]} | Transactions: {chain_info[1]}")
+
         if Context.last_login_date is None:
-            print("This is your first login, no notifications to show!")
+            print("This is your first login, no other notifications to show!")
         else:
             print(f"Last login date: {Context.last_login_date}")
+
+            if len(rejected_transactions_list) > 0:
+                print_warning("Rejected transactions:")
+                for transaction in rejected_transactions_list:
+                    print(transaction)
+                    print('─' * self.term_size.columns)
+            else:
+                print_success("No rejected transactions to show!")
+
+            if len(blocks_added_since_last_login) > 0:
+                print("Blocks added since last login:")
+                for block in blocks_added_since_last_login:
+                    print(block)
+                    print('─' * self.term_size.columns)
+            else:
+                print("No blocks added since last login to show!")
 
         self.shownotifications = False
         update_last_login_date()

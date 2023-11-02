@@ -5,13 +5,19 @@ from src.system.blockchain.TxBlock import INVALID, VALID
 
 #Check the pool for invalid transactions of the logged in user and remove those from the pool.
 def check_pool_for_invalid_transactions_of_logged_in_user():
+    rejected_transactions = []
     get_all_invalid_transactions = check_pool_invalid_transactions()
     for transaction in get_all_invalid_transactions:
         if transaction.owner == Context.user_name:
-            remove_transaction_from_pool(str(transaction.id))
+            result = remove_transaction_from_pool(str(transaction.id))
+            if result:
+                #The invalid transaction is from the logged in user and is removed from the pool.
+                rejected_transactions.append(transaction)
         else:
             #The invalid transaction is not from the logged in user.
             continue
+        
+    return rejected_transactions
 
 def check_blockchain_for_blocks_to_validate():
     blocks_to_validate = find_blocks_to_validate()

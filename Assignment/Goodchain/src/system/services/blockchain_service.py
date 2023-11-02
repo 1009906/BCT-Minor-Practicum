@@ -17,6 +17,28 @@ def explore_chain():
 
     return blocks
 
+def explore_chain_since_date(date):
+    blocks = []
+    try:
+        with open(Context.ledger_path, "rb") as f:
+            while True:
+                block = pickle.load(f)
+                if block.creation_date > date:
+                    blocks.append(block)
+    except EOFError:
+        # No more lines to read from file.
+        pass
+
+    return blocks
+
+def get_information_of_chain():
+    blocks = explore_chain()
+    amount_of_blocks = len(blocks)
+    amount_of_transactions = 0
+    for block in blocks:
+        amount_of_transactions += len(block.data)
+    return amount_of_blocks, amount_of_transactions
+
 def find_blocks_to_validate():
     blocks_to_validate = []
     try:
