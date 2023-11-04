@@ -110,7 +110,19 @@ class NodeMenu(Menu):
     def check_balance(self):
         self._clear()
         print_header("Check balance")
-        #TODO Code here!
+        chain = explore_chain()
+        total_in = 0
+        total_out = 0
+        for block in chain:
+            for tx in block.data:
+                for addr, amt in tx.inputs:
+                    if addr == Context.public_key:
+                        total_in = total_in + amt
+                for addr, amt in tx.outputs:
+                    if addr == Context.public_key:    
+                        total_out = total_out + amt
+
+        print_success(f"Your balance is: {total_out - total_in}")
         self._back()
 
     def explore_chain(self):
