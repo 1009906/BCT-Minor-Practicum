@@ -30,10 +30,13 @@ def check_blockchain_for_block_to_validate():
     
     updated_block = block
 
-    if block.miner_of_block == Context.user_name or Context.user_name in block.validated_by:
-        #Skip the block if the miner of the block is the logged in user
+    if block.miner_of_block == Context.user_name:
+        #Skip the block if the logged in user is the miner of the block
+        return f"During your login, there was a block to validate, but you are the miner of the block. Block hash: {updated_block.blockHash}. The block still needs {3 - block.valid_counter} succesfull validations to be accepted."
+    
+    if Context.user_name in block.validated_by:
         #Skip the block if the logged in user has already validated the block
-        return "During your login, there was a block to validate, but you are the miner of the block or you have already validated the block."
+        return f"During your login, there was a block to validate, but you have already validated the block. Block hash: {updated_block.blockHash}."
 
     #Check if block is valid
     is_valid_block = block.is_valid()
@@ -48,9 +51,9 @@ def check_blockchain_for_block_to_validate():
             updated_block.status = VALID
             #Create a new transaction to the pool to reward the miner
             create_mining_reward(block.miner_of_block, block.total_fee_for_miner)
-            result = "By your login you accepted a new block to the chain. The miner of the block received a reward of " + str(block.total_fee_for_miner) + " coins."
+            result = f"By your login you accepted a new block to the chain. Block hash: {updated_block.blockHash}."
         else:
-            result = "By your login you increased the valid counter of a block. The block is not yet accepted, but it is one step closer to be accepted."
+            result = f"By your login you increased the valid counter to {updated_block.valid_counter} of a block. Block hash: {updated_block.blockHash}. The block is not yet accepted."
         
         #Update the block in the ledger with the new status and other data
         update_block_in_chain(updated_block)
@@ -69,11 +72,11 @@ def check_blockchain_for_block_to_validate():
             #Remove the block from the ledger and set transactions back to pool
             updated_block = set_transactions_back_to_pool(updated_block)
             remove_block_in_chain(updated_block)
-            result = "By your login you rejected a block. The block was removed from the chain and the transactions were returned to the pool."
+            result = f"By your login you rejected a block. Block hash: {updated_block.blockHash}. The block was removed from the chain and the transactions were returned to the pool."
         else:
             #Update the block in the ledger with the new status and other data
             update_block_in_chain(updated_block)
-            result = "By your login you increased the invalid counter of a block. The block is not yet rejected, but it is one step closer to be rejected."
+            result = f"By your login you increased the invalid counter to {updated_block.invalid_counter} of a block. Block hash: {updated_block.blockHash}. The block is not yet rejected."
 
     return result
 

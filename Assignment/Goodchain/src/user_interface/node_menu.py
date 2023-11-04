@@ -8,8 +8,8 @@ from src.user_interface.menu import Menu
 from src.system.security.validation import is_digit
 from src.user_interface.util.colors import convert_to_bold, convert_to_purple, print_error, print_header, print_success, print_warning
 from src.user_interface.util.stopwatch import Stopwatch
-from src.system.services.node_menu_service import update_last_login_date
-from src.system.services.blockchain_service import explore_chain, explore_chain_since_date, find_block_to_validate, get_information_of_chain, mine_new_block
+from src.system.services.node_menu_service import check_mined_blocks_status_since_last_login, update_last_login_date
+from src.system.services.blockchain_service import explore_chain, explore_chain_since_date, find_block_to_validate, get_information_of_chain, mine_new_block, succesfull_transactions_since_date
 
 class NodeMenu(Menu):
     _previous_menu = None
@@ -38,18 +38,20 @@ class NodeMenu(Menu):
     def show_notifications(self, rejected_transactions_list, automatic_validation_result):
         """
         ● General information of the blockchain (the size of blockchain, number of transactions, etc.) -> Done
-        ● Users mined block status (if a user already mined a block and the block was on pending for verification by other nodes
-        ● Any block which was on pending and is confirmed or rejected by this user after login
+        ● Users mined block status (if a user already mined a block and the block was on pending for verification by other nodes -> Done
+        ● Any block which was on pending and is confirmed or rejected by this user after login -> Done
         ● Reward notification if there was any reward pending for confirmation from other nodes
         ● New added block(s) since the last login (already confirmed by other nodes or waiting for a confirmation) -> Done
         ● Rejected transactions of the user -> Done
-        ● Successful transactions of the user
+        ● Successful transactions of the user -> Done
         """	
         self._clear()
         print_header("Notifications")
 
         chain_info = get_information_of_chain()
         blocks_added_since_last_login = explore_chain_since_date(Context.last_login_date)
+        succesfull_transactions_since_last_login = succesfull_transactions_since_date(Context.last_login_date, Context.user_name)
+        mined_blocks_status_since_last_login = check_mined_blocks_status_since_last_login(blocks_added_since_last_login, Context.user_name)
 
         print(f"Size of blockchain | Blocks: {chain_info[0]} | Transactions: {chain_info[1]}")
         print("Automatic validation result: " + automatic_validation_result)
@@ -65,7 +67,7 @@ class NodeMenu(Menu):
                     print(transaction)
                     print('─' * self.term_size.columns)
             else:
-                print_success("No rejected transactions to show!")
+                print_success("No rejected transactions to show.")
 
             if len(blocks_added_since_last_login) > 0:
                 print("Blocks added since last login:")
@@ -73,7 +75,17 @@ class NodeMenu(Menu):
                     print(block)
                     print('─' * self.term_size.columns)
             else:
-                print("No blocks added since last login to show!")
+                print("No blocks added since last login to show.")
+
+            if len(succesfull_transactions_since_last_login) > 0:
+                print("Succesfull transactions since last login:")
+                for transaction in succesfull_transactions_since_last_login:
+                    print(transaction)
+                    print('─' * self.term_size.columns)
+            else:
+                print("No succesfull transactions since last login to show.")
+
+            print(mined_blocks_status_since_last_login)
 
         self.shownotifications = False
         update_last_login_date()

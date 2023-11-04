@@ -31,6 +31,22 @@ def explore_chain_since_date(date):
 
     return blocks
 
+def succesfull_transactions_since_date(date, transaction_owner):
+    transactions = []
+    try:
+        with open(Context.ledger_path, "rb") as f:
+            while True:
+                block = pickle.load(f)
+                if block.creation_date > date:
+                    for transaction in block.data:
+                        if transaction.owner == transaction_owner:
+                            transactions.append(transaction)
+    except EOFError:
+        # No more lines to read from file.
+        pass
+
+    return transactions
+
 def get_information_of_chain():
     blocks = explore_chain()
     amount_of_blocks = len(blocks)
