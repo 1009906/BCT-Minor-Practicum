@@ -9,7 +9,7 @@ from src.system.security.validation import is_digit
 from src.user_interface.util.colors import convert_to_bold, convert_to_purple, print_error, print_header, print_success, print_warning
 from src.user_interface.util.stopwatch import Stopwatch
 from src.system.services.node_menu_service import update_last_login_date
-from src.system.services.blockchain_service import explore_chain, explore_chain_since_date, find_blocks_to_validate, get_information_of_chain, mine_new_block
+from src.system.services.blockchain_service import explore_chain, explore_chain_since_date, find_block_to_validate, get_information_of_chain, mine_new_block
 
 class NodeMenu(Menu):
     _previous_menu = None
@@ -28,14 +28,14 @@ class NodeMenu(Menu):
         self._add_menu_option(self.show_profile, "Show profile")
         self._add_menu_option(self.log_out, "Log out")
 
-    def run(self, rejected_transactions_list = []):
+    def run(self, rejected_transactions_list = [], automatic_validation_result = ""):
         self._title(f"Node Menu, Username: {Context.user_name}")
         self._display_options()
         if self.shownotifications:
-            self.show_notifications(rejected_transactions_list)
+            self.show_notifications(rejected_transactions_list, automatic_validation_result)
         self._read_input()
 
-    def show_notifications(self, rejected_transactions_list):
+    def show_notifications(self, rejected_transactions_list, automatic_validation_result):
         """
         ● General information of the blockchain (the size of blockchain, number of transactions, etc.) -> Done
         ● Users mined block status (if a user already mined a block and the block was on pending for verification by other nodes
@@ -52,11 +52,12 @@ class NodeMenu(Menu):
         blocks_added_since_last_login = explore_chain_since_date(Context.last_login_date)
 
         print(f"Size of blockchain | Blocks: {chain_info[0]} | Transactions: {chain_info[1]}")
+        print("Automatic validation result: " + automatic_validation_result)
 
         if Context.last_login_date is None:
             print("This is your first login, no other notifications to show!")
         else:
-            print(f"Last login date: {Context.last_login_date}")
+            print(f"Last login date: {Context.last_login_date}\n")
 
             if len(rejected_transactions_list) > 0:
                 print_warning("Rejected transactions:")
@@ -81,9 +82,9 @@ class NodeMenu(Menu):
     def transfer_coins(self):
         self._clear()
         print_header("Transfer coins")
-        receiver = prompt_input(lambda: safe_input("Please enter the receiver:"))
-        amountCoins = prompt_input(lambda: safe_input("Please enter the amount of coins:", is_digit))
-        transactionFee = prompt_input(lambda: safe_input("Please enter the transaction fee:", is_digit))
+        receiver = prompt_input(lambda: safe_input("Please enter the receiver: "))
+        amountCoins = prompt_input(lambda: safe_input("Please enter the amount of coins: ", is_digit))
+        transactionFee = prompt_input(lambda: safe_input("Please enter the transaction fee: ", is_digit))
 
         result = transfer_coins(receiver, int(amountCoins), int(transactionFee)) #TODO Mogen hier ook komma getallen gegeven worden? Anders float gebruiken? Ook in de validator aanpassen
 
@@ -144,16 +145,16 @@ class NodeMenu(Menu):
         self._clear()
         print_header("Mine block")
 
-        #Add check if there are no blocks in pending state
-        find_pending_blocks = find_blocks_to_validate()
-        if len(find_pending_blocks) > 0:
-            print_error("There are still blocks in pending state! Please wait until they are validated.")
+        #Add check if there is no block in pending state
+        find_pending_block = find_block_to_validate()
+        if find_pending_block is not None:
+            print_error("There is still a block in pending state! Please wait until it is validated.")
             self._back()
 
         available_transaction_ids = []
         get_transactions_pool = check_pool_valid_transactions()
 
-        if len(get_transactions_pool) < 5: #TODO Maybe comment this out for testing purposes
+        if len(get_transactions_pool) < 5:
             print_error("There are not enough transactions in the pool! Please try again later.")
             self._back()
         
@@ -200,7 +201,10 @@ class NodeMenu(Menu):
         stopwatch.stop()
         stopwatch.print_elapsed_time()
 
-        #TODO Do someting with the result
+        if result[0]:
+            print_success(result[1])
+        else:
+            print_error(result[1])
 
         self._back()
 

@@ -1,6 +1,6 @@
 from src.system.services.pool_service import add_transaction_to_pool, check_pool_invalid_transactions, create_mining_reward, remove_transaction_from_pool
 from src.system.context import Context
-from src.system.services.blockchain_service import find_blocks_to_validate, remove_block_in_chain, update_block_in_chain
+from src.system.services.blockchain_service import find_block_to_validate, remove_block_in_chain, update_block_in_chain
 from src.system.blockchain.TxBlock import INVALID, VALID
 
 #Check the pool for invalid transactions of the logged in user and remove those from the pool.
@@ -19,56 +19,63 @@ def check_pool_for_invalid_transactions_of_logged_in_user():
         
     return rejected_transactions
 
-def check_blockchain_for_blocks_to_validate():
-    blocks_to_validate = find_blocks_to_validate()
+def check_blockchain_for_block_to_validate():
+    result = ""
+    block_needs_to_be_removed = False
+    block = find_block_to_validate()
 
     #Check if there are blocks to validate
-    if len(blocks_to_validate) <= 0:
-        return
+    if block == None:
+        return "During your login, there was no block to validate."
     
-    for block in blocks_to_validate: #TODO Check if this for loop is needed, because it is one block?
-        block_needs_to_be_removed = False
-        updated_block = block
+    updated_block = block
 
-        if block.miner_of_block == Context.user_name or Context.user_name in block.validated_by:
-            #Skip the block if the miner of the block is the logged in user
-            #Skip the block if the logged in user has already validated the block
-            continue
+    if block.miner_of_block == Context.user_name or Context.user_name in block.validated_by:
+        #Skip the block if the miner of the block is the logged in user
+        #Skip the block if the logged in user has already validated the block
+        return "During your login, there was a block to validate, but you are the miner of the block or you have already validated the block."
 
-        #Check if block is valid
-        is_valid_block = block.is_valid()
+    #Check if block is valid
+    is_valid_block = block.is_valid()
 
-        #If block is valid, flag it as valid
-        if is_valid_block:
-            updated_block.valid_counter += 1
-            updated_block.validated_by.append(Context.user_name)
+    #If block is valid, flag it as valid
+    if is_valid_block:
+        updated_block.valid_counter += 1
+        updated_block.validated_by.append(Context.user_name)
 
-            #If block is validated by 3 different users, reward the miner
-            if updated_block.valid_counter == 3:
-                updated_block.status = VALID
-                #Create a new transaction to the pool to reward the miner
-                create_mining_reward(block.miner_of_block, block.total_fee_for_miner)
-            
+        #If block is validated by 3 different users, reward the miner
+        if updated_block.valid_counter == 3:
+            updated_block.status = VALID
+            #Create a new transaction to the pool to reward the miner
+            create_mining_reward(block.miner_of_block, block.total_fee_for_miner)
+            result = "By your login you accepted a new block to the chain. The miner of the block received a reward of " + str(block.total_fee_for_miner) + " coins."
+        else:
+            result = "By your login you increased the valid counter of a block. The block is not yet accepted, but it is one step closer to be accepted."
+        
+        #Update the block in the ledger with the new status and other data
+        update_block_in_chain(updated_block)
+        
+    #If block is invalid, flag it as invalid
+    else:
+        updated_block.invalid_counter += 1
+        updated_block.validated_by.append(Context.user_name)
+
+        #If block is rejected by 3 different users, return all transactions of the rejected block back to the pool and remove the block from the ledger
+        if updated_block.invalid_counter == 3:
+            updated_block.status = INVALID
+            block_needs_to_be_removed = True
+
+        if block_needs_to_be_removed:
+            #Remove the block from the ledger and set transactions back to pool
+            updated_block = set_transactions_back_to_pool(updated_block)
+            remove_block_in_chain(updated_block)
+            result = "By your login you rejected a block. The block was removed from the chain and the transactions were returned to the pool."
+        else:
             #Update the block in the ledger with the new status and other data
             update_block_in_chain(updated_block)
-            
-        #If block is invalid, flag it as invalid
-        else:
-            updated_block.invalid_counter += 1
-            updated_block.validated_by.append(Context.user_name)
+            result = "By your login you increased the invalid counter of a block. The block is not yet rejected, but it is one step closer to be rejected."
 
-            #If block is rejected by 3 different users, return all transactions of the rejected block back to the pool and remove the block from the ledger
-            if updated_block.invalid_counter == 3:
-                updated_block.status = INVALID
-                block_needs_to_be_removed = True
-
-            if block_needs_to_be_removed:
-                #Remove the block from the ledger and set transactions back to pool
-                updated_block = set_transactions_back_to_pool(updated_block)
-                remove_block_in_chain(updated_block)
-            else:
-                #Update the block in the ledger with the new status and other data
-                update_block_in_chain(updated_block)
+    return result
 
 def set_transactions_back_to_pool(block):
     #Return all transactions of the rejected block back to the pool

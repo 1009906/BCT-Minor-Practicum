@@ -73,7 +73,7 @@ class TxBlock (CBlock):
             hashTry = self.computeHash()
             # print(self.nonce, hashTry)
             if self.good_nonce(hashTry):
-                print(f"Nonce found: {self.nonce}")
+                # print(f"Nonce found: {self.nonce}")
                 self.blockHash = hashTry
                 return hashTry
             
