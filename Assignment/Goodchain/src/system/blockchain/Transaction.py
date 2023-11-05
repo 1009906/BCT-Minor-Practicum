@@ -39,6 +39,10 @@ class Tx:
                
     def is_valid(self):
 
+        #TODO check of we dit nodig hebben, ook voor de miner reward en wat is REWARD?
+        if self.type == SIGNUP:
+            return True
+        
         if self.type == REWARD:
             if len(self.inputs)!=0 and len(self.outputs)!=1:
                 return False

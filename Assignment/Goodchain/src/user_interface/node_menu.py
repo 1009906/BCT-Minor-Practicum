@@ -8,7 +8,7 @@ from src.user_interface.menu import Menu
 from src.system.security.validation import is_digit
 from src.user_interface.util.colors import convert_to_bold, convert_to_purple, print_error, print_header, print_success, print_warning
 from src.user_interface.util.stopwatch import Stopwatch
-from src.system.services.node_menu_service import check_mined_blocks_status_since_last_login, update_last_login_date
+from src.system.services.node_menu_service import check_balance, check_mined_blocks_status_since_last_login, update_last_login_date
 from src.system.services.blockchain_service import explore_chain, explore_chain_since_date, find_block_to_validate, get_information_of_chain, mine_new_block, succesfull_transactions_since_date
 
 class NodeMenu(Menu):
@@ -110,19 +110,23 @@ class NodeMenu(Menu):
     def check_balance(self):
         self._clear()
         print_header("Check balance")
-        chain = explore_chain()
-        total_in = 0
-        total_out = 0
-        for block in chain:
-            for tx in block.data:
-                for addr, amt in tx.inputs:
-                    if addr == Context.public_key:
-                        total_in = total_in + amt
-                for addr, amt in tx.outputs:
-                    if addr == Context.public_key:    
-                        total_out = total_out + amt
+        # chain = explore_chain()
+        # total_in = 0
+        # total_out = 0
+        # for block in chain:
+        #     for tx in block.data:
+        #         for addr, amt in tx.inputs:
+        #             if addr == Context.public_key:
+        #                 total_in = total_in + amt
+        #         for addr, amt in tx.outputs:
+        #             if addr == Context.public_key:    
+        #                 total_out = total_out + amt
 
-        print_success(f"Your balance is: {total_out - total_in}")
+        # print_success(f"Your balance is: {total_out - total_in}")
+        
+        balance = check_balance()
+        print(f"Your balance is: {balance}")
+
         self._back()
 
     def explore_chain(self):

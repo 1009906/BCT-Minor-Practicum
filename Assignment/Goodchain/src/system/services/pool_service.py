@@ -41,7 +41,7 @@ def get_receiver_public_key(recieverName):
     user_result = c.fetchone()
 
     if user_result:
-        return True, user_result[3]
+        return True, user_result[4]
     else:
         return False, None
     

@@ -2,6 +2,8 @@ from datetime import datetime
 from sqlite3 import IntegrityError
 from src.system.context import Context
 from src.system.blockchain.TxBlock import PENDING, VALID
+from src.system.services.blockchain_service import explore_chain
+from src.system.services.pool_service import check_pool_valid_transactions
 
 def update_last_login_date():
     con = Context.db_connection
@@ -52,3 +54,29 @@ def check_mined_blocks_status_since_last_login(blocks_added_since_last_login, us
                 result += f"Block hash: {block.blockHash} \n"
 
     return result
+
+def check_balance():
+    total_in = 0
+    total_out = 0
+
+    chain = explore_chain() #Load all blocks in chain, (valid and pending).
+    valid_transactions_pool = check_pool_valid_transactions() #Load all valid transactions in pool.
+
+    for block in chain:
+        for tx in block.data:
+            for addr, amt in tx.inputs:
+                if addr == Context.public_key:
+                    total_in = total_in + amt
+            for addr, amt in tx.outputs:
+                if addr == Context.public_key:    
+                    total_out = total_out + amt
+
+    for tx in valid_transactions_pool:
+        for addr, amt in tx.inputs:
+            if addr == Context.public_key:
+                total_in = total_in + amt
+        for addr, amt in tx.outputs:
+            if addr == Context.public_key:    
+                total_out = total_out + amt
+
+    return total_out - total_in
