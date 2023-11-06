@@ -5,7 +5,7 @@ from src.user_interface.util.form import prompt_input
 from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
 from src.user_interface.menu import Menu
-from src.system.security.validation import is_digit
+from src.system.security.validation import is_float
 from src.user_interface.util.colors import convert_to_bold, convert_to_purple, print_error, print_header, print_success, print_warning
 from src.user_interface.util.stopwatch import Stopwatch
 from src.system.services.node_menu_service import check_balance, check_mined_blocks_status_since_last_login, update_last_login_date
@@ -95,10 +95,18 @@ class NodeMenu(Menu):
         self._clear()
         print_header("Transfer coins")
         receiver = prompt_input(lambda: safe_input("Please enter the receiver: "))
-        amountCoins = prompt_input(lambda: safe_input("Please enter the amount of coins: ", is_digit))
-        transactionFee = prompt_input(lambda: safe_input("Please enter the transaction fee: ", is_digit))
+        amountCoins = prompt_input(lambda: safe_input("Please enter the amount of coins: "))
+        transactionFee = prompt_input(lambda: safe_input("Please enter the transaction fee: "))
 
-        result = transfer_coins(receiver, int(amountCoins), int(transactionFee)) #TODO Mogen hier ook komma getallen gegeven worden? Anders float gebruiken? Ook in de validator aanpassen
+        if is_float(amountCoins) == False or is_float(transactionFee) == False:
+            print_error("You can only enter numbers!")
+            self._back()
+
+        if float(amountCoins) < 0 or float(transactionFee) < 0:
+            print_error("You can't enter a negative number!")
+            self._back()
+
+        result = transfer_coins(receiver, float(amountCoins), float(transactionFee))
 
         if result[0]:
             print_success(result[1])
@@ -110,19 +118,6 @@ class NodeMenu(Menu):
     def check_balance(self):
         self._clear()
         print_header("Check balance")
-        # chain = explore_chain()
-        # total_in = 0
-        # total_out = 0
-        # for block in chain:
-        #     for tx in block.data:
-        #         for addr, amt in tx.inputs:
-        #             if addr == Context.public_key:
-        #                 total_in = total_in + amt
-        #         for addr, amt in tx.outputs:
-        #             if addr == Context.public_key:    
-        #                 total_out = total_out + amt
-
-        # print_success(f"Your balance is: {total_out - total_in}")
         
         balance = check_balance()
         print(f"Your balance is: {balance}")

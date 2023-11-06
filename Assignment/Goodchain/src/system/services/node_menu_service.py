@@ -28,8 +28,6 @@ def update_last_login_date():
         return False, str(e)
     
 def check_mined_blocks_status_since_last_login(blocks_added_since_last_login, user_name):
-    #TODO: Nadenken over of dat we de creationdate van een block updaten als die van pending naar valid gaat.
-    # Nu komt namelijk een transactie die van pending naar valid gaat niet in de lijst erbij.
     result = ""
     valid_mined_blocks = []
     pending_mined_blocks = []

@@ -15,7 +15,11 @@ def transfer_coins(recieverName, amountCoins, transactionFee):
     if recieverName == Context.user_name:
         return False, "You can't send coins to yourself!"
     
-    #TODO Check of de sender genoeg coins heeft
+    #Check if sender has enough coins.
+    check_balance_sender = check_balance()
+    if check_balance_sender - amountCoins < 0:
+        return False, "You don't have enough coins!"
+
     transaction_id = generate_random_transaction_id()
 
     newTx = Tx(transaction_id, Context.user_name, transaction_fee = transactionFee)
@@ -33,6 +37,45 @@ def transfer_coins(recieverName, amountCoins, transactionFee):
     else:
         #Transaction is not valid
         return False, "Transaction is invalid! (not added to the pool)"
+    
+def explore_blocks_in_chain():
+    blocks = []
+    try:
+        with open(Context.ledger_path, "rb") as f:
+            while True:
+                block = pickle.load(f)
+                blocks.append(block)
+    except EOFError:
+        # No more lines to read from file.
+        pass
+
+    return blocks
+    
+def check_balance():
+    total_in = 0
+    total_out = 0
+
+    chain = explore_blocks_in_chain() #Load all blocks in chain, (valid and pending).
+    valid_transactions_pool = check_pool_valid_transactions() #Load all valid transactions in pool.
+
+    for block in chain:
+        for tx in block.data:
+            for addr, amt in tx.inputs:
+                if addr == Context.public_key:
+                    total_in = total_in + amt
+            for addr, amt in tx.outputs:
+                if addr == Context.public_key:    
+                    total_out = total_out + amt
+
+    for tx in valid_transactions_pool:
+        for addr, amt in tx.inputs:
+            if addr == Context.public_key:
+                total_in = total_in + amt
+        for addr, amt in tx.outputs:
+            if addr == Context.public_key:    
+                total_out = total_out + amt
+
+    return total_out - total_in
     
 def get_receiver_public_key(recieverName):
     con = Context.db_connection
@@ -67,7 +110,7 @@ def check_pool_valid_transactions():
         with open(Context.pool_path, "rb") as f:
             while True:
                 transaction = pickle.load(f)
-                if transaction.is_valid_transaction and transaction.is_valid(): #TODO Moet dit een and zijn of een or?
+                if transaction.is_valid_transaction and transaction.is_valid():
                     valid_transactions.append(transaction)
     except EOFError:
         # No more lines to read from file.
@@ -178,7 +221,7 @@ def create_mining_reward(miner_of_block_name, total_fee_for_miner):
     
     #Create transaction give miner reward
     tx = Tx(generate_random_transaction_id(), None, MINERREWARD)
-    tx.add_output(find_receiver[1], total_fee_for_miner)
+    tx.add_output(find_receiver[1], float(total_fee_for_miner))
     tx.set_valid()
 
     savefile = open(Context.pool_path, "ab")

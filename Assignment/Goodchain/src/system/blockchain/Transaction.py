@@ -7,7 +7,7 @@ NORMAL = "NORMAL"
 REWARD = "REWARD"
 SIGNUP = "SIGNUP"
 MINERREWARD = "MINERREWARD"
-SIGNUP_REWARD = 50
+SIGNUP_REWARD = 50.0
 
 from src.system.blockchain.Signature import *
 
@@ -38,9 +38,7 @@ class Tx:
         self.sigs.append(newsig)
                
     def is_valid(self):
-
-        #TODO check of we dit nodig hebben, ook voor de miner reward en wat is REWARD?
-        if self.type == SIGNUP:
+        if self.type == SIGNUP or self.type == MINERREWARD:
             return True
         
         if self.type == REWARD:

@@ -39,8 +39,6 @@ TODO:
     - Het project moet andere structuur krijgen. (Zie de assignment deliverables, src en data folders)
     - TODO's in de code afwerken.
     - Notificaties functie afgemaakt worden.
-    - Check balance functie afgemaakt worden.
     - Goed testen en assignment test cases afwerken.
     - Kijken of er onnodige code is en deze verwijderen.
-    - Moet het async zijn? Er staat async goodchain in de assignment deliverables.
 """

@@ -36,3 +36,10 @@ def match_regex(regex, string):
     pattern = re.compile(regex)
     res = re.match(pattern, string)
     return bool(res)
+
+def is_float(string):
+    try:
+        float(string)
+        return True
+    except ValueError:
+        return False

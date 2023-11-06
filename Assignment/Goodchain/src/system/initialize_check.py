@@ -1,3 +1,4 @@
+from datetime import datetime
 from src.system.services.pool_service import add_transaction_to_pool, check_pool_invalid_transactions, create_mining_reward, remove_transaction_from_pool
 from src.system.context import Context
 from src.system.services.blockchain_service import find_block_to_validate, remove_block_in_chain, update_block_in_chain
@@ -49,6 +50,7 @@ def check_blockchain_for_block_to_validate():
         #If block is validated by 3 different users, reward the miner
         if updated_block.valid_counter == 3:
             updated_block.status = VALID
+            updated_block.creation_date = datetime.now()
             #Create a new transaction to the pool to reward the miner
             create_mining_reward(block.miner_of_block, block.total_fee_for_miner)
             result = f"By your login you accepted a new block to the chain. Block hash: {updated_block.blockHash}."
