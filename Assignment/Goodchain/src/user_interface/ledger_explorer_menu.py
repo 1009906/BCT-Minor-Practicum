@@ -1,7 +1,7 @@
 import os
 from src.user_interface.menu import Menu
 from src.system.services.blockchain_service import explore_chain, find_block_to_validate_by_hash, find_last_block_in_chain
-from src.user_interface.util.colors import convert_to_red, print_error, print_header
+from src.user_interface.util.colors import print_error, print_header
 from src.user_interface.util.form import prompt_input
 from src.user_interface.util.safe_input import safe_input
 
@@ -13,7 +13,8 @@ class LedgerExplorerMenu(Menu):
         self.term_size = os.get_terminal_size()
         self._add_label("Menu for exploring the ledger")
         self._add_menu_option(self.view_block_by_hash, "View a specific block by its hash")
-        self._add_menu_option(self.view_all_blocks, "View all blocks from the genuine block to the last block")
+        self._add_menu_option(self.view_all_blocks, "View all blocks")
+        self._add_menu_option(self.view_all_blocks_paged, "View all blocks (paged)")
         self._add_menu_option(self.view_last_block, "View only the last block")
         self._add_menu_option(self.navigate_back, "Go back to the previous menu")
 
@@ -38,7 +39,6 @@ class LedgerExplorerMenu(Menu):
         self._back()
 
     def view_all_blocks(self):
-        #TODO ADD PAGING
         self._clear()
         print_header("Explore chain")
         result = explore_chain()
@@ -49,6 +49,53 @@ class LedgerExplorerMenu(Menu):
         else:
             print_error("No blocks in the ledger!")
         self._back()
+
+    def view_all_blocks_paged(self):
+        #TODO TEST PROPERLY
+        self._clear()
+        print_header("Explore chain (paged)")
+
+        result = explore_chain()
+
+        if len(result) == 0:
+            print_error("No blocks in the ledger!")
+            self._back()
+
+        current_part = 0
+        part_size = 3
+
+        while True:
+            self._clear()
+            print_header("Explore chain (paged)")
+            print(f"Part {current_part + 1} of {len(result) // part_size + 1}")
+            print("")
+
+            for i in range(current_part * part_size, current_part * part_size + part_size):
+                if i < len(result):
+                    print(result[i])
+                    print('─' * self.term_size.columns)
+                else:
+                    break
+
+            print("")
+            print("[1] Next page")
+            print("[2] Previous page")
+            print("[3] Go back")
+            print("")
+
+            choice = prompt_input(lambda: safe_input("Please enter your choice: "))
+
+            if choice == "1":
+                if current_part < len(result) // part_size:
+                    current_part += 1
+            elif choice == "2":
+                if current_part > 0: 
+                    current_part -= 1
+            elif choice == "3":
+                self.navigate_back()
+                break
+            else:
+                print_error("Invalid choice!")
 
     def view_last_block(self):
         self._clear()
