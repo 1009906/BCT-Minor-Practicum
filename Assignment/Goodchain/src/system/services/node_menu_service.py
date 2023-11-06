@@ -4,6 +4,7 @@ from src.system.context import Context
 from src.system.blockchain.TxBlock import PENDING, VALID
 from src.system.services.blockchain_service import explore_chain
 from src.system.services.pool_service import check_pool_valid_transactions
+from src.system.security.hashing import hash_password
 
 def update_last_login_date():
     con = Context.db_connection
@@ -78,3 +79,43 @@ def check_balance():
                 total_out = total_out + amt
 
     return total_out - total_in
+
+def get_current_password_hashed():
+    con = Context.db_connection
+    c = con.cursor()
+
+    try:
+        c.execute(
+            "SELECT Password "
+            "FROM   users "
+            "WHERE  Name = ?"
+            , (Context.user_name,))
+
+        row = c.fetchone()
+        if row is not None:
+            return True, row[0]
+        else:
+            return False, "Error: Could not get current password."
+
+    except IntegrityError as e:
+        return False, str(e)
+
+def update_password(new_password_hashed):
+    con = Context.db_connection
+    c = con.cursor()
+
+    try:
+        c.execute(
+            "UPDATE users "
+            "SET    Password = ? "
+            "WHERE Name = ?"
+            , (new_password_hashed, Context.user_name))
+
+        if c.rowcount == 1:
+            con.commit()
+            return True, "Password updated."
+        else:
+            return False, "Error: Could not update password."
+
+    except IntegrityError as e:
+        return False, str(e)

@@ -8,8 +8,9 @@ from src.user_interface.menu import Menu
 from src.system.security.validation import is_float
 from src.user_interface.util.colors import convert_to_bold, convert_to_purple, print_error, print_header, print_success, print_warning
 from src.user_interface.util.stopwatch import Stopwatch
-from src.system.services.node_menu_service import check_balance, check_mined_blocks_status_since_last_login, update_last_login_date
+from src.system.services.node_menu_service import check_balance, check_mined_blocks_status_since_last_login, get_current_password_hashed, update_last_login_date, update_password
 from src.system.services.blockchain_service import explore_chain, explore_chain_since_date, find_block_to_validate, get_information_of_chain, mine_new_block, succesfull_transactions_since_date
+from src.system.security.hashing import hash_password
 
 class NodeMenu(Menu):
     _previous_menu = None
@@ -26,6 +27,7 @@ class NodeMenu(Menu):
         self._add_menu_option(self.cancel_transaction, "Cancel a transaction")
         self._add_menu_option(self.mine_block, "Mine a block")
         self._add_menu_option(self.show_profile, "Show profile")
+        self._add_menu_option(self.edit_password, "Edit password")
         self._add_menu_option(self.log_out, "Log out")
 
     def run(self, rejected_transactions_list = [], automatic_validation_result = ""):
@@ -231,6 +233,39 @@ class NodeMenu(Menu):
         self._clear()
         print_header("Profile")
         print(Context.__repr__(Context))
+        self._back()
+    
+    def edit_password(self):
+        self._clear()
+        print_header("Edit password")
+
+        current_password_hashed = get_current_password_hashed()
+        if current_password_hashed[0] == False:
+            print_error(current_password_hashed[1])
+            self._back()
+
+        while True:
+            old_password = prompt_input(lambda: safe_input("Please enter your current password: "))
+            old_password_hashed = hash_password(old_password)
+            if old_password_hashed != current_password_hashed[1]:
+                print_error("The password you entered is incorrect! Please try again.")
+            else:
+                break
+
+        new_password = prompt_input(lambda: safe_input("Please enter your new password: "))
+        new_password_hashed = hash_password(new_password)
+
+        if old_password_hashed == new_password_hashed:
+            print_error("The new password can't be the same as the old password!")
+            self._back()
+
+        result = update_password(new_password_hashed)
+
+        if result[0]:
+            print_success(result[1])
+        else:
+            print_error(result[1])
+
         self._back()
 
     def log_out(self):
