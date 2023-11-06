@@ -21,7 +21,7 @@ def check_pool_for_invalid_transactions_of_logged_in_user():
         
     return rejected_transactions
 
-def check_blockchain_for_block_to_validate(block_hash_to_validate = None):
+def check_blockchain_for_block_to_validate(block_hash_to_validate = None, is_on_login = True):
     result = ""
     block_needs_to_be_removed = False
 
@@ -78,7 +78,7 @@ def check_blockchain_for_block_to_validate(block_hash_to_validate = None):
             updated_block.status = INVALID
             block_needs_to_be_removed = True
 
-        if block_needs_to_be_removed:
+        if block_needs_to_be_removed and is_on_login:
             #Remove the block from the ledger and set transactions back to pool
             updated_block = set_transactions_back_to_pool(updated_block)
             remove_block_in_chain(updated_block)

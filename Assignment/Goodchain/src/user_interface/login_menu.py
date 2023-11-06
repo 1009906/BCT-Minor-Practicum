@@ -14,8 +14,8 @@ class LoginMenu(Menu):
         login_attempt = 1
 
         while True:
-            username = prompt_input(lambda: safe_input("Please input your Username:"))
-            password = prompt_input(lambda: safe_input("Please input your Password:"))
+            username = prompt_input(lambda: safe_input("Please input your Username: "))
+            password = prompt_input(lambda: safe_input("Please input your Password: "))
 
             data = try_login_user(username, password, login_attempt)
 

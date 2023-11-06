@@ -232,7 +232,7 @@ class NodeMenu(Menu):
         print_header("Validate block")
 
         block_hash = prompt_input(lambda: safe_input("Please enter the block hash: "))
-        result = check_blockchain_for_block_to_validate(block_hash)
+        result = check_blockchain_for_block_to_validate(block_hash, False)
         print(result)
 
         self._back()

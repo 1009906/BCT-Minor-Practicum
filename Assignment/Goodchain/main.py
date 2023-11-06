@@ -44,6 +44,5 @@ TODO:
     - Minen moet langzamer gaan. Het gaat nu veel te snel.
     - There are different options for exploring the ledger: 1) view a specific block by its number, 2) view all blocks from the genuine block to the last block, with possibility to see them page by page, 3) view only the last block.
     - User can send/receive coins to/from other users (with option to use their public key or username). Optie maken 1 van de 2.
-    - Node user can validate any block on the ledger, at any time, for any tamper. (Menu optie toevoegen validate any block) Als input vragen naar een blockhash en dat block dan valideren.
     - Undo and redo actions ??????.
 """

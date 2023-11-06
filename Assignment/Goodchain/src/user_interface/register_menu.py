@@ -14,8 +14,8 @@ class RegisterMenu(Menu):
         self._title(f"Register")
 
         while True:
-            username = prompt_input(lambda: safe_input("Please input your Username:"))
-            password = prompt_input(lambda: safe_input("Please input your Password:"))
+            username = prompt_input(lambda: safe_input("Please input your Username: "))
+            password = prompt_input(lambda: safe_input("Please input your Password: "))
 
             data = create_user(username, password)
             if data[0] == True:
