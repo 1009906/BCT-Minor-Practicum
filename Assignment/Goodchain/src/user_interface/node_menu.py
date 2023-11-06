@@ -36,15 +36,6 @@ class NodeMenu(Menu):
         self._read_input()
 
     def show_notifications(self, rejected_transactions_list, automatic_validation_result):
-        """
-        ● General information of the blockchain (the size of blockchain, number of transactions, etc.) -> Done
-        ● Users mined block status (if a user already mined a block and the block was on pending for verification by other nodes -> Done
-        ● Any block which was on pending and is confirmed or rejected by this user after login -> Done
-        ● Reward notification if there was any reward pending for confirmation from other nodes
-        ● New added block(s) since the last login (already confirmed by other nodes or waiting for a confirmation) -> Done
-        ● Rejected transactions of the user -> Done
-        ● Successful transactions of the user -> Done
-        """	
         self._clear()
         print_header("Notifications")
 
@@ -173,6 +164,11 @@ class NodeMenu(Menu):
         if find_pending_block is not None:
             print_error("There is still a block in pending state! Please wait until it is validated.")
             self._back()
+        
+        if find_pending_block is None:
+            #There is no block in pending state!
+            #TODO Nu het laatste block opzoeken in de chain en kijken naar de creation date en kijken of er 3 minuten tussen zit.
+            pass #Pass weghalen als het klaar is.
 
         available_transaction_ids = []
         get_transactions_pool = check_pool_valid_transactions()
