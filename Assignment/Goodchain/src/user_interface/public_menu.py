@@ -6,6 +6,7 @@ from src.user_interface.menu import Menu
 from src.user_interface.util.colors import convert_to_bold, print_error, print_header
 from src.system.security.hashing import save_hashes_to_file
 from src.system.services.blockchain_service import explore_chain
+from src.user_interface.ledger_explorer_menu import LedgerExplorerMenu
 
 class PublicMenu(Menu):
     def __init__(self):
@@ -28,17 +29,8 @@ class PublicMenu(Menu):
         login.run()
 
     def explore_blockchain(self):
-        self._clear()
-        print_header("Explore blockchain")
-
-        result = explore_chain()
-        if result:
-            for block in result:
-                print(block)
-                print('─' * self.term_size.columns)
-        else:
-            print_error("No blocks in the ledger!")
-        self._back()        
+        ledger_menu = LedgerExplorerMenu(self)
+        ledger_menu.run()       
 
     def sign_up(self):
         register_menu = RegisterMenu(self)

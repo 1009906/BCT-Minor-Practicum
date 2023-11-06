@@ -12,6 +12,7 @@ from src.system.services.node_menu_service import check_balance, check_mined_blo
 from src.system.services.blockchain_service import check_possibility_to_mine, explore_chain, explore_chain_since_date, get_information_of_chain, mine_new_block, succesfull_transactions_since_date
 from src.system.security.hashing import hash_password
 from src.system.initialize_check import check_blockchain_for_block_to_validate
+from src.user_interface.ledger_explorer_menu import LedgerExplorerMenu
 
 class NodeMenu(Menu):
     _previous_menu = None
@@ -122,16 +123,8 @@ class NodeMenu(Menu):
         self._back()
 
     def explore_chain(self):
-        self._clear()
-        print_header("Explore chain")
-        result = explore_chain()
-        if result:
-            for block in result:
-                print(block)
-                print('─' * self.term_size.columns)
-        else:
-            print_error("No blocks in the ledger!")
-        self._back()
+        ledger_menu = LedgerExplorerMenu(self)
+        ledger_menu.run()
 
     def check_pool(self):
         self._clear()
