@@ -5,9 +5,13 @@ import uuid
 from src.system.context import Context
 from src.system.blockchain.Transaction import MINERREWARD, Tx
 
-def transfer_coins(recieverName, amountCoins, transactionFee):
+def transfer_coins(recieverName, amountCoins, transactionFee, transfer_method):
     #Check if receiver exists.
-    find_receiver = get_receiver_public_key(recieverName)
+    #Check if user wants to use public key or username. (1) username, (2) public key
+    if transfer_method == "1":
+        find_receiver = get_receiver_public_key(recieverName)
+    if transfer_method == "2" and check_public_key_exists(recieverName):
+        find_receiver = (True, recieverName)
     if not find_receiver[0]:
         return False, "The receiver does not exist!"
     
@@ -37,6 +41,17 @@ def transfer_coins(recieverName, amountCoins, transactionFee):
     else:
         #Transaction is not valid
         return False, "Transaction is invalid! (not added to the pool)"
+    
+def check_public_key_exists(public_key):
+    con = Context.db_connection
+    c = con.cursor()
+    c.execute("SELECT * FROM users WHERE PublicKey=?", [public_key])
+    user_result = c.fetchone()
+
+    if user_result:
+        return True
+    else:
+        return False
     
 def explore_blocks_in_chain():
     blocks = []

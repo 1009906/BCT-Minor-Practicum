@@ -92,7 +92,16 @@ class NodeMenu(Menu):
     def transfer_coins(self):
         self._clear()
         print_header("Transfer coins")
-        receiver = prompt_input(lambda: safe_input("Please enter the receiver: "))
+        print("Enter receivers username or public key.")
+        print("[1] Username")
+        print("[2] Public key")
+        transfer_method = prompt_input(lambda: safe_input("Please enter the desired option: "))
+
+        if transfer_method == "1":
+            receiver = prompt_input(lambda: safe_input("Please enter the receivers username: "))
+        if transfer_method == "2":
+            receiver = prompt_input(lambda: safe_input("Please enter the receivers public key: "))
+
         amountCoins = prompt_input(lambda: safe_input("Please enter the amount of coins: "))
         transactionFee = prompt_input(lambda: safe_input("Please enter the transaction fee: "))
 
@@ -104,7 +113,7 @@ class NodeMenu(Menu):
             print_error("You can't enter a negative number!")
             self._back()
 
-        result = transfer_coins(receiver, float(amountCoins), float(transactionFee))
+        result = transfer_coins(receiver, float(amountCoins), float(transactionFee), transfer_method)
 
         if result[0]:
             print_success(result[1])
