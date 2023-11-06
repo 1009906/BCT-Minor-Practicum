@@ -84,6 +84,20 @@ def find_block_to_validate():
 
     return block_to_validate
 
+def find_block_to_validate_by_hash(block_hash_to_validate):
+    block_to_validate = None
+    try:
+        with open(Context.ledger_path, "rb") as f:
+            while True:
+                block = pickle.load(f)
+                if str(block.blockHash) == block_hash_to_validate:
+                    block_to_validate = block
+    except EOFError:
+        # No more lines to read from file.
+        pass
+
+    return block_to_validate
+
 def check_possibility_to_mine():
     #Check if there is no block in pending state.
     find_pending_block = find_block_to_validate()

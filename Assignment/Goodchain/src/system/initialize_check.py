@@ -1,8 +1,9 @@
 from datetime import datetime
 from src.system.services.pool_service import add_transaction_to_pool, check_pool_invalid_transactions, create_mining_reward, remove_transaction_from_pool
 from src.system.context import Context
-from src.system.services.blockchain_service import find_block_to_validate, remove_block_in_chain, update_block_in_chain
+from src.system.services.blockchain_service import find_block_to_validate, find_block_to_validate_by_hash, remove_block_in_chain, update_block_in_chain
 from src.system.blockchain.TxBlock import INVALID, VALID
+from src.user_interface.util.colors import convert_to_red
 
 #Check the pool for invalid transactions of the logged in user and remove those from the pool.
 def check_pool_for_invalid_transactions_of_logged_in_user():
@@ -20,10 +21,16 @@ def check_pool_for_invalid_transactions_of_logged_in_user():
         
     return rejected_transactions
 
-def check_blockchain_for_block_to_validate():
+def check_blockchain_for_block_to_validate(block_hash_to_validate = None):
     result = ""
     block_needs_to_be_removed = False
-    block = find_block_to_validate()
+
+    if block_hash_to_validate != None:
+        block = find_block_to_validate_by_hash(block_hash_to_validate)
+        if block == None:
+            return convert_to_red(f"Block with hash: {block_hash_to_validate} does not exist in the chain.")
+    else:
+        block = find_block_to_validate()     
 
     #Check if there are blocks to validate
     if block == None:
@@ -33,7 +40,8 @@ def check_blockchain_for_block_to_validate():
 
     if block.miner_of_block == Context.user_name:
         #Skip the block if the logged in user is the miner of the block
-        return f"During your login, there was a block to validate, but you are the miner of the block. Block hash: {updated_block.blockHash}. The block still needs {3 - block.valid_counter} succesfull validations to be accepted."
+        needed_validations_total = 3 - block.valid_counter if block.valid_counter <= 3 else 0
+        return f"During your login, there was a block to validate, but you are the miner of the block. Block hash: {updated_block.blockHash}. The block still needs {needed_validations_total} succesfull validations to be accepted."
     
     if Context.user_name in block.validated_by:
         #Skip the block if the logged in user has already validated the block
@@ -55,7 +63,7 @@ def check_blockchain_for_block_to_validate():
             create_mining_reward(block.miner_of_block, block.total_fee_for_miner)
             result = f"By your login you accepted a new block to the chain. Block hash: {updated_block.blockHash}."
         else:
-            result = f"By your login you increased the valid counter to {updated_block.valid_counter} of a block. Block hash: {updated_block.blockHash}. The block is not yet accepted."
+            result = f"By your login you increased the valid counter to {updated_block.valid_counter} of a block. Block hash: {updated_block.blockHash}."
         
         #Update the block in the ledger with the new status and other data
         update_block_in_chain(updated_block)
@@ -78,7 +86,7 @@ def check_blockchain_for_block_to_validate():
         else:
             #Update the block in the ledger with the new status and other data
             update_block_in_chain(updated_block)
-            result = f"By your login you increased the invalid counter to {updated_block.invalid_counter} of a block. Block hash: {updated_block.blockHash}. The block is not yet rejected."
+            result = f"By your login you increased the invalid counter to {updated_block.invalid_counter} of a block. Block hash: {updated_block.blockHash}."
 
     return result
 

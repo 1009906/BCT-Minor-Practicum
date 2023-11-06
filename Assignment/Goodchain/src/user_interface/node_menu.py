@@ -11,6 +11,7 @@ from src.user_interface.util.stopwatch import Stopwatch
 from src.system.services.node_menu_service import check_balance, check_mined_blocks_status_since_last_login, get_current_password_hashed, update_last_login_date, update_password
 from src.system.services.blockchain_service import check_possibility_to_mine, explore_chain, explore_chain_since_date, get_information_of_chain, mine_new_block, succesfull_transactions_since_date
 from src.system.security.hashing import hash_password
+from src.system.initialize_check import check_blockchain_for_block_to_validate
 
 class NodeMenu(Menu):
     _previous_menu = None
@@ -26,6 +27,7 @@ class NodeMenu(Menu):
         self._add_menu_option(self.check_pool, "Check the pool")
         self._add_menu_option(self.cancel_transaction, "Cancel a transaction")
         self._add_menu_option(self.mine_block, "Mine a block")
+        self._add_menu_option(self.validate_block, "Validate a block")
         self._add_menu_option(self.show_profile, "Show profile")
         self._add_menu_option(self.edit_password, "Edit password")
         self._add_menu_option(self.log_out, "Log out")
@@ -222,6 +224,16 @@ class NodeMenu(Menu):
             print_success(result[1])
         else:
             print_error(result[1])
+
+        self._back()
+    
+    def validate_block(self):
+        self._clear()
+        print_header("Validate block")
+
+        block_hash = prompt_input(lambda: safe_input("Please enter the block hash: "))
+        result = check_blockchain_for_block_to_validate(block_hash)
+        print(result)
 
         self._back()
 

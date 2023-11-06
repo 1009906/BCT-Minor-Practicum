@@ -26,3 +26,6 @@ def convert_to_bold(message):
 
 def convert_to_purple(message):
     return f"{bcolors.HEADER}{message}{bcolors.ENDC}"
+
+def convert_to_red(message):
+    return f"{bcolors.FAIL}{message}{bcolors.ENDC}"
