@@ -9,7 +9,7 @@ from src.system.security.validation import is_float
 from src.user_interface.util.colors import convert_to_bold, convert_to_purple, print_error, print_header, print_success, print_warning
 from src.user_interface.util.stopwatch import Stopwatch
 from src.system.services.node_menu_service import check_balance, check_mined_blocks_status_since_last_login, get_current_password_hashed, update_last_login_date, update_password
-from src.system.services.blockchain_service import explore_chain, explore_chain_since_date, find_block_to_validate, get_information_of_chain, mine_new_block, succesfull_transactions_since_date
+from src.system.services.blockchain_service import check_possibility_to_mine, explore_chain, explore_chain_since_date, get_information_of_chain, mine_new_block, succesfull_transactions_since_date
 from src.system.security.hashing import hash_password
 
 class NodeMenu(Menu):
@@ -79,6 +79,8 @@ class NodeMenu(Menu):
                 print("No succesfull transactions since last login to show.")
 
             print(mined_blocks_status_since_last_login)
+            is_possible_to_mine = check_possibility_to_mine()
+            print(f"\nIs it possible to mine a block: {is_possible_to_mine[0]} | Reason: {is_possible_to_mine[1]}")
 
         self.shownotifications = False
         update_last_login_date()
@@ -161,16 +163,10 @@ class NodeMenu(Menu):
         self._clear()
         print_header("Mine block")
 
-        #Add check if there is no block in pending state
-        find_pending_block = find_block_to_validate()
-        if find_pending_block is not None:
-            print_error("There is still a block in pending state! Please wait until it is validated.")
+        is_possible_to_mine = check_possibility_to_mine()
+        if is_possible_to_mine[0] == False:
+            print_error(is_possible_to_mine[1])
             self._back()
-        
-        if find_pending_block is None:
-            #There is no block in pending state!
-            #TODO Nu het laatste block opzoeken in de chain en kijken naar de creation date en kijken of er 3 minuten tussen zit.
-            pass #Pass weghalen als het klaar is.
 
         available_transaction_ids = []
         get_transactions_pool = check_pool_valid_transactions()

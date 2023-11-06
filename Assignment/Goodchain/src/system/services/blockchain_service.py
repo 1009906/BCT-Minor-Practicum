@@ -1,8 +1,10 @@
+from datetime import datetime
 import os
 import pickle
 from src.system.context import Context
 from src.system.blockchain.TxBlock import PENDING, TxBlock
 from src.system.services.pool_service import load_transaction_by_id, remove_transaction_from_pool, set_transaction_to_invalid_in_pool
+from src.system.util.time_util import difference_in_minutes
 
 def explore_chain():
     blocks = []
@@ -16,6 +18,19 @@ def explore_chain():
         pass
 
     return blocks
+
+def find_last_block_in_chain():
+    last_block = None
+    try:
+        with open(Context.ledger_path, "rb") as f:
+            while True:
+                block = pickle.load(f)
+                last_block = block
+    except EOFError:
+        # No more lines to read from file.
+        pass
+
+    return last_block
 
 def explore_chain_since_date(date):
     blocks = []
@@ -69,6 +84,22 @@ def find_block_to_validate():
 
     return block_to_validate
 
+def check_possibility_to_mine():
+    #Check if there is no block in pending state.
+    find_pending_block = find_block_to_validate()
+    if find_pending_block is not None:
+        return False, "There is still a block in pending state! Please wait until it is validated."
+    
+    #No blocks are in pending state.
+    if find_pending_block is None:
+        last_block = find_last_block_in_chain()
+        if last_block is not None:
+            #Last block is found. Check if there is a time difference of 3 minutes between the last block and now.
+            time_difference_minutes = difference_in_minutes(last_block.creation_date, datetime.now())
+            if time_difference_minutes < 3:
+                return False, "You can only mine a block every 3 minutes!"
+            
+    return True, "You can mine a new block!"
 
 def mine_new_block(transaction_ids):
     try:

@@ -43,8 +43,6 @@ TODO:
     - Transacties bij het minen automatisch toevoegen en check van minimaal 5 door user weghalen.
     - Minen moet langzamer gaan. Het gaat nu veel te snel.
     - There are different options for exploring the ledger: 1) view a specific block by its number, 2) view all blocks from the genuine block to the last block, with possibility to see them page by page, 3) view only the last block.
-    - edit and update their profile,
-    - or if a node can mine a new block (dit moet in de mine functie en in notifications), hier moet ook 3 minuten tussen zitten met de vorige block (laaste block in chain bekijken en daar 3 minuten verschil tussen).
     - User can send/receive coins to/from other users (with option to use their public key or username). Optie maken 1 van de 2.
     - Node user can validate any block on the ledger, at any time, for any tamper. (Menu optie toevoegen validate any block) Als input vragen naar een blockhash en dat block dan valideren.
     - Undo and redo actions ??????.
