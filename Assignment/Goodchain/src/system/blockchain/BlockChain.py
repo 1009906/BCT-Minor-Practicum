@@ -22,5 +22,6 @@ class CBlock:
         #TODO Check what we want to represent
         repr_str = "Blockhash: " + str(self.blockHash) + "\n"
         repr_str += "Previous hash: " + str(self.previousHash) + "\n"
+        repr_str += "Amount of transactions: " + str(len(self.data)) + "\n"
         # repr_str += "Data: " + str(self.data) + "\n"
         return repr_str
