@@ -14,6 +14,9 @@ def transfer_coins(recieverName, amountCoins, transactionFee, transfer_method):
         find_receiver = (True, recieverName)
     else:
         find_receiver = (False, "The receiver does not exist!")
+
+    if not find_receiver[0]:
+        return False, "The receiver does not exist!"
     
     #Check if the receiver is not the sender.
     if recieverName == Context.user_name:
