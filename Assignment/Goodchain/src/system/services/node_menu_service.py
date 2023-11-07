@@ -4,7 +4,7 @@ from src.system.context import Context
 from src.system.blockchain.TxBlock import PENDING, VALID
 from src.system.services.blockchain_service import explore_chain
 from src.system.services.pool_service import check_pool_valid_transactions
-from src.system.security.hashing import hash_password
+from src.user_interface.util.colors import convert_to_green, convert_to_red, convert_to_yellow
 
 def update_last_login_date():
     con = Context.db_connection
@@ -34,7 +34,7 @@ def check_mined_blocks_status_since_last_login(blocks_added_since_last_login, us
     pending_mined_blocks = []
 
     if len(blocks_added_since_last_login) == 0:
-        result += "No blocks that you mined were added to the chain since your last login."
+        result += convert_to_red("No blocks that you mined were added to the chain since your last login.")
     else:
         for block in blocks_added_since_last_login:
             if block.status == VALID and block.miner_of_block == user_name:
@@ -43,12 +43,12 @@ def check_mined_blocks_status_since_last_login(blocks_added_since_last_login, us
                 pending_mined_blocks.append(block)
         
         if len(valid_mined_blocks) > 0:
-            result += f"The following blocks you mined were added to the chain since your last login: \n"
+            result += convert_to_green(f"The following blocks you mined were added to the chain since your last login: \n")
             for block in valid_mined_blocks:
                 result += f"Block hash: {block.blockHash} \n"
 
         if len(pending_mined_blocks) > 0:
-            result += f"\n\nThe following blocks you mined are still pending since your last login: \n"
+            result += convert_to_yellow(f"\n\nThe following blocks you mined are still pending since your last login: \n")
             for block in pending_mined_blocks:
                 result += f"Block hash: {block.blockHash} \n"
 

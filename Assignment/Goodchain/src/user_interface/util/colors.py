@@ -29,3 +29,9 @@ def convert_to_purple(message):
 
 def convert_to_red(message):
     return f"{bcolors.FAIL}{message}{bcolors.ENDC}"
+
+def convert_to_green(message):
+    return f"{bcolors.OKGREEN}{message}{bcolors.ENDC}"
+
+def convert_to_yellow(message):
+    return f"{bcolors.WARNING}{message}{bcolors.ENDC}"

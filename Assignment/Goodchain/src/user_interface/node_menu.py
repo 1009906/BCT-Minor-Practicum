@@ -50,8 +50,8 @@ class NodeMenu(Menu):
         succesfull_transactions_since_last_login = succesfull_transactions_since_date(Context.last_login_date, Context.user_name)
         mined_blocks_status_since_last_login = check_mined_blocks_status_since_last_login(blocks_added_since_last_login, Context.user_name)
 
-        print(f"Size of blockchain | Blocks: {chain_info[0]} | Transactions: {chain_info[1]}")
-        print("Automatic validation result: " + automatic_validation_result)
+        print(f"Size of blockchain | Blocks: {chain_info[0]} | Transactions: {chain_info[1]}\n")
+        print("Automatic validation result: " + automatic_validation_result + "\n")
 
         if Context.last_login_date is None:
             print("This is your first login, no other notifications to show!")
@@ -59,28 +59,28 @@ class NodeMenu(Menu):
             print(f"Last login date: {Context.last_login_date}\n")
 
             if len(rejected_transactions_list) > 0:
-                print_warning("Rejected transactions:")
+                print_error("Rejected transactions:")
                 for transaction in rejected_transactions_list:
                     print(transaction)
                     print('─' * self.term_size.columns)
             else:
-                print_success("No rejected transactions to show.")
+                print_success("No rejected transactions to show.\n")
 
             if len(blocks_added_since_last_login) > 0:
-                print("Blocks added since last login:")
+                print_success("Blocks added since last login:")
                 for block in blocks_added_since_last_login:
                     print(block)
                     print('─' * self.term_size.columns)
             else:
-                print("No blocks added since last login to show.")
+                print_warning("No blocks added since last login to show.\n")
 
             if len(succesfull_transactions_since_last_login) > 0:
-                print("Succesfull transactions since last login:")
+                print_success("Succesfull transactions since last login:")
                 for transaction in succesfull_transactions_since_last_login:
                     print(transaction)
                     print('─' * self.term_size.columns)
             else:
-                print("No succesfull transactions since last login to show.")
+                print_warning("No succesfull transactions since last login to show.\n")
 
             print(mined_blocks_status_since_last_login)
             is_possible_to_mine = check_possibility_to_mine()
