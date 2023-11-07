@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
 """	
 TODO:
-    - Het project moet andere structuur krijgen. (Zie de assignment deliverables, src en data folders)
+    - goodchain.py Moet binnen de src folder staan.
     - TODO's in de code afwerken.
     - Goed testen en assignment test cases afwerken.
     - Kijken of er onnodige code is en deze verwijderen.

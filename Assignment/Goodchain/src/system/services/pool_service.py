@@ -163,6 +163,19 @@ def load_transaction_by_id(transaction_id):
 
     return None
 
+def find_last_transaction_in_pool():
+    last_transaction = None
+    try:
+        with open(Context.pool_path, "rb") as f:
+            while True:
+                transaction = pickle.load(f)
+                last_transaction = transaction
+    except EOFError:
+        # No more lines to read from file.
+        pass
+
+    return last_transaction
+
 def add_transaction_to_pool(transaction):
     try:
         savefile = open(Context.pool_path, "ab")

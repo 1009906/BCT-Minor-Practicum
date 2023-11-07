@@ -115,6 +115,6 @@ class Tx:
         # for sig in self.sigs:
         #     repr_str = repr_str + str(sig) + "\n"
 
-        repr_str += "END\n"
+        # repr_str += "END\n"
         
         return repr_str

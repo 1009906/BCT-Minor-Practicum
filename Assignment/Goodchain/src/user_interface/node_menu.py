@@ -14,6 +14,7 @@ from src.system.security.hashing import hash_password
 from src.system.initialize_check import check_blockchain_for_block_to_validate
 from src.user_interface.ledger_explorer_menu import LedgerExplorerMenu
 from src.system.security.validation import is_digit
+from src.user_interface.pool_explorer_menu import PoolExplorerMenu
 
 class NodeMenu(Menu):
     _previous_menu = None
@@ -143,18 +144,8 @@ class NodeMenu(Menu):
         ledger_menu.run()
 
     def check_pool(self):
-        self._clear()
-        print_header("Check pool")
-
-        result = check_pool()
-        if result:
-            for transaction in result:
-                print(transaction)
-                print('─' * self.term_size.columns)
-        else:
-            print_error("No transactions in the pool!")
-
-        self._back()
+        pool_menu = PoolExplorerMenu(self)
+        pool_menu.run()
         
     def cancel_transaction(self):
         self._clear()
