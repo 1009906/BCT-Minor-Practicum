@@ -40,7 +40,6 @@ TODO:
     - TODO's in de code afwerken.
     - Goed testen en assignment test cases afwerken.
     - Kijken of er onnodige code is en deze verwijderen.
-    - Transacties bij het minen automatisch toevoegen en check van minimaal 5 door user weghalen.
     - Minen moet langzamer gaan. Het gaat nu veel te snel.
     - Undo and redo actions ??????.
 """

@@ -1,4 +1,5 @@
 import re
+from src.user_interface.util.colors import convert_to_red
 
 class Validator:
     def __init__(self, check, error_message):
@@ -8,7 +9,7 @@ class Validator:
 
 # validation objects, contains regexes and error messages
 is_digit = Validator(
-    lambda string: match_regex("^[0-9]+$", string), "ERROR: Input must be an integer.")
+    lambda string: match_regex("^[0-9]+$", string), convert_to_red("ERROR: Input must be an integer."))
 
 is_username = Validator(
     lambda string: match_regex("^[a-zA-Z][a-zA-Z0-9_'.]{5,10}$", string),

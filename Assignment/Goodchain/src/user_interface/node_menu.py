@@ -13,6 +13,7 @@ from src.system.services.blockchain_service import check_possibility_to_mine, ex
 from src.system.security.hashing import hash_password
 from src.system.initialize_check import check_blockchain_for_block_to_validate
 from src.user_interface.ledger_explorer_menu import LedgerExplorerMenu
+from src.system.security.validation import is_digit
 
 class NodeMenu(Menu):
     _previous_menu = None
@@ -196,7 +197,14 @@ class NodeMenu(Menu):
         else:
             print_error("No transactions in the pool!")
             self._back()
-            
+
+        while True:
+            amount_of_transactions_user_want_to_add = int(prompt_input(lambda: safe_input("\nPlease enter the amount of transactions you want to add to the block: ", is_digit)))
+            if amount_of_transactions_user_want_to_add > 10 or amount_of_transactions_user_want_to_add < 5:
+                print_error("You can only add a minimum of 5 and a maximum of 10 transactions!")
+            else:
+                break
+        
         print("\nEnter the transaction id's you want to add to the block.")
         print("When you are done, type 'done'.\n")
 
@@ -206,16 +214,19 @@ class NodeMenu(Menu):
             if len(transaction_ids) == 10:
                 print_warning("Maximum of 10 transactions reached!")
                 break
+            if len(transaction_ids) >= amount_of_transactions_user_want_to_add // 2: #Half of the amount of transactions the user want to add, the rest goes automaticly
+                print_warning("Maximum of transactions reached!")
+                break
             if transaction_id == "done":
-                if len(transaction_ids) < 5:
-                    print_warning("Choose at least 5 transactions!")
-                    continue
                 break
             if transaction_id not in available_transaction_ids: #Check if transaction id is in the pool
                 print_error(f"Id: {transaction_id} is not in the pool! Please enter a valid id.")
                 continue
             if transaction_id not in transaction_ids: #Check if transaction id is not already added
                 transaction_ids.append(transaction_id)
+                if len(transaction_ids) >= amount_of_transactions_user_want_to_add // 2:
+                    print_warning("Maximum of transactions reached!")
+                    break
             else:
                 print_error(f"Id: {transaction_id} is already added!")
 
@@ -223,7 +234,7 @@ class NodeMenu(Menu):
         stopwatch = Stopwatch()
         stopwatch.start()
 
-        result = mine_new_block(transaction_ids)
+        result = mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add)
 
         stopwatch.stop()
         stopwatch.print_elapsed_time()
