@@ -23,13 +23,10 @@ def try_login_user(username, password, attempt):
     login_result = c.fetchone()
 
     if not login_result and attempt > 2:
-        # log("Login attempts exceeded", f"Successful login using 'Username: {username}, 'Password: {password}'", True)
         return LOGIN_ATTEMPTS_EXCEEDED, None
     elif login_result:
-        # log("Successful Login", f"Successful login using \"Username: '{username}', Password: '{password}'\"")
         return SUCCESSFUL_LOGIN, login_result
     else:
-        # log("Unsuccessful Login", f"Unsuccessful login using 'Username: {username}, 'Password: {password}'")
         return INCORRECT_LOGIN, None
 
 

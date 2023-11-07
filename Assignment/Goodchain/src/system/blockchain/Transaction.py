@@ -1,6 +1,4 @@
-from gzip import READ
-from operator import truediv
-from optparse import AmbiguousOptionError
+from src.system.blockchain.Signature import *
 
 REWARD_VALUE = 25.0
 NORMAL = "NORMAL"
@@ -8,8 +6,6 @@ REWARD = "REWARD"
 SIGNUP = "SIGNUP"
 MINERREWARD = "MINERREWARD"
 SIGNUP_REWARD = 50.0
-
-from src.system.blockchain.Signature import *
 
 class Tx:
     def __init__(self,id ,owner, type = NORMAL, transaction_fee = 0):
@@ -94,6 +90,7 @@ class Tx:
         return data
 
     def __repr__(self):
+        #TODO Check what to reprent.
         repr_str = "Id: " + str(self.id) + "\n"
         repr_str += "Owner: " + str(self.owner) + "\n"
         repr_str += "Type: " + str(self.type) + "\n"

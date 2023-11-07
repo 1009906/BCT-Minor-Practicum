@@ -3,9 +3,8 @@ from src.system.context import Context
 from src.user_interface.register_menu import RegisterMenu
 from src.user_interface.login_menu import LoginMenu
 from src.user_interface.menu import Menu
-from src.user_interface.util.colors import convert_to_bold, print_error, print_header
+from src.user_interface.util.colors import convert_to_bold
 from src.system.security.hashing import save_hashes_to_file
-from src.system.services.blockchain_service import explore_chain
 from src.user_interface.ledger_explorer_menu import LedgerExplorerMenu
 
 class PublicMenu(Menu):

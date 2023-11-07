@@ -39,7 +39,6 @@ TODO:
     - goodchain.py Moet binnen de src folder staan.
     - TODO's in de code afwerken.
     - Goed testen en assignment test cases afwerken.
-    - Kijken of er onnodige code is en deze verwijderen.
     - Minen moet langzamer gaan. Het gaat nu veel te snel.
     - Undo and redo actions ??????.
 """

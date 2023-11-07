@@ -1,6 +1,6 @@
 import os
 import time
-from src.system.services.pool_service import check_pool, check_pool_valid_transactions, cancel_transaction_from_pool, transfer_coins
+from src.system.services.pool_service import check_pool_valid_transactions, cancel_transaction_from_pool, transfer_coins
 from src.user_interface.util.form import prompt_input
 from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
