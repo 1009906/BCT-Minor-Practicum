@@ -12,6 +12,8 @@ def transfer_coins(recieverName, amountCoins, transactionFee, transfer_method):
         find_receiver = get_receiver_public_key(recieverName)
     if transfer_method == "2" and check_public_key_exists(recieverName):
         find_receiver = (True, recieverName)
+    else:
+        find_receiver = (False, "The receiver does not exist!")
     if not find_receiver[0]:
         return False, "The receiver does not exist!"
     

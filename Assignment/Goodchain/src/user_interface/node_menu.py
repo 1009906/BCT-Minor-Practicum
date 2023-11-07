@@ -97,11 +97,17 @@ class NodeMenu(Menu):
         print("[2] Public key")
         transfer_method = prompt_input(lambda: safe_input("Please enter the desired option: "))
 
-        if transfer_method == "1":
-            receiver = prompt_input(lambda: safe_input("Please enter the receivers username: "))
-        if transfer_method == "2":
-            receiver = prompt_input(lambda: safe_input("Please enter the receivers public key: "))
-
+        while True:
+            if transfer_method == "1":
+                receiver = prompt_input(lambda: safe_input("Please enter the receivers username: "))
+                break
+            if transfer_method == "2":
+                receiver = prompt_input(lambda: safe_input("Please enter the receivers public key: "))
+                break
+            if transfer_method != "1" or transfer_method != "2":
+                print_error("You can only enter 1 or 2!")
+                continue
+            
         amountCoins = prompt_input(lambda: safe_input("Please enter the amount of coins: "))
         transactionFee = prompt_input(lambda: safe_input("Please enter the transaction fee: "))
 
