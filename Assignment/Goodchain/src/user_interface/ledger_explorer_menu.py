@@ -51,7 +51,6 @@ class LedgerExplorerMenu(Menu):
         self._back()
 
     def view_all_blocks_paged(self):
-        #TODO TEST PROPERLY
         self._clear()
         print_header("Explore chain (paged)")
 
@@ -66,8 +65,10 @@ class LedgerExplorerMenu(Menu):
 
         while True:
             self._clear()
+            pages_length = len(result) // part_size + 1 if len(result) % part_size != 0 else len(result) // part_size
+
             print_header("Explore chain (paged)")
-            print(f"Part {current_part + 1} of {len(result) // part_size + 1}")
+            print(f"Part {current_part + 1} of {pages_length}")
             print("")
 
             for i in range(current_part * part_size, current_part * part_size + part_size):
@@ -86,7 +87,7 @@ class LedgerExplorerMenu(Menu):
             choice = prompt_input(lambda: safe_input("Please enter your choice: "))
 
             if choice == "1":
-                if current_part < len(result) // part_size:
+                if current_part < pages_length - 1:
                     current_part += 1
             elif choice == "2":
                 if current_part > 0: 
