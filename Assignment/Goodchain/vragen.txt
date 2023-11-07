@@ -1,3 +1,0 @@
-Can transactions have comma numbers?
-How does the pool need to look like? Does it need to contain every key and signature?
-Does the transactions fee need to be an percentage of the coins to be transfered?

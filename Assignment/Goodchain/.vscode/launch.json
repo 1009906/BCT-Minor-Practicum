@@ -8,7 +8,7 @@
             "name": "Python: Main",
             "type": "python",
             "request": "launch",
-            "program": "main.py",
+            "program": "goodchain.py",
             "console": "integratedTerminal",
             "justMyCode": true
         },

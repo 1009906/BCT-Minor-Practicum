@@ -1,5 +1,5 @@
 from src.user_interface.public_menu import PublicMenu
-from src.database.connection import get_connection
+from src.system.connection import get_connection
 from src.system.context import Context
 from src.system.security.hashing import calculate_file_hash, load_hashes_from_file
 from src.user_interface.util.colors import convert_to_bold, print_error

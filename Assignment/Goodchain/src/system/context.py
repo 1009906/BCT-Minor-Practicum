@@ -9,12 +9,12 @@ class Context:
 
     db_connection = None  # database connection
 
-    database_path = "src/database/database.db"
-    ledger_path = "src/ledger/ledger.dat"
-    temp_ledger_path = "src/ledger/templedger.dat"
-    pool_path = "src/pool/pooltx.dat"
-    temp_pool_path = "src/pool/temppooltx.dat"
-    hash_file_path = "src/hash_file.txt"
+    database_path = "data/database/database.db"
+    ledger_path = "data/ledger/ledger.dat"
+    temp_ledger_path = "data/ledger/templedger.dat"
+    pool_path = "data/pool/pooltx.dat"
+    temp_pool_path = "data/pool/temppooltx.dat"
+    hash_file_path = "data/hash_file.txt"
 
     def __repr__(self):
         repr_str = f"User id: {self.user_id}\n"

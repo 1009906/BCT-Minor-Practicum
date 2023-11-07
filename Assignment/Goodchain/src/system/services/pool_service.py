@@ -10,21 +10,19 @@ def transfer_coins(recieverName, amountCoins, transactionFee, transfer_method):
     #Check if user wants to use public key or username. (1) username, (2) public key
     if transfer_method == "1":
         find_receiver = get_receiver_public_key(recieverName)
-    if transfer_method == "2" and check_public_key_exists(recieverName):
+    elif transfer_method == "2" and check_public_key_exists(recieverName):
         find_receiver = (True, recieverName)
     else:
         find_receiver = (False, "The receiver does not exist!")
-    if not find_receiver[0]:
-        return False, "The receiver does not exist!"
     
     #Check if the receiver is not the sender.
     if recieverName == Context.user_name:
         return False, "You can't send coins to yourself!"
     
     #Check if sender has enough coins.
-    check_balance_sender = check_balance()
-    if check_balance_sender - amountCoins < 0:
-        return False, "You don't have enough coins!"
+    # check_balance_sender = check_balance()
+    # if check_balance_sender - amountCoins < 0:
+    #     return False, "You don't have enough coins!"
 
     transaction_id = generate_random_transaction_id()
 

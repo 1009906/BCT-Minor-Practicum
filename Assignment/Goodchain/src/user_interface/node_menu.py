@@ -96,9 +96,9 @@ class NodeMenu(Menu):
         print("Enter receivers username or public key.")
         print("[1] Username")
         print("[2] Public key")
-        transfer_method = prompt_input(lambda: safe_input("Please enter the desired option: "))
 
         while True:
+            transfer_method = prompt_input(lambda: safe_input("Please enter the desired option: "))
             if transfer_method == "1":
                 receiver = prompt_input(lambda: safe_input("Please enter the receivers username: "))
                 break
