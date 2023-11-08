@@ -222,13 +222,8 @@ class NodeMenu(Menu):
                 print_error(f"Id: {transaction_id} is already added!")
 
         print(convert_to_bold("Mining block..."))
-        stopwatch = Stopwatch()
-        stopwatch.start()
 
         result = mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add)
-
-        stopwatch.stop()
-        stopwatch.print_elapsed_time()
 
         if result[0]:
             print_success(result[1])

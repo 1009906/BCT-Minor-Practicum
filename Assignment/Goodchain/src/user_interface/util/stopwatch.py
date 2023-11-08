@@ -12,6 +12,8 @@ class Stopwatch:
         self.end_time = time.time()
 
     def get_elapsed_time(self):
+        if self.end_time == None: 
+            return time.time() - self.start_time
         return self.end_time - self.start_time
 
     def print_elapsed_time(self):

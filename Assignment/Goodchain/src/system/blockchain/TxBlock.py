@@ -1,7 +1,9 @@
+import secrets
 from src.system.blockchain.BlockChain import CBlock
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 from datetime import datetime
+from src.user_interface.util.stopwatch import Stopwatch
 
 REWARD_VALUE = 25.0
 leading_zeros = 2
@@ -14,7 +16,7 @@ PENDING = "PENDING"
 class TxBlock (CBlock):
 
     def __init__(self, previousBlock):
-        self.nonce = 0
+        self.nonce = secrets.randbelow(2**256)
         super(TxBlock, self).__init__([], previousBlock)
         self.valid_counter = 0
         self.invalid_counter = 0
@@ -60,24 +62,57 @@ class TxBlock (CBlock):
         digest.update(bytes(str(self.nonce),'utf8'))
         return digest.finalize()
 
-    def good_nonce(self, new_hash = None):
+    def good_nonce(self, new_hash = None, adjusted_third_char = 16):
         if new_hash is None:
             new_hash = self.computeHash()
-        if new_hash.startswith(b'0' * leading_zeros):
+
+        if new_hash.startswith(b'0' * leading_zeros) and new_hash[leading_zeros] <= adjusted_third_char:
             return True
         else:
             return False
-
+        
+        # bytes(str(message), 'utf-8')
+        
     def find_nonce(self):
-        while True:
+        stopwatch = Stopwatch()
+        stopwatch.start()
+        third_char = 8
+        hashTry = self.computeHash()
+        interval = 2
+        while not self.good_nonce(hashTry, third_char):
+            self.nonce = secrets.randbelow(2**256)
             hashTry = self.computeHash()
-            # print(self.nonce, hashTry)
-            if self.good_nonce(hashTry):
-                # print(f"Nonce found: {self.nonce}")
-                self.blockHash = hashTry
-                return hashTry
+            if stopwatch.get_elapsed_time() > interval:
+                third_char = third_char * 2 if third_char * 2 <= 256 else 256
+                interval += 2
             
-            self.nonce += 1
+        #Hier komt die als de nonce goed is
+        self.blockHash = hashTry
+        print(hashTry, self.nonce)
+        stopwatch.stop()
+        stopwatch.print_elapsed_time()
+
+        return hashTry, self.nonce #Maakt niet uit, doen we toch niks mee.
+
+    # TODO
+    # def find_nonce(self):
+    #     stopwatch = Stopwatch()
+    #     stopwatch.start()
+    #     hash = None
+    #     nonce = None
+    #     while stopwatch.get_elapsed_time() < 20: 
+    #         while True:
+    #             hashTry = self.computeHash()
+    #             if self.good_nonce(hashTry):
+    #                 self.blockHash = hashTry
+    #                 hash = hashTry
+    #                 nonce = self.nonce
+    #                 break
+    #             self.nonce += 1
+        
+    #     stopwatch.stop()
+    #     stopwatch.print_elapsed_time()
+    #     return hash, nonce
     
     def __repr__(self):
         #TODO Check what we want to represent
