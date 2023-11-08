@@ -157,7 +157,7 @@ class NodeMenu(Menu):
         if result:
             print_success("Transaction is found and removed from the pool!")
         else:
-            print_error("Transaction is not found in the pool!")
+            print_error("Transaction is not found in the pool or you are not the owner of the transaction!")
 
         self._back()
 

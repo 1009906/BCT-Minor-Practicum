@@ -83,6 +83,9 @@ class TxBlock (CBlock):
             self.nonce = secrets.randbelow(2**256)
             hashTry = self.computeHash()
             if stopwatch.get_elapsed_time() > interval:
+                print("Interval: ", interval) #TODO deze prints verwijderen
+                print("Third char: ", third_char)
+                print("Elapsed time: ", stopwatch.get_elapsed_time())
                 third_char = third_char * 2 if third_char * 2 <= 256 else 256
                 interval += 2
             

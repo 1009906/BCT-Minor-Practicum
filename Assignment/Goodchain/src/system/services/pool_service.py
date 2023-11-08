@@ -23,9 +23,9 @@ def transfer_coins(recieverName, amountCoins, transactionFee, transfer_method):
         return False, "You can't send coins to yourself!"
     
     #Check if sender has enough coins.
-    # check_balance_sender = check_balance()
-    # if check_balance_sender - amountCoins < 0:
-    #     return False, "You don't have enough coins!"
+    check_balance_sender = check_balance()
+    if check_balance_sender - amountCoins < 0:
+        return False, "You don't have enough coins!"
 
     transaction_id = generate_random_transaction_id()
 
