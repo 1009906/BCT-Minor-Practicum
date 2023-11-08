@@ -182,6 +182,10 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
         #Set total fee for miner
         newBlock.total_fee_for_miner = total_fee_for_miner
 
+        #TODO Moeten we validaten of het block valid is voordat die naar de ledger gaat? Denk ik wel. Dan nog iets doen met de result.
+        result = newBlock.is_valid()
+        print(result) #TODO Remove this line print
+
         #Add block to ledger
         savefile = open(Context.ledger_path, "ab")
         pickle.dump(newBlock, savefile)

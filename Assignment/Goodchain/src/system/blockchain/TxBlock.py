@@ -51,6 +51,7 @@ class TxBlock (CBlock):
         
         Tx_Balance = round(total_out - total_in, 10)
         
+        #TODO Check wat reward value is nu is tx balance 250 en reward value 25 waardoor die false returned
         if Tx_Balance > REWARD_VALUE:
             return False
         return True
@@ -97,6 +98,25 @@ class TxBlock (CBlock):
 
         return hashTry, self.nonce #Maakt niet uit, doen we toch niks mee.
 
+    #TODO Dit is de oude code van good_nonce en find_nonce
+    # def good_nonce(self, new_hash = None):
+    #     if new_hash is None:
+    #         new_hash = self.computeHash()
+    #     if new_hash.startswith(b'0' * leading_zeros):
+    #         return True
+    #     else:
+    #         return False
+
+    # def find_nonce(self):
+    #     while True:
+    #         hashTry = self.computeHash()
+    #         # print(self.nonce, hashTry)
+    #         if self.good_nonce(hashTry):
+    #             # print(f"Nonce found: {self.nonce}")
+    #             self.blockHash = hashTry
+    #             return hashTry
+            
+    #         self.nonce += 1
     # TODO
     # def find_nonce(self):
     #     stopwatch = Stopwatch()
