@@ -29,7 +29,7 @@ def check_file_integrity():
         exit(convert_to_bold("Exiting the application!"))
 
 if __name__ == "__main__":
-    # check_file_integrity() #TODO Maybe comment this line during development.
+    check_file_integrity()
     Context.db_connection = get_connection()
     public_menu = PublicMenu()
     public_menu.run()
@@ -38,7 +38,5 @@ if __name__ == "__main__":
 TODO:
     - goodchain.py Moet binnen de src folder staan.
     - TODO's in de code afwerken.
-    - Goed testen en assignment test cases afwerken.
-    - Minen moet langzamer gaan. Het gaat nu veel te snel.
     - Undo and redo actions ??????.
 """

@@ -174,7 +174,8 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
             remove_transaction_from_pool(transaction_id)
 
         #Find nonce for block
-        newBlock.find_nonce()
+        amount_of_transactions = len(newBlock.data)
+        newBlock.find_nonce(amount_of_transactions)
 
         #Set miner of the block
         newBlock.miner_of_block = Context.user_name
