@@ -20,8 +20,4 @@ class Context:
         repr_str = f"User id: {self.user_id}\n"
         repr_str += f"User name: {self.user_name}\n"
         repr_str += f"Last login date: {self.last_login_date}\n"
-        repr_str += "\n"
-        repr_str += f"Private key: {self.private_key}\n"
-        repr_str += "\n"
-        repr_str += f"Public key: {self.public_key}\n"
         return repr_str
