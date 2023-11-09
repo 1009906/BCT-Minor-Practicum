@@ -47,9 +47,10 @@ class NodeMenu(Menu):
         print_header("Notifications")
 
         chain_info = get_information_of_chain()
-        blocks_added_since_last_login = explore_chain_since_date(Context.last_login_date)
-        succesfull_transactions_since_last_login = succesfull_transactions_since_date(Context.last_login_date, Context.user_name)
-        mined_blocks_status_since_last_login = check_mined_blocks_status_since_last_login(blocks_added_since_last_login, Context.user_name)
+        if Context.last_login_date is not None:
+            blocks_added_since_last_login = explore_chain_since_date(Context.last_login_date)
+            succesfull_transactions_since_last_login = succesfull_transactions_since_date(Context.last_login_date, Context.user_name)
+            mined_blocks_status_since_last_login = check_mined_blocks_status_since_last_login(blocks_added_since_last_login, Context.user_name)
 
         print(f"Size of blockchain | Blocks: {chain_info[0]} | Transactions: {chain_info[1]}\n")
         print("Automatic validation result: " + automatic_validation_result + "\n")
