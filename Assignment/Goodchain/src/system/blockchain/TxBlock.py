@@ -4,6 +4,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 from datetime import datetime
 from src.user_interface.util.stopwatch import Stopwatch
+from src.system.blockchain.Transaction import NORMAL
 
 REWARD_VALUE = 25.0
 leading_zeros = 2
@@ -34,10 +35,11 @@ class TxBlock (CBlock):
         total_in = 0
         total_out = 0
         for tx in self.data:
-            for addr, amt in tx.inputs:
-                total_in = total_in + amt
-            for addr, amt in tx.outputs:
-                total_out = total_out + amt
+            if tx.type == NORMAL:
+                for addr, amt in tx.inputs:
+                    total_in = total_in + amt
+                for addr, amt in tx.outputs:
+                    total_out = total_out + amt
         return total_in, total_out
 
     def is_valid(self):

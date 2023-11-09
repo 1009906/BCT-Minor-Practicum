@@ -3,7 +3,7 @@ import os
 import pickle
 from src.system.context import Context
 from src.system.blockchain.TxBlock import PENDING, TxBlock
-from src.system.services.pool_service import check_pool_valid_transactions, load_transaction_by_id, remove_transaction_from_pool, set_transaction_to_invalid_in_pool
+from src.system.services.pool_service import check_pool_valid_transactions, load_transaction_by_id, remove_transaction_from_pool, set_transaction_to_invalid_in_pool, set_transactions_back_to_pool
 from src.system.util.time_util import difference_in_minutes
 
 def explore_chain():
@@ -182,9 +182,10 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
         #Set total fee for miner
         newBlock.total_fee_for_miner = total_fee_for_miner
 
-        #TODO Moeten we validaten of het block valid is voordat die naar de ledger gaat? Denk ik wel. Dan nog iets doen met de result.
-        result = newBlock.is_valid()
-        print(result) #TODO Remove this line print
+        new_block_is_valid = newBlock.is_valid()
+        if new_block_is_valid == False:
+            set_transactions_back_to_pool(newBlock)
+            return False, "The new block is not valid!"
 
         #Add block to ledger
         savefile = open(Context.ledger_path, "ab")

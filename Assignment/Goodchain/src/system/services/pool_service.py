@@ -245,6 +245,21 @@ def set_transaction_to_invalid_in_pool(transaction_id):
 
     return transaction_set_invalid
 
+def set_transactions_back_to_pool(block):
+    #Return all transactions of the rejected block back to the pool
+    #If the block is rejected because of some invalid transactions, those invalid transactions must be also flagged as invalid on the pool to be nullified by the creator of the transaction upon login. 
+    # Other valid transactions in the rejected block must be returned to the pool, waiting for the next mining process to be included in a new block again.
+    for transaction in block.data:
+        if transaction.is_valid():
+            transaction.set_valid()
+        else:
+            transaction.set_invalid()
+        
+        add_transaction_to_pool(transaction)
+
+    block.data = []
+    return block
+
 def create_mining_reward(miner_of_block_name, total_fee_for_miner):
     find_receiver = get_receiver_public_key(miner_of_block_name)
     if not find_receiver[0]:

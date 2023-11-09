@@ -1,5 +1,5 @@
 from datetime import datetime
-from src.system.services.pool_service import add_transaction_to_pool, check_pool_invalid_transactions, create_mining_reward, remove_transaction_from_pool
+from src.system.services.pool_service import check_pool_invalid_transactions, create_mining_reward, remove_transaction_from_pool, set_transactions_back_to_pool
 from src.system.context import Context
 from src.system.services.blockchain_service import find_block_to_validate, find_block_to_validate_by_hash, remove_block_in_chain, update_block_in_chain
 from src.system.blockchain.TxBlock import INVALID, VALID
@@ -89,18 +89,3 @@ def check_blockchain_for_block_to_validate(block_hash_to_validate = None, is_on_
             result = f"By your login you increased the invalid counter to {updated_block.invalid_counter} of a block. Block hash: {updated_block.blockHash}."
 
     return result
-
-def set_transactions_back_to_pool(block):
-    #Return all transactions of the rejected block back to the pool
-    #If the block is rejected because of some invalid transactions, those invalid transactions must be also flagged as invalid on the pool to be nullified by the creator of the transaction upon login. 
-    # Other valid transactions in the rejected block must be returned to the pool, waiting for the next mining process to be included in a new block again.
-    for transaction in block.data:
-        if transaction.is_valid():
-            transaction.set_valid()
-        else:
-            transaction.set_invalid()
-        
-        add_transaction_to_pool(transaction)
-
-    block.data = []
-    return block

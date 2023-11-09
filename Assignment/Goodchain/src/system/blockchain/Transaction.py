@@ -56,7 +56,8 @@ class Tx:
                     return False
                 if amount < 0:
                     return False
-                total_in = total_in + amount
+                if self.type == NORMAL:
+                    total_in = total_in + amount
             for addr in self.reqd:
                 found = False
                 for s in self.sigs:
@@ -67,7 +68,8 @@ class Tx:
             for addr,amount in self.outputs:
                 if amount < 0:
                     return False
-                total_out = total_out + amount
+                if self.type == NORMAL:
+                    total_out = total_out + amount
 
             if total_out > total_in:
                 # print("Outputs exceed inputs")

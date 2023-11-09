@@ -117,8 +117,8 @@ class NodeMenu(Menu):
             print_error("You can only enter numbers!")
             self._back()
 
-        if float(amountCoins) < 0 or float(transactionFee) < 0:
-            print_error("You can't enter a negative number!")
+        if float(amountCoins) <= 0 or float(transactionFee) < 0: #TODO Mogen transacties van 0 coins?
+            print_error("You can't enter a negative number or enter a amount of coins of 0!")
             self._back()
 
         result = transfer_coins(receiver, float(amountCoins), float(transactionFee), transfer_method)
