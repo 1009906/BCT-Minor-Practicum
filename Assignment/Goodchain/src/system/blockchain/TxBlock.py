@@ -76,10 +76,10 @@ class TxBlock (CBlock):
     def find_nonce(self, amount_of_transactions):
         stopwatch = Stopwatch()
         stopwatch.start()
-        third_char = 4 if amount_of_transactions <= 5 else 8
+        third_char = 4 if amount_of_transactions <= 5 else 8 # Laptop Leco
         # third_char = 4 if amount_of_transactions <= 5 else 8 (LAPTOP BRAM VALUES)
         hashTry = self.computeHash()
-        interval = 2
+        interval = 5
 
         while not self.good_nonce(hashTry, third_char):
             self.nonce = secrets.randbelow(2**256)
