@@ -5,15 +5,10 @@ import uuid
 from src.system.context import Context
 from src.system.blockchain.Transaction import MINERREWARD, Tx
 
-def transfer_coins(recieverName, amountCoins, transactionFee, transfer_method):
+def transfer_coins(recieverName, amountCoins, transactionFee):
     #Check if receiver exists.
     #Check if user wants to use public key or username. (1) username, (2) public key
-    if transfer_method == "1":
-        find_receiver = get_receiver_public_key(recieverName)
-    elif transfer_method == "2" and check_public_key_exists(recieverName):
-        find_receiver = (True, recieverName)
-    else:
-        find_receiver = (False, "The receiver does not exist!")
+    find_receiver = get_receiver_public_key(recieverName)
 
     if not find_receiver[0]:
         return False, "The receiver does not exist!"
