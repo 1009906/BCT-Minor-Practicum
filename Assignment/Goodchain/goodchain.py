@@ -33,10 +33,3 @@ if __name__ == "__main__":
     Context.db_connection = get_connection()
     public_menu = PublicMenu()
     public_menu.run()
-
-"""	
-TODO:
-    - goodchain.py Moet binnen de src folder staan.
-    - TODO's in de code afwerken.
-    - Undo and redo actions ??????.
-"""

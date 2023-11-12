@@ -7,13 +7,10 @@ from src.system.blockchain.Transaction import MINERREWARD, Tx
 
 def transfer_coins(recieverName, amountCoins, transactionFee):
     #Check if receiver exists.
-    #Check if user wants to use public key or username. (1) username, (2) public key
     find_receiver = get_receiver_public_key(recieverName)
 
     if not find_receiver[0]:
         return False, "The receiver does not exist!"
-    
-    #TODO Check toevoegen als de receiver een public key is, dat de public key niet gelijk is aan context.publickey.
 
     #Check if the receiver is not the sender.
     if recieverName == Context.user_name:

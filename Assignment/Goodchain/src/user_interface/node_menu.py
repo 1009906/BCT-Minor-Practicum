@@ -237,7 +237,6 @@ class NodeMenu(Menu):
         print(Context.__repr__(Context))
         print("Public key: ")
         print(fr"{str(Context.public_key, encoding='utf-8')}")
-        # print(str(Context.public_key, encoding='utf-8').replace('\n', ' ')) #TODO weghalen als de transfer coins werkt, hiermee kan je oneliner maken en werkt het voor input bij public key.
         print("Private key: ")
         print(fr"{str(Context.private_key, encoding='utf-8')}")
         self._back()
