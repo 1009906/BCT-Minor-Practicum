@@ -8,9 +8,10 @@ MINERREWARD = "MINERREWARD"
 SIGNUP_REWARD = 50.0
 
 class Tx:
-    def __init__(self,id ,owner, type = NORMAL, transaction_fee = 0):
+    def __init__(self,id ,owner, receiver, type = NORMAL, transaction_fee = 0):
         self.id = id
         self.owner = owner
+        self.receiver = receiver
         self.type = type
         self.inputs = []
         self.outputs = []
@@ -93,7 +94,8 @@ class Tx:
 
     def __repr__(self):
         repr_str = "Id: " + str(self.id) + "\n"
-        repr_str += "Owner: " + str(self.owner) + "\n"
+        repr_str += "Owner/Sender: " + str(self.owner) + "\n" if self.owner != None else "Owner/Sender: " + "System" + "\n"
+        repr_str += "Receiver: " + str(self.receiver) + "\n"
         repr_str += "Type: " + str(self.type) + "\n"
         repr_str += "Is Valid: " + str(self.is_valid_transaction) + "\n"
         repr_str += "Fee: " + str(self.transaction_fee) + "\n"

@@ -23,7 +23,7 @@ def transfer_coins(recieverName, amountCoins, transactionFee):
 
     transaction_id = generate_random_transaction_id()
 
-    newTx = Tx(transaction_id, Context.user_name, transaction_fee = transactionFee)
+    newTx = Tx(transaction_id, Context.user_name, recieverName, transaction_fee = transactionFee)
     newTx.add_input(Context.public_key, amountCoins)
     newTx.add_output(find_receiver[1], amountCoins) 
     newTx.sign(Context.private_key)
@@ -260,7 +260,7 @@ def create_mining_reward(miner_of_block_name, total_fee_for_miner):
         return False, "The receiver does not exist!"
     
     #Create transaction give miner reward
-    tx = Tx(generate_random_transaction_id(), None, MINERREWARD)
+    tx = Tx(generate_random_transaction_id(), None, miner_of_block_name, MINERREWARD)
     tx.add_output(find_receiver[1], float(total_fee_for_miner))
     tx.set_valid()
 

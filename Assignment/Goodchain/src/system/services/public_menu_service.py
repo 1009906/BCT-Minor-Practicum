@@ -31,15 +31,15 @@ def create_user(user_name, password):
             "VALUES (?, ?, ?, ?)",
             (user_name, hashed_password, prv_ser, pbc_ser))
         con.commit()
-        signup_reward(pbc_ser)
+        signup_reward(user_name, pbc_ser)
         return True, f"{user_name} Added to the system."
 
     except IntegrityError:
         return False, "User already exists."
 
-def signup_reward(public_key):
+def signup_reward(receiver_name, public_key):
     #Create transaction user gets 50 coins
-    tx = Tx(generate_random_transaction_id(), None, SIGNUP)
+    tx = Tx(generate_random_transaction_id(), None, receiver_name, SIGNUP)
     tx.add_output(public_key, SIGNUP_REWARD)
     tx.set_valid()
 
