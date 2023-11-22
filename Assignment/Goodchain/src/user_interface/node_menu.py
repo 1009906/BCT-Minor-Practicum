@@ -6,10 +6,10 @@ from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
 from src.user_interface.menu import Menu
 from src.system.security.validation import is_float
-from src.user_interface.util.colors import convert_to_bold, convert_to_purple, print_error, print_header, print_success, print_warning
+from src.user_interface.util.colors import convert_to_bold, convert_to_green, convert_to_purple, convert_to_red, print_error, print_header, print_success, print_warning
 from src.user_interface.util.stopwatch import Stopwatch
 from src.system.services.node_menu_service import check_balance, check_mined_blocks_status_since_last_login, get_current_password_hashed, update_last_login_date, update_password
-from src.system.services.blockchain_service import check_possibility_to_mine, explore_chain, explore_chain_since_date, get_information_of_chain, mine_new_block, succesfull_transactions_since_date
+from src.system.services.blockchain_service import check_possibility_to_mine, explore_chain_since_date, get_information_of_chain, mine_new_block, succesfull_transactions_since_date, tamper_proof_check
 from src.system.security.hashing import hash_password
 from src.system.initialize_check import check_blockchain_for_block_to_validate
 from src.user_interface.ledger_explorer_menu import LedgerExplorerMenu
@@ -31,18 +31,19 @@ class NodeMenu(Menu):
         self._add_menu_option(self.cancel_transaction, "Cancel a transaction")
         self._add_menu_option(self.mine_block, "Mine a block")
         self._add_menu_option(self.validate_block, "Validate a block")
+        self._add_menu_option(self.validate_chain, "Validate the chain")
         self._add_menu_option(self.show_profile, "Show profile")
         self._add_menu_option(self.edit_password, "Edit password")
         self._add_menu_option(self.log_out, "Log out")
 
-    def run(self, rejected_transactions_list = [], automatic_validation_result = ""):
+    def run(self, rejected_transactions_list = [], automatic_validation_result = "", tamper_proof_result = (None, None)):
         self._title(f"Node Menu, Username: {Context.user_name}")
         self._display_options()
         if self.shownotifications:
-            self.show_notifications(rejected_transactions_list, automatic_validation_result)
+            self.show_notifications(rejected_transactions_list, automatic_validation_result, tamper_proof_result)
         self._read_input()
 
-    def show_notifications(self, rejected_transactions_list, automatic_validation_result):
+    def show_notifications(self, rejected_transactions_list, automatic_validation_result, tamper_proof_result):
         self._clear()
         print_header("Notifications")
 
@@ -87,6 +88,15 @@ class NodeMenu(Menu):
             print(mined_blocks_status_since_last_login)
             is_possible_to_mine = check_possibility_to_mine()
             print(f"\nIs it possible to mine a block: {is_possible_to_mine[0]} | Reason: {is_possible_to_mine[1]}")
+
+            if tamper_proof_result[0] != None:
+                result = "\nIs blockchain tamperd: "
+                if tamper_proof_result[0] == True:
+                    result += convert_to_red(f"{tamper_proof_result[0]} | Reason: {tamper_proof_result[1]}")
+                else:
+                    result += convert_to_green(f"{tamper_proof_result[0]} | Reason: {tamper_proof_result[1]}")
+
+                print(result)
 
         self.shownotifications = False
         update_last_login_date()
@@ -229,6 +239,20 @@ class NodeMenu(Menu):
         result = check_blockchain_for_block_to_validate(block_hash, False)
         print(result)
 
+        self._back()
+
+    def validate_chain(self):
+        self._clear()
+        print_header("Validate chain")
+
+        tamper_proof_result = tamper_proof_check()
+        result = "\nIs blockchain tamperd: "
+        if tamper_proof_result[0] == True:
+            result += convert_to_red(f"{tamper_proof_result[0]} | Reason: {tamper_proof_result[1]}")
+        else:
+            result += convert_to_green(f"{tamper_proof_result[0]} | Reason: {tamper_proof_result[1]}")
+
+        print(result)
         self._back()
 
     def show_profile(self):

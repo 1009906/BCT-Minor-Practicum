@@ -19,6 +19,14 @@ def explore_chain():
 
     return blocks
 
+def tamper_proof_check():
+    blocks = explore_chain()
+    for block in blocks:
+        if block.is_valid() == False:
+            return True, "The chain is tamperd. The block with hash: " + str(block.blockHash) + " is not valid!"
+        
+    return False, "The chain is not tamperd."
+
 def find_last_block_in_chain():
     last_block = None
     try:

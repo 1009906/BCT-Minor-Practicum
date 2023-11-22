@@ -1,7 +1,7 @@
 from datetime import datetime
 from src.system.services.pool_service import check_pool_invalid_transactions, create_mining_reward, remove_transaction_from_pool, set_transactions_back_to_pool
 from src.system.context import Context
-from src.system.services.blockchain_service import find_block_to_validate, find_block_to_validate_by_hash, remove_block_in_chain, update_block_in_chain
+from src.system.services.blockchain_service import find_block_to_validate, find_block_to_validate_by_hash, remove_block_in_chain, tamper_proof_check, update_block_in_chain
 from src.system.blockchain.TxBlock import INVALID, VALID
 from src.user_interface.util.colors import convert_to_red
 
@@ -89,3 +89,6 @@ def check_blockchain_for_block_to_validate(block_hash_to_validate = None, is_on_
             result = f"By your login you increased the invalid counter to {updated_block.invalid_counter} of a block. Block hash: {updated_block.blockHash}."
 
     return result
+
+def check_blockchain_for_tamper():
+    return tamper_proof_check()

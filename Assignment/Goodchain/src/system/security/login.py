@@ -2,7 +2,7 @@ from datetime import datetime
 from src.system.security.hashing import hash_password
 from src.user_interface.node_menu import NodeMenu
 from src.system.context import Context
-from src.system.initialize_check import check_blockchain_for_block_to_validate, check_pool_for_invalid_transactions_of_logged_in_user
+from src.system.initialize_check import check_blockchain_for_block_to_validate, check_blockchain_for_tamper, check_pool_for_invalid_transactions_of_logged_in_user
 from src.user_interface.util.colors import print_success
 
 LOGIN_MAX_ATTEMPTS = 3
@@ -46,5 +46,9 @@ def login(user_id, user_name, private_key, public_key, last_login_date, previous
     automatic_validation_result = check_blockchain_for_block_to_validate()
     print_success("Done checking blockchain for blocks to validate...")
 
+    print("Checking the blockchain for any tamper...")
+    tamper_proof_result = check_blockchain_for_tamper()
+    print_success("Done checking the blockchain for any tamper...")
+
     node_menu = NodeMenu(previous_menu)
-    node_menu.run(rejected_transactions_list, automatic_validation_result)
+    node_menu.run(rejected_transactions_list, automatic_validation_result, tamper_proof_result)
