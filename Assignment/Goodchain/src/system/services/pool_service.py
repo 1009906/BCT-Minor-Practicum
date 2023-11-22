@@ -3,7 +3,7 @@ import pickle
 import uuid
 
 from src.system.context import Context
-from src.system.blockchain.Transaction import MINERREWARD, Tx
+from src.system.blockchain.Transaction import MINERREWARD, MINERREWARD_VALUE, Tx
 
 def transfer_coins(recieverName, amountCoins, transactionFee):
     #Check if receiver exists.
@@ -259,9 +259,11 @@ def create_mining_reward(miner_of_block_name, total_fee_for_miner):
     if not find_receiver[0]:
         return False, "The receiver does not exist!"
     
+    total_reward_value = MINERREWARD_VALUE + float(total_fee_for_miner) #50.0 (Reward for mining) + total fee in transactions for the miner
+
     #Create transaction give miner reward
     tx = Tx(generate_random_transaction_id(), None, miner_of_block_name, MINERREWARD)
-    tx.add_output(find_receiver[1], float(total_fee_for_miner))
+    tx.add_output(find_receiver[1], total_reward_value)
     tx.set_valid()
 
     savefile = open(Context.pool_path, "ab")

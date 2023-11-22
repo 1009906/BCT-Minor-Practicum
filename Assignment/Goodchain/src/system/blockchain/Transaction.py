@@ -6,6 +6,7 @@ REWARD = "REWARD"
 SIGNUP = "SIGNUP"
 MINERREWARD = "MINERREWARD"
 SIGNUP_REWARD = 50.0
+MINERREWARD_VALUE = 50.0
 
 class Tx:
     def __init__(self,id ,owner, receiver, type = NORMAL, transaction_fee = 0):
