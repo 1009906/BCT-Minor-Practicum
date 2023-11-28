@@ -3,7 +3,7 @@ import pickle
 import uuid
 
 from src.system.context import Context
-from src.system.blockchain.Transaction import MINERREWARD, MINERREWARD_VALUE, Tx
+from src.system.blockchain.Transaction import MINERREWARD, MINERREWARD_VALUE, SIGNUP, Tx
 
 def transfer_coins(recieverName, amountCoins, transactionFee):
     #Check if receiver exists.
@@ -38,17 +38,18 @@ def transfer_coins(recieverName, amountCoins, transactionFee):
     else:
         #Transaction is not valid
         return False, "Transaction is invalid! (not added to the pool)"
-    
-def check_public_key_exists(public_key):
-    con = Context.db_connection
-    c = con.cursor()
-    c.execute("SELECT * FROM users WHERE PublicKey=?", [public_key])
-    user_result = c.fetchone()
 
-    if user_result:
-        return True
-    else:
-        return False
+#TODO REMOVE? Is not used anymore.
+# def check_public_key_exists(public_key):
+#     con = Context.db_connection
+#     c = con.cursor()
+#     c.execute("SELECT * FROM users WHERE PublicKey=?", [public_key])
+#     user_result = c.fetchone()
+
+#     if user_result:
+#         return True
+#     else:
+#         return False
     
 def explore_blocks_in_chain():
     blocks = []
@@ -143,6 +144,20 @@ def check_pool_invalid_transactions():
         pass
 
     return invalid_transactions
+
+def check_pool_reward_transactions():
+    reward_transactions = []
+    try:
+        with open(Context.pool_path, "rb") as f:
+            while True:
+                transaction = pickle.load(f)
+                if (transaction.type == MINERREWARD or transaction.type == SIGNUP) and transaction.is_valid():
+                    reward_transactions.append(transaction)
+    except EOFError:
+        # No more lines to read from file.
+        pass
+
+    return reward_transactions
 
 def load_transaction_by_id(transaction_id):
     try:

@@ -3,7 +3,7 @@ import os
 import pickle
 from src.system.context import Context
 from src.system.blockchain.TxBlock import PENDING, TxBlock
-from src.system.services.pool_service import check_pool_valid_transactions, load_transaction_by_id, remove_transaction_from_pool, set_transaction_to_invalid_in_pool, set_transactions_back_to_pool
+from src.system.services.pool_service import check_pool_reward_transactions, check_pool_valid_transactions, load_transaction_by_id, remove_transaction_from_pool, set_transaction_to_invalid_in_pool, set_transactions_back_to_pool
 from src.system.util.time_util import difference_in_minutes
 
 def explore_chain():
@@ -164,6 +164,23 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
         #Set transactions to invalid in pool the user choose to add to the block
         for transaction_id in transactions_to_set_invalid:
             set_transaction_to_invalid_in_pool(transaction_id)
+
+        #Check if there are reward transactions in the pool (signup or mining reward). Priority to add reward transactions to the block
+        get_reward_transactions_from_pool = check_pool_reward_transactions() #Gets all reward and valid transactions from the pool
+        if len(get_reward_transactions_from_pool) > 0:
+            for transaction in get_reward_transactions_from_pool:
+                if len(newBlock.data) < amount_of_transactions_user_want_to_add:
+                    newBlock.addTx(transaction)
+                    transactions_to_remove.append(str(transaction.id))
+                    total_fee_for_miner += transaction.transaction_fee
+                else:
+                    break
+
+        #Remove added reward transactions from pool
+        for transaction_id in transactions_to_remove:
+            remove_transaction_from_pool(transaction_id)
+
+        transactions_to_remove = [] #Reset list
 
         #Check if there are valid transactions in the pool
         #Add transactions to block with a maximum of amount_of_transactions_user_want_to_add transactions in the block

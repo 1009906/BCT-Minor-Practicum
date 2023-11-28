@@ -56,6 +56,15 @@ class NodeMenu(Menu):
         print(f"Size of blockchain | Blocks: {chain_info[0]} | Transactions: {chain_info[1]}\n")
         print("Automatic validation result: " + automatic_validation_result + "\n")
 
+        if tamper_proof_result[0] != None:
+                result = "Is blockchain tamperd: "
+                if tamper_proof_result[0] == True:
+                    result += convert_to_red(f"{tamper_proof_result[0]} | Reason: {tamper_proof_result[1]}")
+                else:
+                    result += convert_to_green(f"{tamper_proof_result[0]} | Reason: {tamper_proof_result[1]}")
+
+                print(result)
+
         if Context.last_login_date is None:
             print("This is your first login, no other notifications to show!")
         else:
@@ -88,15 +97,6 @@ class NodeMenu(Menu):
             print(mined_blocks_status_since_last_login)
             is_possible_to_mine = check_possibility_to_mine()
             print(f"\nIs it possible to mine a block: {is_possible_to_mine[0]} | Reason: {is_possible_to_mine[1]}")
-
-            if tamper_proof_result[0] != None:
-                result = "\nIs blockchain tamperd: "
-                if tamper_proof_result[0] == True:
-                    result += convert_to_red(f"{tamper_proof_result[0]} | Reason: {tamper_proof_result[1]}")
-                else:
-                    result += convert_to_green(f"{tamper_proof_result[0]} | Reason: {tamper_proof_result[1]}")
-
-                print(result)
 
         self.shownotifications = False
         update_last_login_date()
