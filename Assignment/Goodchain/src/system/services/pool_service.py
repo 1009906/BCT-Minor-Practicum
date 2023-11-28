@@ -4,6 +4,7 @@ import uuid
 
 from src.system.context import Context
 from src.system.blockchain.Transaction import MINERREWARD, MINERREWARD_VALUE, SIGNUP, Tx
+from src.system.blockchain.TxBlock import VALID
 
 def transfer_coins(recieverName, amountCoins, transactionFee):
     #Check if receiver exists.
@@ -51,13 +52,28 @@ def transfer_coins(recieverName, amountCoins, transactionFee):
 #     else:
 #         return False
     
-def explore_blocks_in_chain():
+#TODO REMOVE? Is not used anymore.
+# def explore_blocks_in_chain():
+#     blocks = []
+#     try:
+#         with open(Context.ledger_path, "rb") as f:
+#             while True:
+#                 block = pickle.load(f)
+#                 blocks.append(block)
+#     except EOFError:
+#         # No more lines to read from file.
+#         pass
+
+#     return blocks
+
+def explore_chain_valid_blocks():
     blocks = []
     try:
         with open(Context.ledger_path, "rb") as f:
             while True:
                 block = pickle.load(f)
-                blocks.append(block)
+                if block.status == VALID:
+                    blocks.append(block)
     except EOFError:
         # No more lines to read from file.
         pass
@@ -65,11 +81,15 @@ def explore_blocks_in_chain():
     return blocks
     
 def check_balance():
+    #TODO CHECK IF THIS IS CORRECT WAY TO CALCULATE BALANCE FOR TRANSFER COINS
+    #This function is used in transfer_coins to check if the sender has enough coins to send. There is also another check_balance, that one is used in the node menu to show the balance of the user.
+    #This function is only showing the balance of the user in the chain for valid blocks, not pending blocks.
     total_in = 0
     total_out = 0
 
-    chain = explore_blocks_in_chain() #Load all blocks in chain, (valid and pending).
-    valid_transactions_pool = check_pool_valid_transactions() #Load all valid transactions in pool.
+    chain = explore_chain_valid_blocks() #Load all valid blocks in chain (dont load PENDING blocks).
+    # chain = explore_blocks_in_chain() #Load all blocks in chain, (valid and pending).
+    # valid_transactions_pool = check_pool_valid_transactions() #Load all valid transactions in pool.
 
     for block in chain:
         for tx in block.data:
@@ -80,13 +100,13 @@ def check_balance():
                 if addr == Context.public_key:    
                     total_out = total_out + amt
 
-    for tx in valid_transactions_pool:
-        for addr, amt in tx.inputs:
-            if addr == Context.public_key:
-                total_in = total_in + amt
-        for addr, amt in tx.outputs:
-            if addr == Context.public_key:    
-                total_out = total_out + amt
+    # for tx in valid_transactions_pool:
+    #     for addr, amt in tx.inputs:
+    #         if addr == Context.public_key:
+    #             total_in = total_in + amt
+    #     for addr, amt in tx.outputs:
+    #         if addr == Context.public_key:    
+    #             total_out = total_out + amt
 
     return total_out - total_in
     

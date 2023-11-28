@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlite3 import IntegrityError
 from src.system.context import Context
 from src.system.blockchain.TxBlock import PENDING, VALID
-from src.system.services.blockchain_service import explore_chain
+from src.system.services.blockchain_service import explore_chain, explore_chain_valid_blocks
 from src.system.services.pool_service import check_pool_valid_transactions
 from src.user_interface.util.colors import convert_to_green, convert_to_red, convert_to_yellow
 
@@ -55,11 +55,12 @@ def check_mined_blocks_status_since_last_login(blocks_added_since_last_login, us
     return result
 
 def check_balance():
+    #This function is used in the node menu to show the balance of the user, there is also another check_balance, that one is used for transfer coins in pool_service.py
+    #This function is only showing the balance of the user in the chain for valid blocks, not pending blocks.
     total_in = 0
     total_out = 0
 
-    chain = explore_chain() #Load all blocks in chain, (valid and pending).
-    valid_transactions_pool = check_pool_valid_transactions() #Load all valid transactions in pool.
+    chain = explore_chain_valid_blocks() #Load all valid blocks in chain (dont load PENDING blocks).
 
     for block in chain:
         for tx in block.data:
@@ -69,14 +70,6 @@ def check_balance():
             for addr, amt in tx.outputs:
                 if addr == Context.public_key:    
                     total_out = total_out + amt
-
-    for tx in valid_transactions_pool:
-        for addr, amt in tx.inputs:
-            if addr == Context.public_key:
-                total_in = total_in + amt
-        for addr, amt in tx.outputs:
-            if addr == Context.public_key:    
-                total_out = total_out + amt
 
     return total_out - total_in
 
