@@ -1,38 +1,55 @@
+import socket 
+import threading
 import select
-import socket
-import pickle
+HEADER = 64
+PORT = 5050
+local_ip = socket.gethostbyname('localhost')
+ADDR = (local_ip, PORT)
+FORMAT = 'utf-8'
+DISCONNECT_MESSAGE = "!DISCONNECT"
+class PoolServer: 
 
-class PoolServer:
     def __init__(self):
-        self.TCP_PORT = 5005 #TODO Dont use the same port as the ledger server
-        self.BUFFER_SIZE = 1024
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.bind(ADDR)
+        print("[STARTING] server is starting...")
+        self.start()
 
-    def newServerConnection(self, ip_addr):
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.bind((ip_addr, self.TCP_PORT))
-        server_socket.listen()
-        return server_socket
+    def handle_client(conn, addr):
+        client_name = conn.recv(2048).decode(FORMAT)
 
-    def recvObj(self, socket):
-        ready_to_read, ready_to_write, in_error = select.select([socket], [], [socket], 30)
-        if socket in ready_to_read:
-            print('Server is blocked by accept() ...')
-            connected_socket, addr = socket.accept()
-            print('Server is released and receiving data ...')
-            all_data = b''
-            while True:
-                data = connected_socket.recv(self.BUFFER_SIZE)
-                if not data:
-                    break
-                all_data = all_data + data
-            return pickle.loads(all_data)
-        return None
+        print(f"\n[NEW CONNECTION] {client_name}@{addr} is connected.")
+        connection_message = f"...\nHi {client_name}! \nYou are successfully connected to the server {ADDR}"
+        conn.send(connection_message.encode(FORMAT))
+        connected = True
+        while connected:
+            ready_to_read, ready_to_write, in_error = select.select([conn], [], [conn], 20)
+            if len(ready_to_read):
+                msg_length = conn.recv(HEADER).decode(FORMAT)
+                if(msg_length):
+                    msg_length = int(msg_length)
+                    msg = conn.recv(msg_length).decode(FORMAT)
+                    if msg == DISCONNECT_MESSAGE:
+                        connected = False
 
+                    print(f"[{client_name}@{addr}]>> {msg}")
+                    return_message = f'Server received your message: "{msg}"'
+                    conn.send(return_message.encode(FORMAT))
+            else:
+                connected = False
+                return_message = f'\n Timeout! You are disconnected.'
+                conn.send(return_message.encode(FORMAT))
+        
+        bye_message = f"\nBye {client_name}!"
+        conn.send(bye_message.encode(FORMAT))
+        conn.close()
+        print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 2}")    
 
-    def sendObj(self, ip_addr, obj):
-        soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        soc.connect((ip_addr, self.TCP_PORT))
-        data = pickle.dumps(obj)
-        soc.send(data)
-        soc.close()
-        return False
+    def start(self):
+        self.server.listen()
+        print(f"[LISTENING] Server is listening on {local_ip}")
+        while True:
+            conn, addr = self.server.accept()
+            thread = threading.Thread(target=self.handle_client, args=(conn, addr))
+            thread.start()
+            print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
