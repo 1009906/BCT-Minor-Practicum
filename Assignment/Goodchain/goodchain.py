@@ -1,3 +1,6 @@
+from sys import executable
+from subprocess import Popen, CREATE_NEW_CONSOLE
+
 from src.user_interface.public_menu import PublicMenu
 from src.system.connection import get_connection
 from src.system.context import Context
@@ -28,8 +31,13 @@ def check_file_integrity():
         print_error(error_message)
         exit(convert_to_bold("Exiting the application!"))
 
+def start_servers():
+    #TODO Start all servers
+    Popen([executable, 'src/system/networking/server.py'], creationflags=CREATE_NEW_CONSOLE)
+
 if __name__ == "__main__":
     check_file_integrity()
     Context.db_connection = get_connection()
+    start_servers()
     public_menu = PublicMenu()
     public_menu.run()

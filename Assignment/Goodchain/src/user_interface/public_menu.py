@@ -6,6 +6,7 @@ from src.user_interface.menu import Menu
 from src.user_interface.util.colors import convert_to_bold
 from src.system.security.hashing import save_hashes_to_file
 from src.user_interface.ledger_explorer_menu import LedgerExplorerMenu
+from src.system.networking.poolClient import PoolClient #TODO REMOVE
 
 class PublicMenu(Menu):
     def __init__(self):
@@ -16,6 +17,7 @@ class PublicMenu(Menu):
         self._add_menu_option(self.explore_blockchain, "Explore blockchain")
         self._add_menu_option(self.sign_up, "Sign up")
         self._add_menu_option(self.exit, "Exit")
+        self._add_menu_option(self.send_message_to_server_test, "Send message to server test") #TODO REMOVE
 
 
     def run(self):
@@ -39,3 +41,10 @@ class PublicMenu(Menu):
         Context.db_connection.close()
         save_hashes_to_file()
         exit(convert_to_bold("Exiting the application!"))
+
+    #TODO REMOVE
+    def send_message_to_server_test(self):
+        Context.user_name = "test"
+        pool_client = PoolClient()
+        pool_client.start_client()
+        
