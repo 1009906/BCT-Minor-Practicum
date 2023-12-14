@@ -32,8 +32,8 @@ def check_file_integrity():
         exit(convert_to_bold("Exiting the application!"))
 
 def start_servers():
-    #TODO Start all servers
-    Popen([executable, 'src/system/networking/server.py'], creationflags=CREATE_NEW_CONSOLE)
+    #TODO Start all servers, maybe pass processes to public menu and stop them when exiting the application.
+    wallet_server_subprocess = Popen([executable, 'src/system/networking/wallet_server.py'], creationflags=CREATE_NEW_CONSOLE)
 
 if __name__ == "__main__":
     check_file_integrity()
