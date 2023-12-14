@@ -59,7 +59,10 @@ class WalletClient:
 
     def handle_server(self, transaction):
         for port in W_SERVER_PORTS:
-            client_socket = self.initialize_socket(port)
+            try:
+                client_socket = self.initialize_socket(port)
+            except:
+                continue
             
             cont_flag = True
             while cont_flag:
