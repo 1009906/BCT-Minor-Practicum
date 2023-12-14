@@ -4,7 +4,7 @@ import socket
 import threading
 
 HEADER = 64
-PORT = 5000 #5050
+PORT = 5002 #5050
 # local_ip = socket.gethostbyname('localhost')
 local_ip = 'localhost'
 ADDR = (local_ip, PORT)
