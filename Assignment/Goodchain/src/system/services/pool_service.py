@@ -5,6 +5,7 @@ import uuid
 from src.system.context import Context
 from src.system.blockchain.Transaction import MINERREWARD, MINERREWARD_VALUE, SIGNUP, Tx
 from src.system.blockchain.TxBlock import VALID
+from src.system.networking.wallet_client import WalletClient
 
 def transfer_coins(recieverName, amountCoins, transactionFee):
     #Check if receiver exists.
@@ -32,9 +33,12 @@ def transfer_coins(recieverName, amountCoins, transactionFee):
     if newTx.is_valid():
         #Transaction is valid
         newTx.set_valid()
-        savefile = open(Context.pool_path, "ab")
-        pickle.dump(newTx, savefile)
-        savefile.close()
+        #TODO Remove comments when the wallet server is ready.
+        # savefile = open(Context.pool_path, "ab")
+        # pickle.dump(newTx, savefile)
+        # savefile.close()
+        wallet_client = WalletClient()
+        wallet_client.handle_server(newTx)
 
         return True, "Transaction is valid! (added to the pool)"
     else:

@@ -26,6 +26,8 @@ class Context:
 
     W_SERVER_PORT = 5000 if current_node == "node1" else 5002
     M_SERVER_PORT = 5001 if current_node == "node1" else 5003
+
+    subprocesses = []
     
     def __repr__(self):
         repr_str = f"User id: {self.user_id}\n"

@@ -37,7 +37,7 @@ class NodeMenu(Menu):
         self._add_menu_option(self.log_out, "Log out")
 
     def run(self, rejected_transactions_list = [], automatic_validation_result = "", tamper_proof_result = (None, None)):
-        self._title(f"Node Menu, Username: {Context.user_name}")
+        self._title(f"Node Menu, Username: {Context.user_name}, Running on: {Context.current_node}")
         self._display_options()
         if self.shownotifications:
             self.show_notifications(rejected_transactions_list, automatic_validation_result, tamper_proof_result)

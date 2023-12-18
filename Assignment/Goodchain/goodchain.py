@@ -39,8 +39,10 @@ def start_servers():
     wallet_server_command = [executable, 'wallet_server.py'] + wallet_server_args
     wallet_server_subprocess = Popen(wallet_server_command, creationflags=CREATE_NEW_CONSOLE)
 
+    Context.subprocesses.append(wallet_server_subprocess)
+
 if __name__ == "__main__":
-    check_file_integrity()
+    # check_file_integrity() #TODO Uncomment this line when the application is ready for production.
     Context.db_connection = get_connection()
     start_servers()
     public_menu = PublicMenu()

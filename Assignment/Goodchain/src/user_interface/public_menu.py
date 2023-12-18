@@ -25,7 +25,7 @@ class PublicMenu(Menu):
 
 
     def run(self):
-        self._title(f"Public Menu")
+        self._title(f"Public Menu - Running on: {Context.current_node}")
         self._display_options()
         self._read_input()
     
@@ -44,6 +44,10 @@ class PublicMenu(Menu):
     def exit(self):
         Context.db_connection.close()
         save_hashes_to_file()
+        
+        for process in Context.subprocesses:
+            process.kill()
+
         exit(convert_to_bold("Exiting the application!"))
 
     #TODO REMOVE to bottom after testing

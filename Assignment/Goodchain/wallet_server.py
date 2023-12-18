@@ -36,9 +36,11 @@ def handle_client(conn, addr):
                 try:
                     received_tx = pickle.loads(msg)
                     print(f"[{client_name}@{addr}]>> Received Transaction: {received_tx}")
-                    print("Validation Result: " + str(process_received_transaction(received_tx)))
 
-                    return_message = f'Server received your transaction: {received_tx}'
+                    transaction_processed = process_received_transaction(received_tx)
+                    print("Validation Result: " + str(transaction_processed[0]))
+
+                    return_message = f'Server received and processed your transaction: {transaction_processed[1]}'
                     conn.send(return_message.encode(FORMAT))
                 except:
                     msg = msg.decode(FORMAT)
