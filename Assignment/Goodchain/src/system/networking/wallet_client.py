@@ -53,7 +53,7 @@ class WalletClient:
             while cont_flag:
 
                 timeout = 15
-                timeout_thread = Timer(timeout, self.stop_the_client, [])
+                timeout_thread = Timer(timeout, self.stop_the_client, [client_socket])
                 timeout_thread.start()
 
                 if not cont_flag:

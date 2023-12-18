@@ -1,4 +1,6 @@
 import os
+from subprocess import CREATE_NEW_CONSOLE, Popen
+from sys import executable
 import uuid #TODO REMOVE
 from src.system.context import Context
 from src.user_interface.register_menu import RegisterMenu
@@ -22,6 +24,7 @@ class PublicMenu(Menu):
         self._add_menu_option(self.sign_up, "Sign up")
         self._add_menu_option(self.exit, "Exit")
         self._add_menu_option(self.send_message_to_server_test, "Send message to server test") #TODO REMOVE
+        self._add_menu_option(self.start_pool_server, "Start pool server") #TODO REMOVE
 
 
     def run(self):
@@ -47,7 +50,7 @@ class PublicMenu(Menu):
         exit(convert_to_bold("Exiting the application!"))
 
     #TODO REMOVE to bottom after testing
-    def create_test_transaction():
+    def create_test_transaction(self):
         alex_prv, alex_pbc = generate_keys()
         mike_prv, mike_pbc = generate_keys()
 
@@ -79,4 +82,8 @@ class PublicMenu(Menu):
         new_transaction = self.create_test_transaction()
         wallet_client = WalletClient()
         wallet_client.handle_server(new_transaction)
+
+    def start_pool_server(self):
+        wallet_server_subprocess = Popen([executable, 'src/system/networking/wallet_server.py'], creationflags=CREATE_NEW_CONSOLE)
+
         

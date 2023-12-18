@@ -2,16 +2,22 @@ import pickle
 import select
 import socket 
 import threading
+import sys
+import importlib.util
 
-from src.system.context import Context
+# spec = importlib.util.spec_from_file_location("context", "C:/School jaar 4/Minor Blockchain Technology/OP1/BCT-Minor-Practicum/Assignment/Goodchain/src/system/context.py")
+# foo = importlib.util.module_from_spec(spec)
+# sys.modules["context"] = foo
+# spec.loader.exec_module(foo)
+# Context = foo.Context
 
 HEADER = 64
 
 #TODO remove after testing
-# PORT = 5000 
-# local_ip = 'localhost'
-# ADDR = (local_ip, PORT)
-ADDR = (Context.HOST_IP, Context.W_SERVER_PORT)
+PORT = 5000 
+local_ip = 'localhost'
+ADDR = (local_ip, PORT)
+# ADDR = (Context.HOST_IP, Context.W_SERVER_PORT)
 
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
@@ -35,9 +41,12 @@ def handle_client(conn, addr):
 
                 msg = conn.recv(msg_length)
 
+                print("Received message length: ", msg_length)
+
                 try:
                     # Deserialize the received message to reconstruct the Tx object
                     received_tx = pickle.loads(msg)
+                    # received_tx = server_helper.load_transaction_from_network(msg)
 
                     # Process received_tx as needed
                     print(f"[{client_name}@{addr}]>> Received Transaction: {received_tx}")
@@ -54,14 +63,6 @@ def handle_client(conn, addr):
                     print(f"[{client_name}@{addr}]>> {msg}")
                     return_message = f'Server received your message: "{msg}"'
                     conn.send(return_message.encode(FORMAT))
-
-                # msg = conn.recv(msg_length).decode(FORMAT)
-                # if msg == DISCONNECT_MESSAGE:
-                #     connected = False
-
-                # print(f"[{client_name}@{addr}]>> {msg}")
-                # return_message = f'Server received your message: "{msg}"'
-                # conn.send(return_message.encode(FORMAT))
         else:
             connected = False
             return_message = f'\nTimeout! You are disconnected.'
@@ -74,7 +75,8 @@ def handle_client(conn, addr):
 
 def start():
     server.listen()
-    print(f"[LISTENING] Server is listening on {Context.HOST_IP}:{Context.W_SERVER_PORT}")
+    # print(f"[LISTENING] Server is listening on {Context.HOST_IP}:{Context.W_SERVER_PORT}")
+    print(f"[LISTENING] Server is listening...")
     while True:
         conn, addr = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr))
