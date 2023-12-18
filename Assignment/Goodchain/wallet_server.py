@@ -2,22 +2,12 @@ import pickle
 import select
 import socket 
 import threading
-import sys
-import importlib.util
-
-# spec = importlib.util.spec_from_file_location("context", "C:/School jaar 4/Minor Blockchain Technology/OP1/BCT-Minor-Practicum/Assignment/Goodchain/src/system/context.py")
-# foo = importlib.util.module_from_spec(spec)
-# sys.modules["context"] = foo
-# spec.loader.exec_module(foo)
-# Context = foo.Context
+from src.system.context import Context
+from src.system.services.network_service import process_received_transaction
 
 HEADER = 64
 
-#TODO remove after testing
-PORT = 5000 
-local_ip = 'localhost'
-ADDR = (local_ip, PORT)
-# ADDR = (Context.HOST_IP, Context.W_SERVER_PORT)
+ADDR = (Context.HOST_IP, Context.W_SERVER_PORT)
 
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
@@ -44,17 +34,12 @@ def handle_client(conn, addr):
                 print("Received message length: ", msg_length)
 
                 try:
-                    # Deserialize the received message to reconstruct the Tx object
                     received_tx = pickle.loads(msg)
-                    # received_tx = server_helper.load_transaction_from_network(msg)
-
-                    # Process received_tx as needed
                     print(f"[{client_name}@{addr}]>> Received Transaction: {received_tx}")
+                    print("Validation Result: " + str(process_received_transaction(received_tx)))
 
-                    # Send acknowledgment or process the transaction
                     return_message = f'Server received your transaction: {received_tx}'
                     conn.send(return_message.encode(FORMAT))
-                    
                 except:
                     msg = msg.decode(FORMAT)
                     if msg == DISCONNECT_MESSAGE:
@@ -75,8 +60,7 @@ def handle_client(conn, addr):
 
 def start():
     server.listen()
-    # print(f"[LISTENING] Server is listening on {Context.HOST_IP}:{Context.W_SERVER_PORT}")
-    print(f"[LISTENING] Server is listening...")
+    print(f"[LISTENING] Server is listening on {Context.HOST_IP}:{Context.W_SERVER_PORT}")
     while True:
         conn, addr = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr))
@@ -84,5 +68,5 @@ def start():
         print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
 
-print("[STARTING] server is starting...")
+print("[STARTING] Server is starting...")
 start()
