@@ -269,6 +269,9 @@ def create_mining_reward(miner_of_block_name, total_fee_for_miner):
     tx.add_output(find_receiver[1], total_reward_value)
     tx.set_valid()
 
-    savefile = open(Context.pool_path, "ab")
-    pickle.dump(tx, savefile)
-    savefile.close()
+    #TODO Remove comments when the wallet server is ready.
+    # savefile = open(Context.pool_path, "ab")
+    # pickle.dump(tx, savefile)
+    # savefile.close()
+    wallet_client = WalletClient()
+    wallet_client.handle_server(tx)

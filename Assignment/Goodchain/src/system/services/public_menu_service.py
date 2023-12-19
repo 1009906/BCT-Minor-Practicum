@@ -1,11 +1,9 @@
-import pickle
 from sqlite3 import IntegrityError
+from src.system.networking.wallet_client import WalletClient
 from src.system.security.hashing import hash_password
 from src.system.context import Context
-from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from src.system.blockchain.Transaction import *
-
 from src.system.services.pool_service import generate_random_transaction_id
 
 def create_user(user_name, password):
@@ -43,6 +41,10 @@ def signup_reward(receiver_name, public_key):
     tx.add_output(public_key, SIGNUP_REWARD)
     tx.set_valid()
 
-    savefile = open(Context.pool_path, "ab")
-    pickle.dump(tx, savefile)
-    savefile.close()
+    #TODO Remove
+    # savefile = open(Context.pool_path, "ab")
+    # pickle.dump(tx, savefile)
+    # savefile.close()
+
+    wallet_client = WalletClient()
+    wallet_client.handle_server(tx)
