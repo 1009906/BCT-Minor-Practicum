@@ -41,6 +41,12 @@ def start_servers():
 
     Context.subprocesses.append(wallet_server_subprocess)
 
+    miner_server_args = []
+    miner_server_command = [executable, 'miner_server.py'] + miner_server_args
+    miner_server_subprocess = Popen(miner_server_command, creationflags=CREATE_NEW_CONSOLE)
+
+    Context.subprocesses.append(miner_server_subprocess)
+
 if __name__ == "__main__":
     # check_file_integrity() #TODO Uncomment this line when the application is ready for production.
     Context.db_connection = get_connection()

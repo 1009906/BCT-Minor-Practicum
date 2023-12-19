@@ -3,6 +3,7 @@ import os
 import pickle
 from src.system.context import Context
 from src.system.blockchain.TxBlock import PENDING, VALID, TxBlock
+from src.system.networking.miner_client import MinerClient
 from src.system.services.pool_service import check_pool_reward_transactions, check_pool_valid_transactions, load_transaction_by_id, remove_transaction_from_pool, set_transaction_to_invalid_in_pool, set_transactions_back_to_pool
 from src.system.util.time_util import difference_in_minutes
 
@@ -228,14 +229,27 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
             return False, "The new block is not valid!"
 
         #Add block to ledger
-        savefile = open(Context.ledger_path, "ab")
-        pickle.dump(newBlock, savefile)
-        savefile.close()
-        
+        #TODO REMOVE en try catch misschien evt ook bij transfer coins.
+        # savefile = open(Context.ledger_path, "ab")
+        # pickle.dump(newBlock, savefile)
+        # savefile.close()
+
+        miner_client = MinerClient()
+        miner_client.handle_server(newBlock)
+
         return True, "New block is created and added to the chain, waiting for validation."
     
     except Exception:
         return False, "Error occurred while creating a new block."
+    
+def add_block_to_ledger(block):
+    try:
+        savefile = open(Context.ledger_path, "ab")
+        pickle.dump(block, savefile)
+        savefile.close()
+        return True
+    except Exception:
+        return False
 
 def update_block_in_chain(updated_block):
     block_updated = False

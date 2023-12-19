@@ -3,11 +3,11 @@ import select
 import socket 
 import threading
 from src.system.context import Context
-from src.system.services.network_service import process_received_transaction
+from src.system.services.network_service import process_received_block
 
 HEADER = 64
 
-ADDR = (Context.HOST_IP, Context.W_SERVER_PORT)
+ADDR = (Context.HOST_IP, Context.M_SERVER_PORT)
 
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
@@ -34,13 +34,13 @@ def handle_client(conn, addr):
                 print("Received message length: ", msg_length)
 
                 try:
-                    received_tx = pickle.loads(msg)
-                    print(f"[{client_name}@{addr}]>> Received Transaction: {received_tx}")
+                    received_block = pickle.loads(msg)
+                    print(f"[{client_name}@{addr}]>> Received Block: {received_block}")
 
-                    transaction_processed = process_received_transaction(received_tx)
-                    print("Validation Result: " + str(transaction_processed[0]))
+                    block_processed = process_received_block(received_block)
+                    print("Validation Result: " + str(block_processed[0]))
 
-                    return_message = f'Server received and processed your transaction: {transaction_processed[1]}'
+                    return_message = f'Server received and processed your block: {block_processed[1]}'
                     conn.send(return_message.encode(FORMAT))
                 except:
                     msg = msg.decode(FORMAT)
@@ -62,7 +62,7 @@ def handle_client(conn, addr):
 
 def start():
     server.listen()
-    print(f"[LISTENING] Wallet Server is listening on {Context.HOST_IP}:{Context.W_SERVER_PORT}")
+    print(f"[LISTENING] Miner Server is listening on {Context.HOST_IP}:{Context.M_SERVER_PORT}")
     while True:
         conn, addr = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr))
@@ -70,5 +70,5 @@ def start():
         print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
 
-print("[STARTING] Wallet Server is starting...")
+print("[STARTING] Miner Server is starting...")
 start()
