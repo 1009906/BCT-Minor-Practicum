@@ -275,4 +275,4 @@ def create_mining_reward(miner_of_block_name, total_fee_for_miner):
     # pickle.dump(tx, savefile)
     # savefile.close()
 
-    create_wallet_client_and_send_transaction(tx)
+    create_wallet_client_and_send_transaction(tx, miner_of_block_name) #TODO CHECK IF NAME IS OK

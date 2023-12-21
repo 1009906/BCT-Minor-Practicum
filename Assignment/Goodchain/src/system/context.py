@@ -6,7 +6,7 @@ class Context:
     private_key: str = None
     public_key: str = None
     last_login_date: datetime = None
-    current_node: str = "node2"
+    current_node: str = "node1"
 
     db_connection = None  # database connection
 
