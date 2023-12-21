@@ -1,5 +1,5 @@
 from sqlite3 import IntegrityError
-from src.system.networking.wallet_client import WalletClient
+from src.system.networking.client_helper import create_wallet_client_and_send_transaction
 from src.system.security.hashing import hash_password
 from src.system.context import Context
 from cryptography.hazmat.primitives import serialization
@@ -46,5 +46,4 @@ def signup_reward(receiver_name, public_key):
     # pickle.dump(tx, savefile)
     # savefile.close()
 
-    wallet_client = WalletClient()
-    wallet_client.handle_server(tx)
+    create_wallet_client_and_send_transaction(tx, receiver_name)

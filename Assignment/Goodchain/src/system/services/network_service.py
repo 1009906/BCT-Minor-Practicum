@@ -1,7 +1,7 @@
 #TODO Deze service implementeren om alles over het netwerk te handelen.
 from src.system.blockchain.TxBlock import VALID
 from src.system.services.blockchain_service import add_block_to_ledger
-from src.system.services.pool_service import add_transaction_to_pool
+from src.system.services.pool_service import add_transaction_to_pool, create_mining_reward
 from src.system.context import Context
 
 def process_received_transaction(transaction):
@@ -29,6 +29,7 @@ def process_received_block(block):
         adding_result = add_block_to_ledger(block)
         
         if adding_result:
+            create_mining_reward(block.miner_of_block, block.total_fee_for_miner)
             result = True, block
         else:
             result = False, block

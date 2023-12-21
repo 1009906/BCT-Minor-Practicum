@@ -9,11 +9,11 @@ FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
 class WalletClient:
-    def initialize_socket(self, port):
+    def initialize_socket(self, port, client_name = None):
         ADDR = (Context.HOST_IP, port)
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect(ADDR)
-        client_name = Context.user_name
+        client_name = Context.user_name if client_name is None else client_name
         client_socket.send(client_name.encode(FORMAT))
         print(client_socket.recv(2048).decode(FORMAT))
         return client_socket
@@ -42,10 +42,10 @@ class WalletClient:
         client_socket.close()
         return False
 
-    def handle_server(self, transaction):
+    def handle_server(self, transaction, client_name = None):
         for port in Context.W_SERVER_PORTS:
             try:
-                client_socket = self.initialize_socket(port)
+                client_socket = self.initialize_socket(port, client_name)
             except:
                 continue
             

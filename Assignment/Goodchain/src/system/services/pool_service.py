@@ -1,11 +1,12 @@
 import os
 import pickle
 import uuid
+from src.system.connection import get_connection
 
 from src.system.context import Context
 from src.system.blockchain.Transaction import MINERREWARD, MINERREWARD_VALUE, SIGNUP, Tx
 from src.system.blockchain.TxBlock import VALID
-from src.system.networking.wallet_client import WalletClient
+from src.system.networking.client_helper import create_wallet_client_and_send_transaction
 
 def transfer_coins(recieverName, amountCoins, transactionFee):
     #Check if receiver exists.
@@ -37,8 +38,8 @@ def transfer_coins(recieverName, amountCoins, transactionFee):
         # savefile = open(Context.pool_path, "ab")
         # pickle.dump(newTx, savefile)
         # savefile.close()
-        wallet_client = WalletClient()
-        wallet_client.handle_server(newTx)
+
+        create_wallet_client_and_send_transaction(newTx)
 
         return True, "Transaction is valid! (added to the pool)"
     else:
@@ -79,7 +80,7 @@ def check_balance():
     return total_out - total_in
     
 def get_receiver_public_key(recieverName):
-    con = Context.db_connection
+    con = Context.db_connection if Context.db_connection != None else get_connection()
     c = con.cursor()
     c.execute("SELECT * FROM users WHERE Name=?", [recieverName])
     user_result = c.fetchone()
@@ -273,5 +274,5 @@ def create_mining_reward(miner_of_block_name, total_fee_for_miner):
     # savefile = open(Context.pool_path, "ab")
     # pickle.dump(tx, savefile)
     # savefile.close()
-    wallet_client = WalletClient()
-    wallet_client.handle_server(tx)
+
+    create_wallet_client_and_send_transaction(tx)
