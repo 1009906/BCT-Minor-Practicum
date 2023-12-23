@@ -223,6 +223,26 @@ def remove_transaction_from_pool(transaction_id):
 
     return transaction_is_removed
 
+def remove_transactions_from_pool(transaction_ids):
+    transactions_are_removed = False
+    with open(Context.pool_path, "rb") as original_file, open(Context.temp_pool_path, "wb") as temp_file:
+        try:
+            while True:
+                transaction = pickle.load(original_file)
+                if str(transaction.id) in transaction_ids:
+                    # Skip this transaction
+                    transactions_are_removed = True
+                    continue
+                pickle.dump(transaction, temp_file)
+        except EOFError:
+            pass
+        
+    # Replace the original pool file with the temporary file
+    os.remove(Context.pool_path)
+    os.rename(Context.temp_pool_path, Context.pool_path)
+
+    return transactions_are_removed
+
 def set_transaction_to_invalid_in_pool(transaction_id):
     transaction_set_invalid = False
     with open(Context.pool_path, "rb") as original_file, open(Context.temp_pool_path, "wb") as temp_file:

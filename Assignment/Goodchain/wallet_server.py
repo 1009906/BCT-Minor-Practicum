@@ -3,7 +3,7 @@ import select
 import socket 
 import threading
 from src.system.context import Context
-from src.system.services.network_service import process_received_transaction
+from src.system.services.network_service import process_received_remove_transactions, process_received_transaction
 
 HEADER = 64
 
@@ -11,6 +11,7 @@ ADDR = (Context.HOST_IP, Context.W_SERVER_PORT)
 
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
+REMOVE_TXS_MESSAGE = "!REMOVE_TXS"
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
@@ -44,6 +45,14 @@ def handle_client(conn, addr):
                     conn.send(return_message.encode(FORMAT))
                 except:
                     msg = msg.decode(FORMAT)
+
+                    if msg.startswith(REMOVE_TXS_MESSAGE):
+                        tx_ids = msg[len(REMOVE_TXS_MESSAGE):].split(",")
+
+                        print(f"[{client_name}@{addr}]>> Received Remove Transactions: {tx_ids}")
+                        result = process_received_remove_transactions(tx_ids)
+                        print("Remove Result: " + str(result))
+
                     if msg == DISCONNECT_MESSAGE:
                         connected = False
 

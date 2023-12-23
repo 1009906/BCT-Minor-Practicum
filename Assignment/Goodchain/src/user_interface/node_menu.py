@@ -151,7 +151,7 @@ class NodeMenu(Menu):
         print_header("Cancel transaction")
 
         transaction_id = prompt_input(lambda: safe_input("Please enter the transaction id:"))
-        result = cancel_transaction_from_pool(transaction_id)
+        result = cancel_transaction_from_pool(transaction_id) #TODO: SEND OVER NETWORK
 
         if result:
             print_success("Transaction is found and removed from the pool!")

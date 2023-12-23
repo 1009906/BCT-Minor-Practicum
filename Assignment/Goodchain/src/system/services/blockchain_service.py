@@ -3,7 +3,7 @@ import os
 import pickle
 from src.system.context import Context
 from src.system.blockchain.TxBlock import PENDING, VALID, TxBlock
-from src.system.networking.client_helper import create_miner_client_and_send_block
+from src.system.networking.client_helper import create_miner_client_and_send_block, create_wallet_client_and_send_remove_txs
 from src.system.services.pool_service import check_pool_reward_transactions, check_pool_valid_transactions, load_transaction_by_id, remove_transaction_from_pool, set_transaction_to_invalid_in_pool, set_transactions_back_to_pool
 from src.system.util.time_util import difference_in_minutes
 
@@ -171,14 +171,16 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
             newBlock.addTx(transaction)
 
         #Remove transactions from pool, the user choose to add to the block
-        for transaction_id in transactions_to_remove:
-            remove_transaction_from_pool(transaction_id)
+        # for transaction_id in transactions_to_remove:
+        #     remove_transaction_from_pool(transaction_id) #TODO over network
+        if len(transactions_to_remove) > 0:
+            create_wallet_client_and_send_remove_txs(transactions_to_remove)
 
         transactions_to_remove = [] #Reset list
         
         #Set transactions to invalid in pool the user choose to add to the block
         for transaction_id in transactions_to_set_invalid:
-            set_transaction_to_invalid_in_pool(transaction_id)
+            set_transaction_to_invalid_in_pool(transaction_id) #TODO over network
 
         #Check if there are reward transactions in the pool (signup or mining reward). Priority to add reward transactions to the block
         get_reward_transactions_from_pool = check_pool_reward_transactions() #Gets all reward and valid transactions from the pool
@@ -192,8 +194,10 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
                     break
 
         #Remove added reward transactions from pool
-        for transaction_id in transactions_to_remove:
-            remove_transaction_from_pool(transaction_id)
+        # for transaction_id in transactions_to_remove:
+        #     remove_transaction_from_pool(transaction_id) #TODO over network
+        if len(transactions_to_remove) > 0:
+            create_wallet_client_and_send_remove_txs(transactions_to_remove)
 
         transactions_to_remove = [] #Reset list
 
@@ -210,8 +214,10 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
                     break
 
         #Remove later added transactions from pool
-        for transaction_id in transactions_to_remove:
-            remove_transaction_from_pool(transaction_id)
+        # for transaction_id in transactions_to_remove:
+        #     remove_transaction_from_pool(transaction_id) #TODO over network
+        if len(transactions_to_remove) > 0:
+            create_wallet_client_and_send_remove_txs(transactions_to_remove)
 
         #Find nonce for block
         amount_of_transactions = len(newBlock.data)
@@ -225,7 +231,7 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
 
         new_block_is_valid = newBlock.is_valid()
         if new_block_is_valid == False:
-            set_transactions_back_to_pool(newBlock)
+            set_transactions_back_to_pool(newBlock) #TODO over network
             return False, "The new block is not valid!"
 
         #Add block to ledger
