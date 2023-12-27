@@ -7,7 +7,7 @@ from src.system.services.network_service import process_received_remove_transact
 
 HEADER = 64
 
-ADDR = (Context.HOST_IP, Context.W_SERVER_PORT)
+ADDR = Context.W_SERVER_ADDR
 
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
@@ -79,7 +79,7 @@ def handle_client(conn, addr):
 
 def start():
     server.listen()
-    print(f"[LISTENING] Wallet Server is listening on {Context.HOST_IP}:{Context.W_SERVER_PORT}")
+    print(f"[LISTENING] Wallet Server is listening on {ADDR}")
     while True:
         conn, addr = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr))

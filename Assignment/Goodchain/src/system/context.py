@@ -18,14 +18,15 @@ class Context:
     temp_pool_path = f"data/{current_node}/temppooltx.dat"
     hash_file_path = f"data/{current_node}/hash_file.txt"
 
-    #All used ports
-    HOST_IP = 'localhost'
-    
-    W_SERVER_PORTS = [5000, 5002]
-    M_SERVER_PORTS = [5001, 5003]
+    #All used addresses, depends on current_node
+    CURRENT_HOST_IP = 'localhost'
+    OTHER_HOST_IP = 'localhost'
 
-    W_SERVER_PORT = 5000 if current_node == "node1" else 5002
-    M_SERVER_PORT = 5001 if current_node == "node1" else 5003
+    W_SERVER_ADDRESSES = [(CURRENT_HOST_IP, 5000), (OTHER_HOST_IP, 5002)]
+    M_SERVER_ADDRESSES = [(CURRENT_HOST_IP, 5001), (OTHER_HOST_IP, 5003)]
+
+    W_SERVER_ADDR = W_SERVER_ADDRESSES[0] if current_node == "node1" else W_SERVER_ADDRESSES[1]
+    M_SERVER_ADDR = M_SERVER_ADDRESSES[0] if current_node == "node1" else M_SERVER_ADDRESSES[1]
 
     subprocesses = []
     

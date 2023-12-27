@@ -9,8 +9,8 @@ FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
 class MinerClient:
-    def initialize_socket(self, port):
-        ADDR = (Context.HOST_IP, port)
+    def initialize_socket(self, addr):
+        ADDR = addr
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect(ADDR)
         client_name = Context.user_name
@@ -43,9 +43,9 @@ class MinerClient:
         return False
 
     def handle_server(self, block):
-        for port in Context.M_SERVER_PORTS:
+        for addr in Context.M_SERVER_ADDRESSES:
             try:
-                client_socket = self.initialize_socket(port)
+                client_socket = self.initialize_socket(addr)
             except:
                 continue
             

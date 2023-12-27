@@ -11,8 +11,8 @@ REMOVE_TXS_MESSAGE = "!REMOVE_TXS"
 SET_INVALID_TXS_MESSAGE = "!SET_INVALID_TXS"
 
 class WalletClient:
-    def initialize_socket(self, port, client_name = None):
-        ADDR = (Context.HOST_IP, port)
+    def initialize_socket(self, addr, client_name = None):
+        ADDR = addr
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect(ADDR)
         client_name = Context.user_name if client_name is None else client_name
@@ -53,9 +53,9 @@ class WalletClient:
         return False
 
     def handle_server_send_tx(self, transaction, client_name = None):
-        for port in Context.W_SERVER_PORTS:
+        for addr in Context.W_SERVER_ADDRESSES:
             try:
-                client_socket = self.initialize_socket(port, client_name)
+                client_socket = self.initialize_socket(addr, client_name)
             except:
                 continue
             
@@ -80,9 +80,9 @@ class WalletClient:
                 timeout_thread.cancel()
     
     def handle_server_send_remove_txs(self, tx_ids, client_name = None):
-        for port in Context.W_SERVER_PORTS:
+        for addr in Context.W_SERVER_ADDRESSES:
             try:
-                client_socket = self.initialize_socket(port, client_name)
+                client_socket = self.initialize_socket(addr, client_name)
             except:
                 continue
             
@@ -107,9 +107,9 @@ class WalletClient:
                 timeout_thread.cancel()
 
     def handle_server_send_set_invalid_txs(self, tx_ids, client_name = None):
-        for port in Context.W_SERVER_PORTS:
+        for addr in Context.W_SERVER_ADDRESSES:
             try:
-                client_socket = self.initialize_socket(port, client_name)
+                client_socket = self.initialize_socket(addr, client_name)
             except:
                 continue
             

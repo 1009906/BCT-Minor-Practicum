@@ -66,7 +66,6 @@ if __name__ == "__main__":
 
 """
 -> DatabaseClient en DatabaseServer implementeren. Port 5004 en 5005.
--> Context omschrijven met de ports dat het addressen zijn. [('localhost', port), ('localhost', port)]
 -> Opt: Niks wijzigen aan de code en toch de node1 naar node2 zetten. Via tekstfile oid?
 -> Alles wat nu via het netwerk gaat, heel goed en grondig testen.
 
@@ -75,6 +74,5 @@ Public Menu:
 -> 3 Signup functie over netwerk user toevoegen aan database.
 
 Node Menu:
--> 5 Cancel transaction functie over netwerk.
 -> 10 Edit password functie over netwerk.
 """
