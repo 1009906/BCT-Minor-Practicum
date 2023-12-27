@@ -47,6 +47,12 @@ def start_servers():
 
     Context.subprocesses.append(miner_server_subprocess)
 
+    database_server_args = []
+    database_server_command = [executable, 'database_server.py'] + database_server_args
+    database_server_subprocess = Popen(database_server_command, creationflags=CREATE_NEW_CONSOLE)
+
+    Context.subprocesses.append(database_server_subprocess)
+
 """
 How to run the application:
 -> Navigate to the Goodchain folder.

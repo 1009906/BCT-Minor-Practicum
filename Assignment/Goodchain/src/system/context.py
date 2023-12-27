@@ -24,9 +24,11 @@ class Context:
 
     W_SERVER_ADDRESSES = [(CURRENT_HOST_IP, 5000), (OTHER_HOST_IP, 5002)]
     M_SERVER_ADDRESSES = [(CURRENT_HOST_IP, 5001), (OTHER_HOST_IP, 5003)]
+    DB_SERVER_ADDRESSES = [(CURRENT_HOST_IP, 5004), (OTHER_HOST_IP, 5005)]
 
     W_SERVER_ADDR = W_SERVER_ADDRESSES[0] if current_node == "node1" else W_SERVER_ADDRESSES[1]
     M_SERVER_ADDR = M_SERVER_ADDRESSES[0] if current_node == "node1" else M_SERVER_ADDRESSES[1]
+    DB_SERVER_ADDR = DB_SERVER_ADDRESSES[0] if current_node == "node1" else DB_SERVER_ADDRESSES[1]
 
     subprocesses = []
     
