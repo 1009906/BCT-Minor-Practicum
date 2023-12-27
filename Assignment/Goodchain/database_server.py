@@ -2,6 +2,8 @@ import select
 import socket 
 import threading
 from src.system.context import Context
+from src.system.services.database_service import add_user_to_database
+from src.system.util.formatting_util import parse_formatted_string
 
 HEADER = 64
 
@@ -9,6 +11,10 @@ ADDR = Context.DB_SERVER_ADDR
 
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
+
+CREATE_USER_MESSAGE = "!CREATE_USER"
+EDIT_PASSWORD_MESSAGE = "!EDIT_PASSWORD"
+UPDATE_LAST_LOGIN_DATE_MESSAGE = "!UPDATE_LAST_LOGIN_DATE"
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
@@ -32,7 +38,18 @@ def handle_client(conn, addr):
                 print("Received message length: ", msg_length)
 
                 msg = msg.decode(FORMAT)
-                if msg == DISCONNECT_MESSAGE:
+
+                if msg.startswith(CREATE_USER_MESSAGE):
+                    print("Create user message received.")
+                    msg = msg.replace(CREATE_USER_MESSAGE + " ", "")
+                    parsed_user_data = parse_formatted_string(msg)
+                    result = add_user_to_database(parsed_user_data)
+                    if result:
+                        print(f'User {parsed_user_data["username"]} is successfully created!')
+                    else:
+                        print(f'Error while creating user {parsed_user_data["username"]}!')
+                    
+                elif msg == DISCONNECT_MESSAGE:
                     connected = False
 
                 print(f"[{client_name}@{addr}]>> {msg}")
@@ -43,9 +60,9 @@ def handle_client(conn, addr):
             return_message = f'\nTimeout! You are disconnected.'
             conn.send(return_message.encode(FORMAT))
     
-    bye_message = f"\nBye {client_name}!"
-    conn.send(bye_message.encode(FORMAT))
-    conn.close()
+    # bye_message = f"\nBye {client_name}!"
+    # conn.send(bye_message.encode(FORMAT))
+    # conn.close()
     print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 2}")    
 
 def start():

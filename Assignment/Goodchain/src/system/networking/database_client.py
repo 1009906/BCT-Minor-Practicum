@@ -7,6 +7,11 @@ HEADER = 64
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
+CREATE_USER_MESSAGE = "!CREATE_USER"
+EDIT_PASSWORD_MESSAGE = "!EDIT_PASSWORD"
+UPDATE_LAST_LOGIN_DATE_MESSAGE = "!UPDATE_LAST_LOGIN_DATE"
+
+
 class DatabaseClient:
     def initialize_socket(self, addr, client_name = None):
         ADDR = addr
@@ -26,22 +31,13 @@ class DatabaseClient:
         client_socket.send(message)
         print(client_socket.recv(2048).decode(FORMAT))
 
-    # def send_block(self, block, client_socket: socket.socket):
-    #     serialized_block = pickle.dumps(block)
-    #     msg_length = len(serialized_block)
-    #     send_length = str(msg_length).encode(FORMAT)
-    #     send_length += b' ' * (HEADER - len(send_length))
-    #     client_socket.send(send_length)
-    #     client_socket.send(serialized_block)
-    #     print(client_socket.recv(2048).decode(FORMAT))
-
     def stop_the_client(self, client_socket: socket.socket):
         mes = DISCONNECT_MESSAGE
         self.send(mes, client_socket)
         client_socket.close()
         return False
 
-    def handle_server(self, client_name = None):
+    def handle_server(self, message, client_name = None):
         for addr in Context.DB_SERVER_ADDRESSES:
             try:
                 client_socket = self.initialize_socket(addr, client_name)
@@ -60,8 +56,7 @@ class DatabaseClient:
                     break
 
                 try:
-                    # self.send_block(block, client_socket)
-                    self.send("Hello", client_socket)
+                    self.send(message, client_socket)
                     cont_flag = self.stop_the_client(client_socket)
                 except:
                     print('The connection has already terminated.')

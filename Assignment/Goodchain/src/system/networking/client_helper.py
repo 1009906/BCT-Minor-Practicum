@@ -21,6 +21,6 @@ def create_miner_client_and_send_block(block):
     miner_client.handle_server(block)
 
 # DatabaseClient
-def create_database_client_and_send_test_message(client_name = None): #TODO remove
+def create_database_client_and_send_create_user(formatted_data_string, client_name = None):
     database_client = DatabaseClient()
-    database_client.handle_server(client_name)
+    database_client.handle_server(formatted_data_string, client_name)
