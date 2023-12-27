@@ -8,6 +8,7 @@ HEADER = 64
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
 REMOVE_TXS_MESSAGE = "!REMOVE_TXS"
+SET_INVALID_TXS_MESSAGE = "!SET_INVALID_TXS"
 
 class WalletClient:
     def initialize_socket(self, port, client_name = None):
@@ -38,8 +39,11 @@ class WalletClient:
         print(client_socket.recv(2048).decode(FORMAT))
 
     def send_remove_txs(self, tx_ids, client_socket: socket.socket):
-        #TODO Create a string with REMOVE_TXS_MESSAGE at the beginning + tx_ids seperated by ','
         msg = REMOVE_TXS_MESSAGE + ",".join(tx_ids)
+        self.send(msg, client_socket)
+
+    def send_set_invalid_txs(self, tx_ids, client_socket: socket.socket):
+        msg = SET_INVALID_TXS_MESSAGE + ",".join(tx_ids)
         self.send(msg, client_socket)
 
     def stop_the_client(self, client_socket: socket.socket):
@@ -95,6 +99,33 @@ class WalletClient:
 
                 try:
                     self.send_remove_txs(tx_ids, client_socket)
+                    cont_flag = self.stop_the_client(client_socket)
+                except:
+                    print('The connection has already terminated.')
+                    cont_flag = False
+
+                timeout_thread.cancel()
+
+    def handle_server_send_set_invalid_txs(self, tx_ids, client_name = None):
+        for port in Context.W_SERVER_PORTS:
+            try:
+                client_socket = self.initialize_socket(port, client_name)
+            except:
+                continue
+            
+            cont_flag = True
+            while cont_flag:
+
+                timeout = 15
+                timeout_thread = Timer(timeout, self.stop_the_client, [client_socket])
+                timeout_thread.start()
+
+                if not cont_flag:
+                    print('The connection has already terminated.')
+                    break
+
+                try:
+                    self.send_set_invalid_txs(tx_ids, client_socket)
                     cont_flag = self.stop_the_client(client_socket)
                 except:
                     print('The connection has already terminated.')

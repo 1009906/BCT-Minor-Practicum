@@ -1,7 +1,7 @@
 #TODO Deze service implementeren om alles over het netwerk te handelen.
 from src.system.blockchain.TxBlock import VALID
 from src.system.services.blockchain_service import add_block_to_ledger
-from src.system.services.pool_service import add_transaction_to_pool, create_mining_reward, remove_transactions_from_pool
+from src.system.services.pool_service import add_transaction_to_pool, create_mining_reward, remove_transactions_from_pool, set_transactions_invalid_in_pool
 from src.system.context import Context
 
 def process_received_transaction(transaction):
@@ -20,6 +20,10 @@ def process_received_transaction(transaction):
 
 def process_received_remove_transactions(tx_ids):
     result = remove_transactions_from_pool(tx_ids)
+    return result
+
+def process_received_set_invalid_transactions(tx_ids):
+    result = set_transactions_invalid_in_pool(tx_ids)
     return result
 
 def process_received_block(block):

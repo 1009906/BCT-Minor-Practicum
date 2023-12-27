@@ -263,6 +263,26 @@ def set_transaction_to_invalid_in_pool(transaction_id):
 
     return transaction_set_invalid
 
+def set_transactions_invalid_in_pool(transaction_ids):
+    transactions_are_set_invalid = False
+    with open(Context.pool_path, "rb") as original_file, open(Context.temp_pool_path, "wb") as temp_file:
+        try:
+            while True:
+                transaction = pickle.load(original_file)
+                if str(transaction.id) in transaction_ids:
+                    # Set transaction to invalid
+                    transaction.set_invalid()
+                    transactions_are_set_invalid = True
+                pickle.dump(transaction, temp_file)
+        except EOFError:
+            pass
+        
+    # Replace the original pool file with the temporary file
+    os.remove(Context.pool_path)
+    os.rename(Context.temp_pool_path, Context.pool_path)
+
+    return transactions_are_set_invalid
+
 def set_transactions_back_to_pool(block):
     #Return all transactions of the rejected block back to the pool
     #If the block is rejected because of some invalid transactions, those invalid transactions must be also flagged as invalid on the pool to be nullified by the creator of the transaction upon login. 
@@ -273,8 +293,9 @@ def set_transactions_back_to_pool(block):
         else:
             transaction.set_invalid()
         
-        add_transaction_to_pool(transaction)
-
+        # add_transaction_to_pool(transaction) #TODO over network
+        create_wallet_client_and_send_transaction(transaction)
+        
     block.data = []
     return block
 

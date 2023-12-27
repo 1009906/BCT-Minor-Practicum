@@ -47,9 +47,34 @@ def start_servers():
 
     Context.subprocesses.append(miner_server_subprocess)
 
+"""
+How to run the application:
+-> Navigate to the Goodchain folder.
+-> Make sure that in the Context class (context.py) the current_node is set to "node1".
+-> Run the following command: python goodchain.py
+-> The application is now running on node1. And all the servers are running.
+
+-> Do the same for node2, but change the current_node in the Context class to "node2".
+"""
+
 if __name__ == "__main__":
     # check_file_integrity() #TODO Uncomment this line when the application is ready for production.
     Context.db_connection = get_connection()
     start_servers()
     public_menu = PublicMenu()
     public_menu.run()
+
+"""
+-> DatabaseClient en DatabaseServer implementeren. Port 5004 en 5005.
+-> Context omschrijven met de ports dat het addressen zijn. [('localhost', port), ('localhost', port)]
+-> Opt: Niks wijzigen aan de code en toch de node1 naar node2 zetten. Via tekstfile oid?
+-> Alles wat nu via het netwerk gaat, heel goed en grondig testen.
+
+Public Menu:
+-> 1 Login functie over netwerk updaten van laatste login date in database.
+-> 3 Signup functie over netwerk user toevoegen aan database.
+
+Node Menu:
+-> 5 Cancel transaction functie over netwerk.
+-> 10 Edit password functie over netwerk.
+"""

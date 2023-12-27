@@ -1,6 +1,7 @@
 import os
 import time
-from src.system.services.pool_service import check_pool_valid_transactions, cancel_transaction_from_pool, transfer_coins
+from src.system.networking.client_helper import create_wallet_client_and_send_remove_txs
+from src.system.services.pool_service import check_pool_valid_transactions, cancel_transaction_from_pool, load_transaction_by_id, transfer_coins
 from src.user_interface.util.form import prompt_input
 from src.user_interface.util.safe_input import safe_input
 from src.system.context import Context
@@ -30,7 +31,6 @@ class NodeMenu(Menu):
         self._add_menu_option(self.check_pool, "Check the pool")
         self._add_menu_option(self.cancel_transaction, "Cancel a transaction")
         self._add_menu_option(self.mine_block, "Mine a block")
-        self._add_menu_option(self.validate_block, "Validate a block")
         self._add_menu_option(self.validate_chain, "Validate the chain")
         self._add_menu_option(self.show_profile, "Show profile")
         self._add_menu_option(self.edit_password, "Edit password")
@@ -151,12 +151,22 @@ class NodeMenu(Menu):
         print_header("Cancel transaction")
 
         transaction_id = prompt_input(lambda: safe_input("Please enter the transaction id:"))
-        result = cancel_transaction_from_pool(transaction_id) #TODO: SEND OVER NETWORK
 
-        if result:
+        find_transaction = load_transaction_by_id(transaction_id)
+
+        if find_transaction == None:
+            print_error("Transaction not found!")
+            self._back()
+
+        if find_transaction.owner != Context.user_name:
+            print_error("You are not the owner of this transaction!")
+            self._back()
+
+        try:
+            create_wallet_client_and_send_remove_txs([transaction_id])
             print_success("Transaction is found and removed from the pool!")
-        else:
-            print_error("Transaction is not found in the pool or you are not the owner of the transaction!")
+        except:
+            print_error("Something went wrong while canceling the transaction!")
 
         self._back()
 
@@ -228,16 +238,6 @@ class NodeMenu(Menu):
             print_success(result[1])
         else:
             print_error(result[1])
-
-        self._back()
-    
-    def validate_block(self):
-        self._clear()
-        print_header("Validate block")
-
-        block_hash = prompt_input(lambda: safe_input("Please enter the block hash: "))
-        result = check_blockchain_for_block_to_validate(block_hash, False)
-        print(result)
 
         self._back()
 
