@@ -75,9 +75,6 @@ if __name__ == "__main__":
 -> Alles wat nu via het netwerk gaat, heel goed en grondig testen.
 -> Komt miner reward dubbel in de pool? Na het minen van een block?
 
-Public Menu:
--> 1 Login functie over netwerk updaten van laatste login date in database.
-
 Node Menu:
 -> 10 Edit password functie over netwerk.
 """

@@ -2,7 +2,7 @@ import select
 import socket 
 import threading
 from src.system.context import Context
-from src.system.services.database_service import add_user_to_database
+from src.system.services.database_service import add_user_to_database, update_last_login_date_user
 from src.system.util.formatting_util import parse_formatted_string
 
 HEADER = 64
@@ -48,6 +48,16 @@ def handle_client(conn, addr):
                         print(f'User {parsed_user_data["username"]} is successfully created!')
                     else:
                         print(f'Error while creating user {parsed_user_data["username"]}!')
+
+                elif msg.startswith(UPDATE_LAST_LOGIN_DATE_MESSAGE):
+                    print("Update last login date message received.")
+                    msg = msg.replace(UPDATE_LAST_LOGIN_DATE_MESSAGE + " ", "")
+                    parsed_user_data = parse_formatted_string(msg)
+                    result = update_last_login_date_user(parsed_user_data["username"], parsed_user_data["last_login_date"])
+                    if result:
+                        print(f'User {parsed_user_data["username"]} is successfully updated!')
+                    else:
+                        print(f'Error while updating user {parsed_user_data["username"]}!')
                     
                 elif msg == DISCONNECT_MESSAGE:
                     connected = False

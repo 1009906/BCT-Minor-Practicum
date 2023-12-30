@@ -2,31 +2,51 @@ from datetime import datetime
 from sqlite3 import IntegrityError
 from src.system.context import Context
 from src.system.blockchain.TxBlock import PENDING, VALID
-from src.system.services.blockchain_service import explore_chain, explore_chain_valid_blocks
-from src.system.services.pool_service import check_pool_valid_transactions
+from src.system.networking.client_helper import create_database_client_and_send_update_last_login_date_user
+from src.system.networking.database_client import UPDATE_LAST_LOGIN_DATE_MESSAGE
+from src.system.services.blockchain_service import explore_chain_valid_blocks
+from src.system.util.formatting_util import create_formatted_string, format_datetime
 from src.user_interface.util.colors import convert_to_green, convert_to_red, convert_to_yellow
 
 def update_last_login_date():
-    con = Context.db_connection
-    c = con.cursor()
-    datetime_now = datetime.now()
-
     try:
-        c.execute(
-            "UPDATE users "
-            "SET    LastLogin = ? "
-            "WHERE Name = ?"
-            , (datetime_now, Context.user_name))
+        datetime_now = datetime.now()
 
-        if c.rowcount == 1:
-            con.commit()
-            Context.last_login_date = datetime_now
-            return True, "User updated."
-        else:
-            return False, "Error: Could not update user."
+        data = {
+            "username": Context.user_name,
+            "last_login_date": format_datetime(datetime_now)
+        }
 
-    except IntegrityError as e:
-        return False, str(e)
+        formatted_string = create_formatted_string(UPDATE_LAST_LOGIN_DATE_MESSAGE, data)
+        create_database_client_and_send_update_last_login_date_user(formatted_string, "System")
+
+        Context.last_login_date = datetime_now
+        
+        return True, "Last login date updated."
+    except:
+        return False, "Error while updating last login date."
+
+    #TODO Remove
+    # con = Context.db_connection
+    # c = con.cursor()
+    # datetime_now = datetime.now()
+
+    # try:
+    #     c.execute(
+    #         "UPDATE users "
+    #         "SET    LastLogin = ? "
+    #         "WHERE Name = ?"
+    #         , (datetime_now, Context.user_name))
+
+    #     if c.rowcount == 1:
+    #         con.commit()
+    #         Context.last_login_date = datetime_now
+    #         return True, "User updated."
+    #     else:
+    #         return False, "Error: Could not update user."
+
+    # except IntegrityError as e:
+    #     return False, str(e)
     
 def check_mined_blocks_status_since_last_login(blocks_added_since_last_login, user_name):
     result = ""
