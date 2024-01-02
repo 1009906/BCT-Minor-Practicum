@@ -1,14 +1,25 @@
 from sqlite3 import IntegrityError
+from src.system.blockchain.Signature import generate_keys
 from src.system.connection import get_connection
 from src.system.context import Context
 from src.system.util.formatting_util import unformat_datetime
+from cryptography.hazmat.primitives import serialization
 
 def add_user_to_database(parsed_user_data):
     try:
         user_name = parsed_user_data["username"]
         hashed_password = parsed_user_data["hashed_password"]
-        prv_ser = parsed_user_data["private_key"]
-        pbc_ser = parsed_user_data["public_key"]
+
+        keys = generate_keys()
+        prv_ser = keys[0].private_bytes(
+                    encoding=serialization.Encoding.PEM,
+                    format=serialization.PrivateFormat.PKCS8,
+                    encryption_algorithm=serialization.NoEncryption()
+                    )
+        pbc_ser = keys[1].public_bytes(
+                encoding=serialization.Encoding.PEM,
+                format=serialization.PublicFormat.SubjectPublicKeyInfo
+                )
 
         con = Context.db_connection if Context.db_connection else get_connection()
         c = con.cursor()

@@ -19,12 +19,12 @@ class Context:
     hash_file_path = f"data/{current_node}/hash_file.txt"
 
     #All used addresses, depends on current_node
-    CURRENT_HOST_IP = 'localhost'
-    OTHER_HOST_IP = 'localhost'
+    HOST_IP_NODE_1 = 'localhost'
+    HOST_IP_NODE_2 = 'localhost'
 
-    W_SERVER_ADDRESSES = [(CURRENT_HOST_IP, 5000), (OTHER_HOST_IP, 5002)]
-    M_SERVER_ADDRESSES = [(CURRENT_HOST_IP, 5001), (OTHER_HOST_IP, 5003)]
-    DB_SERVER_ADDRESSES = [(CURRENT_HOST_IP, 5004), (OTHER_HOST_IP, 5005)]
+    W_SERVER_ADDRESSES = [(HOST_IP_NODE_1, 5000), (HOST_IP_NODE_2, 5002)]
+    M_SERVER_ADDRESSES = [(HOST_IP_NODE_1, 5001), (HOST_IP_NODE_2, 5003)]
+    DB_SERVER_ADDRESSES = [(HOST_IP_NODE_1, 5004), (HOST_IP_NODE_2, 5005)]
 
     W_SERVER_ADDR = W_SERVER_ADDRESSES[0] if current_node == "node1" else W_SERVER_ADDRESSES[1]
     M_SERVER_ADDR = M_SERVER_ADDRESSES[0] if current_node == "node1" else M_SERVER_ADDRESSES[1]

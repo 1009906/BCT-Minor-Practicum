@@ -1,5 +1,5 @@
 import time
-from src.system.services.public_menu_service import create_user
+from src.system.services.public_menu_service import create_user, signup_reward
 from src.user_interface.util.form import prompt_input
 from src.user_interface.util.safe_input import safe_input
 from src.user_interface.menu import Menu
@@ -21,6 +21,14 @@ class RegisterMenu(Menu):
             if data[0] == True:
                 #Register is succesfull
                 print_success(data[1])
+                print("Creating signup reward transaction...")
+
+                result = signup_reward(username)
+                if result[0] == True:
+                    print_success(result[1])
+                else:
+                    print_error(result[1])
+
                 print(convert_to_bold("\nRedirecting to public menu in 2 seconds..."))
                 time.sleep(2)
                 self._previous_menu.run()
