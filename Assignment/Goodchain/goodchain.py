@@ -73,8 +73,5 @@ if __name__ == "__main__":
 """
 -> Opt: Niks wijzigen aan de code en toch de node1 naar node2 zetten. Via tekstfile oid?
 -> Alles wat nu via het netwerk gaat, heel goed en grondig testen.
--> Komt miner reward dubbel in de pool? Na het minen van een block?
-
-Node Menu:
--> 10 Edit password functie over netwerk.
+-> Komt miner reward dubbel in de pool? Na het minen van een block? Is gefixt denk ik, even goed testen.
 """

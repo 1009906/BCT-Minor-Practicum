@@ -4,7 +4,7 @@ import pickle
 from src.system.context import Context
 from src.system.blockchain.TxBlock import PENDING, VALID, TxBlock
 from src.system.networking.client_helper import create_miner_client_and_send_block, create_wallet_client_and_send_remove_txs, create_wallet_client_and_send_set_invalid_txs
-from src.system.services.pool_service import check_pool_reward_transactions, check_pool_valid_transactions, load_transaction_by_id, remove_transaction_from_pool, set_transaction_to_invalid_in_pool, set_transactions_back_to_pool
+from src.system.services.pool_service import check_pool_reward_transactions, check_pool_valid_transactions, create_mining_reward, load_transaction_by_id, set_transactions_back_to_pool
 from src.system.util.time_util import difference_in_minutes
 
 def explore_chain():
@@ -243,6 +243,7 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
         # savefile.close()
 
         create_miner_client_and_send_block(newBlock)
+        create_mining_reward(newBlock.miner_of_block, newBlock.total_fee_for_miner)
 
         return True, "New block is created and added to the chain, waiting for validation."
     
