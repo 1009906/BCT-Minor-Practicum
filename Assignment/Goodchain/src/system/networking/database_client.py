@@ -19,7 +19,7 @@ class DatabaseClient:
         client_socket.connect(ADDR)
         client_name = Context.user_name if client_name is None else client_name
         client_socket.send(client_name.encode(FORMAT))
-        print(client_socket.recv(2048).decode(FORMAT))
+        client_socket.recv(2048).decode(FORMAT)
         return client_socket
 
     def send(self, msg, client_socket: socket.socket ):
@@ -29,7 +29,7 @@ class DatabaseClient:
         send_length += b' ' * (HEADER - len(send_length))
         client_socket.send(send_length)
         client_socket.send(message)
-        print(client_socket.recv(2048).decode(FORMAT))
+        client_socket.recv(2048).decode(FORMAT)
 
     def stop_the_client(self, client_socket: socket.socket):
         mes = DISCONNECT_MESSAGE

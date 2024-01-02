@@ -17,7 +17,7 @@ class WalletClient:
         client_socket.connect(ADDR)
         client_name = Context.user_name if client_name is None else client_name
         client_socket.send(client_name.encode(FORMAT))
-        print(client_socket.recv(2048).decode(FORMAT))
+        client_socket.recv(2048).decode(FORMAT) 
         return client_socket
 
     def send(self, msg, client_socket: socket.socket ):
@@ -27,7 +27,7 @@ class WalletClient:
         send_length += b' ' * (HEADER - len(send_length))
         client_socket.send(send_length)
         client_socket.send(message)
-        print(client_socket.recv(2048).decode(FORMAT))
+        client_socket.recv(2048).decode(FORMAT) 
 
     def send_tx(self, tx, client_socket: socket.socket):
         serialized_tx = pickle.dumps(tx)
@@ -36,7 +36,7 @@ class WalletClient:
         send_length += b' ' * (HEADER - len(send_length))
         client_socket.send(send_length)
         client_socket.send(serialized_tx)
-        print(client_socket.recv(2048).decode(FORMAT))
+        client_socket.recv(2048).decode(FORMAT) 
 
     def send_remove_txs(self, tx_ids, client_socket: socket.socket):
         msg = REMOVE_TXS_MESSAGE + ",".join(tx_ids)
