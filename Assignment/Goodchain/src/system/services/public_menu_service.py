@@ -15,17 +15,17 @@ def create_user(user_name, password):
     # c = con.cursor()
 
     hashed_password = hash_password(password)
-    # keys = generate_keys()
+    keys = generate_keys()
 
-    # prv_ser = keys[0].private_bytes(
-    #             encoding=serialization.Encoding.PEM,
-    #             format=serialization.PrivateFormat.PKCS8,
-    #             encryption_algorithm=serialization.NoEncryption()
-    #             )
-    # pbc_ser = keys[1].public_bytes(
-    #         encoding=serialization.Encoding.PEM,
-    #         format=serialization.PublicFormat.SubjectPublicKeyInfo
-    #         )
+    prv_ser = keys[0].private_bytes(
+                encoding=serialization.Encoding.PEM,
+                format=serialization.PrivateFormat.PKCS8,
+                encryption_algorithm=serialization.NoEncryption()
+                )
+    pbc_ser = keys[1].public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo
+            )
 
     if is_user_in_database(user_name):
         return False, "User already exists."
@@ -40,8 +40,8 @@ def create_user(user_name, password):
         user_data = {
             "username": user_name,
             "hashed_password": hashed_password,
-            # "private_key": prv_ser,
-            # "public_key": pbc_ser
+            "private_key": prv_ser,
+            "public_key": pbc_ser
         }
 
         formatted_string = create_formatted_string(CREATE_USER_MESSAGE, user_data)

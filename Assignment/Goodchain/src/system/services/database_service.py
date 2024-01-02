@@ -9,24 +9,18 @@ def add_user_to_database(parsed_user_data):
     try:
         user_name = parsed_user_data["username"]
         hashed_password = parsed_user_data["hashed_password"]
+        prv_ser = parsed_user_data["private_key"]
+        pbc_ser = parsed_user_data["public_key"]
 
-        keys = generate_keys()
-        prv_ser = keys[0].private_bytes(
-                    encoding=serialization.Encoding.PEM,
-                    format=serialization.PrivateFormat.PKCS8,
-                    encryption_algorithm=serialization.NoEncryption()
-                    )
-        pbc_ser = keys[1].public_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PublicFormat.SubjectPublicKeyInfo
-                )
+        public_key = bytes(pbc_ser[2:-1], 'utf-8')
+        private_key = bytes(prv_ser[2:-1], 'utf-8')
 
         con = Context.db_connection if Context.db_connection else get_connection()
         c = con.cursor()
         c.execute(
                 "INSERT INTO users (Name, Password, PrivateKey, PublicKey) "
                 "VALUES (?, ?, ?, ?)",
-                (user_name, hashed_password, prv_ser, pbc_ser))
+                (user_name, hashed_password, private_key, public_key))
         con.commit()
         return True
     except:
