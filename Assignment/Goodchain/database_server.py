@@ -2,7 +2,7 @@ import select
 import socket 
 import threading
 from src.system.context import Context
-from src.system.services.database_service import add_user_to_database, update_last_login_date_user
+from src.system.services.database_service import add_user_to_database, update_last_login_date_user, update_password_user
 from src.system.util.formatting_util import parse_formatted_string
 
 HEADER = 64
@@ -58,7 +58,17 @@ def handle_client(conn, addr):
                         print(f'User {parsed_user_data["username"]} is successfully updated!')
                     else:
                         print(f'Error while updating user {parsed_user_data["username"]}!')
-                    
+
+                elif msg.startswith(EDIT_PASSWORD_MESSAGE):
+                    print("Edit password message received.")
+                    msg = msg.replace(EDIT_PASSWORD_MESSAGE + " ", "")
+                    parsed_user_data = parse_formatted_string(msg)
+                    result = update_password_user(parsed_user_data)
+                    if result:
+                        print(f'User {parsed_user_data["username"]} is successfully updated!')
+                    else:
+                        print(f'Error while updating user {parsed_user_data["username"]}!')
+
                 elif msg == DISCONNECT_MESSAGE:
                     connected = False
 

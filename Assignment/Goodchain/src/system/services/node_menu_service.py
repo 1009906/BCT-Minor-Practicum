@@ -2,8 +2,8 @@ from datetime import datetime
 from sqlite3 import IntegrityError
 from src.system.context import Context
 from src.system.blockchain.TxBlock import PENDING, VALID
-from src.system.networking.client_helper import create_database_client_and_send_update_last_login_date_user
-from src.system.networking.database_client import UPDATE_LAST_LOGIN_DATE_MESSAGE
+from src.system.networking.client_helper import *
+from src.system.networking.database_client import EDIT_PASSWORD_MESSAGE, UPDATE_LAST_LOGIN_DATE_MESSAGE
 from src.system.services.blockchain_service import explore_chain_valid_blocks
 from src.system.util.formatting_util import create_formatted_string, format_datetime
 from src.user_interface.util.colors import convert_to_green, convert_to_red, convert_to_yellow
@@ -114,21 +114,34 @@ def get_current_password_hashed():
         return False, str(e)
 
 def update_password(new_password_hashed):
-    con = Context.db_connection
-    c = con.cursor()
+    # con = Context.db_connection
+    # c = con.cursor()
+
+    # try:
+    #     c.execute(
+    #         "UPDATE users "
+    #         "SET    Password = ? "
+    #         "WHERE Name = ?"
+    #         , (new_password_hashed, Context.user_name))
+
+    #     if c.rowcount == 1:
+    #         con.commit()
+    #         return True, "Password updated."
+    #     else:
+    #         return False, "Error: Could not update password."
+
+    # except IntegrityError as e:
+    #     return False, str(e)
 
     try:
-        c.execute(
-            "UPDATE users "
-            "SET    Password = ? "
-            "WHERE Name = ?"
-            , (new_password_hashed, Context.user_name))
+        data = {
+            "username": Context.user_name,
+            "hashed_password": new_password_hashed
+        }
 
-        if c.rowcount == 1:
-            con.commit()
-            return True, "Password updated."
-        else:
-            return False, "Error: Could not update password."
-
-    except IntegrityError as e:
-        return False, str(e)
+        formatted_string = create_formatted_string(EDIT_PASSWORD_MESSAGE, data)
+        create_database_client_and_edit_password(formatted_string, "System")
+        
+        return True, "Password updated."
+    except:
+        return False, "Error while updating password."

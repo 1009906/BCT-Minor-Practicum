@@ -47,3 +47,26 @@ def update_last_login_date_user(user_name, last_login_date):
 
     except IntegrityError as e:
         return False
+    
+def update_password_user(parsed_user_data):
+    con = Context.db_connection if Context.db_connection else get_connection()
+    c = con.cursor()
+
+    user_name = parsed_user_data["username"]
+    hashed_password = parsed_user_data["hashed_password"]
+
+    try:
+        c.execute(
+            "UPDATE users "
+            "SET    Password = ? "
+            "WHERE Name = ?"
+            , (hashed_password, user_name))
+
+        if c.rowcount == 1:
+            con.commit()
+            return True
+        else:
+            return False
+
+    except IntegrityError as e:
+        return False
