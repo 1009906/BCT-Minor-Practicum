@@ -64,7 +64,7 @@ How to run the application:
 """
 
 if __name__ == "__main__":
-    check_file_integrity() #TODO Uncomment this line when the application is ready for production.
+    # check_file_integrity() #TODO Uncomment this line when the application is ready for production.
     Context.db_connection = get_connection()
     start_servers()
     public_menu = PublicMenu()

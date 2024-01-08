@@ -9,42 +9,46 @@ from src.system.blockchain.TxBlock import VALID
 from src.system.networking.client_helper import create_wallet_client_and_send_transaction
 
 def transfer_coins(recieverName, amountCoins, transactionFee):
-    #Check if receiver exists.
-    find_receiver = get_receiver_public_key(recieverName)
+    try:
+        #Check if receiver exists.
+        find_receiver = get_receiver_public_key(recieverName)
 
-    if not find_receiver[0]:
-        return False, "The receiver does not exist!"
+        if not find_receiver[0]:
+            return False, "The receiver does not exist!"
 
-    #Check if the receiver is not the sender.
-    if recieverName == Context.user_name:
-        return False, "You can't send coins to yourself!"
-    
-    #Check if sender has enough coins.
-    check_balance_sender = check_balance()
-    if check_balance_sender - amountCoins < 0:
-        return False, "You don't have enough coins!"
+        #Check if the receiver is not the sender.
+        if recieverName == Context.user_name:
+            return False, "You can't send coins to yourself!"
+        
+        #Check if sender has enough coins.
+        check_balance_sender = check_balance()
+        if check_balance_sender - amountCoins < 0:
+            return False, "You don't have enough coins!"
 
-    transaction_id = generate_random_transaction_id()
+        transaction_id = generate_random_transaction_id()
 
-    newTx = Tx(transaction_id, Context.user_name, recieverName, transaction_fee = transactionFee)
-    newTx.add_input(Context.public_key, amountCoins)
-    newTx.add_output(find_receiver[1], amountCoins) 
-    newTx.sign(Context.private_key)
+        newTx = Tx(transaction_id, Context.user_name, recieverName, transaction_fee = transactionFee)
+        newTx.add_input(Context.public_key, amountCoins)
+        newTx.add_output(find_receiver[1], amountCoins) 
+        newTx.sign(Context.private_key)
 
-    if newTx.is_valid():
-        #Transaction is valid
-        newTx.set_valid()
-        #TODO Remove comments when the wallet server is ready.
-        # savefile = open(Context.pool_path, "ab")
-        # pickle.dump(newTx, savefile)
-        # savefile.close()
+        if newTx.is_valid():
+            #Transaction is valid
+            newTx.set_valid()
+            #TODO Remove comments when the wallet server is ready.
+            # savefile = open(Context.pool_path, "ab")
+            # pickle.dump(newTx, savefile)
+            # savefile.close()
 
-        create_wallet_client_and_send_transaction(newTx)
+            create_wallet_client_and_send_transaction(newTx)
 
-        return True, "Transaction is valid! (added to the pool)"
-    else:
-        #Transaction is not valid
-        return False, "Transaction is invalid! (not added to the pool)"
+            return True, "Transaction is valid! (added to the pool)"
+        else:
+            #Transaction is not valid
+            return False, "Transaction is invalid! (not added to the pool)"
+    except Exception as e:
+        print(e) #TODO Remove this line when the application is ready for production.
+        return False, "Error while transfering coins!"
 
 def explore_chain_valid_blocks():
     blocks = []
