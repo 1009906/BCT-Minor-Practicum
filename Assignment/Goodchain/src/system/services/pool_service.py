@@ -90,7 +90,8 @@ def get_receiver_public_key(recieverName):
     user_result = c.fetchone()
 
     if user_result:
-        return True, user_result[4]
+        return True, bytes(user_result[4].decode('unicode_escape'), 'utf-8')
+        # return True, user_result[4] #TODO check if it is ok to return the public key as bytes
     else:
         return False, None
     
