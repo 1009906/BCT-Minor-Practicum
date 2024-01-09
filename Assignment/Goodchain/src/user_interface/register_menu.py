@@ -14,25 +14,29 @@ class RegisterMenu(Menu):
         self._title(f"Register")
 
         while True:
-            username = prompt_input(lambda: safe_input("Please input your Username: "))
-            password = prompt_input(lambda: safe_input("Please input your Password: "))
+            try:
+                username = prompt_input(lambda: safe_input("Please input your Username: "))
+                password = prompt_input(lambda: safe_input("Please input your Password: "))
 
-            data = create_user(username, password)
-            if data[0] == True:
-                #Register is succesfull
-                print_success(data[1])
-                print("Creating signup reward transaction...")
+                data = create_user(username, password)
+                if data[0] == True:
+                    #Register is succesfull
+                    print_success(data[1])
+                    print("Creating signup reward transaction...")
 
-                result = signup_reward(username)
-                if result[0] == True:
-                    print_success(result[1])
+                    result = signup_reward(username)
+                    if result[0] == True:
+                        print_success(result[1])
+                    else:
+                        print_error(result[1])
+
+                    print(convert_to_bold("\nRedirecting to public menu in 2 seconds..."))
+                    time.sleep(2)
+                    self._previous_menu.run()
+                    break
                 else:
-                    print_error(result[1])
-
-                print(convert_to_bold("\nRedirecting to public menu in 2 seconds..."))
-                time.sleep(2)
-                self._previous_menu.run()
-                break
-            else:
-                print_error(data[1])
+                    print_error(data[1])
+                    continue
+            except:
+                print_error("Something went wrong. Please try again.")
                 continue
