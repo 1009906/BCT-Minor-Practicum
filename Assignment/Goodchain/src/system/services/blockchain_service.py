@@ -171,16 +171,12 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
             newBlock.addTx(transaction)
 
         #Remove transactions from pool, the user choose to add to the block
-        # for transaction_id in transactions_to_remove:
-        #     remove_transaction_from_pool(transaction_id) #TODO over network
         if len(transactions_to_remove) > 0:
             create_wallet_client_and_send_remove_txs(transactions_to_remove)
 
         transactions_to_remove = [] #Reset list
         
         #Set transactions to invalid in pool the user choose to add to the block
-        # for transaction_id in transactions_to_set_invalid:
-        #     set_transaction_to_invalid_in_pool(transaction_id) #TODO over network
         if len(transactions_to_set_invalid) > 0:
             create_wallet_client_and_send_set_invalid_txs(transactions_to_set_invalid)
 
@@ -196,8 +192,6 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
                     break
 
         #Remove added reward transactions from pool
-        # for transaction_id in transactions_to_remove:
-        #     remove_transaction_from_pool(transaction_id) #TODO over network
         if len(transactions_to_remove) > 0:
             create_wallet_client_and_send_remove_txs(transactions_to_remove)
 
@@ -216,8 +210,6 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
                     break
 
         #Remove later added transactions from pool
-        # for transaction_id in transactions_to_remove:
-        #     remove_transaction_from_pool(transaction_id) #TODO over network
         if len(transactions_to_remove) > 0:
             create_wallet_client_and_send_remove_txs(transactions_to_remove)
 
@@ -233,15 +225,10 @@ def mine_new_block(transaction_ids, amount_of_transactions_user_want_to_add):
 
         new_block_is_valid = newBlock.is_valid()
         if new_block_is_valid == False:
-            set_transactions_back_to_pool(newBlock) #TODO sent over network, DONEE
+            set_transactions_back_to_pool(newBlock)
             return False, "The new block is not valid!"
 
-        #Add block to ledger
-        #TODO REMOVE en try catch misschien evt ook bij transfer coins.
-        # savefile = open(Context.ledger_path, "ab")
-        # pickle.dump(newBlock, savefile)
-        # savefile.close()
-
+        #Add block to ledger and create mining reward
         create_miner_client_and_send_block(newBlock)
         create_mining_reward(newBlock.miner_of_block, newBlock.total_fee_for_miner)
 

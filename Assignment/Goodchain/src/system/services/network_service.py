@@ -1,4 +1,3 @@
-#TODO Deze service implementeren om alles over het netwerk te handelen.
 from src.system.blockchain.TxBlock import VALID
 from src.system.services.blockchain_service import add_block_to_ledger
 from src.system.services.pool_service import add_transaction_to_pool, remove_transactions_from_pool, set_transactions_invalid_in_pool

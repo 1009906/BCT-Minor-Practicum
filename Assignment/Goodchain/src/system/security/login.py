@@ -34,14 +34,9 @@ def login(user_id, user_name, private_key, public_key, last_login_date, previous
     last_login_date = datetime.strptime(last_login_date, '%Y-%m-%d %H:%M:%S.%f') if last_login_date != None else None
     Context.user_id = user_id
     Context.user_name = user_name
-    # Context.private_key = private_key
     Context.private_key = bytes(private_key.decode('unicode_escape'), 'utf-8')
-    # Context.public_key = public_key
     Context.public_key = bytes(public_key.decode('unicode_escape'), 'utf-8')
     Context.last_login_date = last_login_date
-
-    #     test = private_key.decode('unicode_escape')
-    # test2 = bytes(test, 'utf-8') #TODO test and remove?
 
     print("Checking pool for invalid transactions...")
     rejected_transactions_list = check_pool_for_invalid_transactions_of_logged_in_user()

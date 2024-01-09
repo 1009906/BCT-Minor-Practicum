@@ -25,28 +25,6 @@ def update_last_login_date():
         return True, "Last login date updated."
     except:
         return False, "Error while updating last login date."
-
-    #TODO Remove
-    # con = Context.db_connection
-    # c = con.cursor()
-    # datetime_now = datetime.now()
-
-    # try:
-    #     c.execute(
-    #         "UPDATE users "
-    #         "SET    LastLogin = ? "
-    #         "WHERE Name = ?"
-    #         , (datetime_now, Context.user_name))
-
-    #     if c.rowcount == 1:
-    #         con.commit()
-    #         Context.last_login_date = datetime_now
-    #         return True, "User updated."
-    #     else:
-    #         return False, "Error: Could not update user."
-
-    # except IntegrityError as e:
-    #     return False, str(e)
     
 def check_mined_blocks_status_since_last_login(blocks_added_since_last_login, user_name):
     result = ""
@@ -114,25 +92,6 @@ def get_current_password_hashed():
         return False, str(e)
 
 def update_password(new_password_hashed):
-    # con = Context.db_connection
-    # c = con.cursor()
-
-    # try:
-    #     c.execute(
-    #         "UPDATE users "
-    #         "SET    Password = ? "
-    #         "WHERE Name = ?"
-    #         , (new_password_hashed, Context.user_name))
-
-    #     if c.rowcount == 1:
-    #         con.commit()
-    #         return True, "Password updated."
-    #     else:
-    #         return False, "Error: Could not update password."
-
-    # except IntegrityError as e:
-    #     return False, str(e)
-
     try:
         data = {
             "username": Context.user_name,

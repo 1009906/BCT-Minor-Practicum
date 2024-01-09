@@ -35,19 +35,13 @@ def transfer_coins(recieverName, amountCoins, transactionFee):
         if newTx.is_valid():
             #Transaction is valid
             newTx.set_valid()
-            #TODO Remove comments when the wallet server is ready.
-            # savefile = open(Context.pool_path, "ab")
-            # pickle.dump(newTx, savefile)
-            # savefile.close()
-
             create_wallet_client_and_send_transaction(newTx)
 
             return True, "Transaction is valid! (added to the pool)"
         else:
             #Transaction is not valid
             return False, "Transaction is invalid! (not added to the pool)"
-    except Exception as e:
-        print(e) #TODO Remove this line when the application is ready for production.
+    except:
         return False, "Error while transfering coins!"
 
 def explore_chain_valid_blocks():
@@ -91,7 +85,6 @@ def get_receiver_public_key(recieverName):
 
     if user_result:
         return True, bytes(user_result[4].decode('unicode_escape'), 'utf-8')
-        # return True, user_result[4] #TODO check if it is ok to return the public key as bytes
     else:
         return False, None
     
@@ -298,7 +291,6 @@ def set_transactions_back_to_pool(block):
         else:
             transaction.set_invalid()
         
-        # add_transaction_to_pool(transaction) #TODO over network
         create_wallet_client_and_send_transaction(transaction)
         
     block.data = []
@@ -316,9 +308,4 @@ def create_mining_reward(miner_of_block_name, total_fee_for_miner):
     tx.add_output(find_receiver[1], total_reward_value)
     tx.set_valid()
 
-    #TODO Remove comments when the wallet server is ready.
-    # savefile = open(Context.pool_path, "ab")
-    # pickle.dump(tx, savefile)
-    # savefile.close()
-
-    create_wallet_client_and_send_transaction(tx, miner_of_block_name) #TODO CHECK IF NAME IS OK
+    create_wallet_client_and_send_transaction(tx, miner_of_block_name)

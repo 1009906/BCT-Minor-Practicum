@@ -1,8 +1,6 @@
-from sqlite3 import IntegrityError
 from src.system.networking.client_helper import create_database_client_and_send_create_user, create_wallet_client_and_send_transaction
 from src.system.networking.database_client import CREATE_USER_MESSAGE
 from src.system.security.hashing import hash_password
-from src.system.context import Context
 from cryptography.hazmat.primitives import serialization
 from src.system.blockchain.Transaction import *
 from src.system.services.database_service import is_user_in_database
@@ -10,10 +8,6 @@ from src.system.services.pool_service import generate_random_transaction_id, get
 from src.system.util.formatting_util import create_formatted_string
 
 def create_user(user_name, password):
-    #TODO Remove
-    # con = Context.db_connection
-    # c = con.cursor()
-
     hashed_password = hash_password(password)
     keys = generate_keys()
 
@@ -31,12 +25,6 @@ def create_user(user_name, password):
         return False, "User already exists."
     
     try:
-        # c.execute(
-        #     "INSERT INTO users (Name, Password, PrivateKey, PublicKey) "
-        #     "VALUES (?, ?, ?, ?)",
-        #     (user_name, hashed_password, prv_ser, pbc_ser))
-        # con.commit()
-
         user_data = {
             "username": user_name,
             "hashed_password": hashed_password,
@@ -45,9 +33,12 @@ def create_user(user_name, password):
         }
 
         formatted_string = create_formatted_string(CREATE_USER_MESSAGE, user_data)
-        create_database_client_and_send_create_user(formatted_string, "System")
 
-        # signup_reward(user_name, pbc_ser) #TODO Remove this line, because keys are generetad in database server
+        try:
+            create_database_client_and_send_create_user(formatted_string, "System")
+        except:
+            return False, "Error while sending create user message over the network."
+
         return True, f"{user_name} Added to the system."
 
     except :
@@ -59,17 +50,17 @@ def signup_reward(receiver_name):
 
         if not public_key[0]:
             return False, "The receiver does not exist!"
+        
         #Create transaction user gets 50 coins
         tx = Tx(generate_random_transaction_id(), None, receiver_name, SIGNUP)
         tx.add_output(public_key[1], SIGNUP_REWARD)
         tx.set_valid()
 
-        #TODO Remove
-        # savefile = open(Context.pool_path, "ab")
-        # pickle.dump(tx, savefile)
-        # savefile.close()
-
-        create_wallet_client_and_send_transaction(tx, receiver_name)
+        try:
+            create_wallet_client_and_send_transaction(tx, receiver_name)
+        except:
+            return False, "Error while sending signup reward transaction over the network."
+        
         return True, "Signup reward transaction created."
     except:
         return False, "Error while creating signup reward transaction."

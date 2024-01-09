@@ -55,9 +55,6 @@ def handle_client(conn, addr):
             return_message = f'\nTimeout! You are disconnected.'
             conn.send(return_message.encode(FORMAT))
     
-    # bye_message = f"\nBye {client_name}!"
-    # conn.send(bye_message.encode(FORMAT))
-    # conn.close()
     print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 2}")    
 
 def start():
