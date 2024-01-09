@@ -32,7 +32,6 @@ class RegisterMenu(Menu):
 
                     print(convert_to_bold("\nRedirecting to public menu in 2 seconds..."))
                     time.sleep(2)
-                    self._previous_menu.run()
                     break
                 else:
                     print_error(data[1])
@@ -40,3 +39,4 @@ class RegisterMenu(Menu):
             except:
                 print_error("Something went wrong. Please try again.")
                 continue
+        return self._previous_menu.run()
