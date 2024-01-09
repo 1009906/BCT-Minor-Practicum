@@ -61,14 +61,8 @@ How to run the application:
 """
 
 if __name__ == "__main__":
-    # check_file_integrity() #TODO Uncomment this line when the application is ready for production.
+    check_file_integrity()
     Context.db_connection = get_connection()
     start_servers()
     public_menu = PublicMenu()
     public_menu.run()
-
-"""
--> Opt: Niks wijzigen aan de code en toch de node1 naar node2 zetten. Via tekstfile oid?
--> Alles wat nu via het netwerk gaat, heel goed en grondig testen.
--> Komt miner reward dubbel in de pool? Na het minen van een block? Is gefixt denk ik, even goed testen.
-"""
