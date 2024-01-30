@@ -1,3 +1,4 @@
+import base64
 from sqlite3 import IntegrityError
 from src.system.blockchain.Signature import generate_keys
 from src.system.connection import get_connection
@@ -14,6 +15,28 @@ def add_user_to_database(parsed_user_data):
 
         public_key = bytes(pbc_ser[2:-1], 'utf-8')
         private_key = bytes(prv_ser[2:-1], 'utf-8')
+
+        con = Context.db_connection if Context.db_connection else get_connection()
+        c = con.cursor()
+        c.execute(
+                "INSERT INTO users (Name, Password, PrivateKey, PublicKey) "
+                "VALUES (?, ?, ?, ?)",
+                (user_name, hashed_password, private_key, public_key))
+        con.commit()
+        return True
+    except:
+        return False
+    
+def add_user_to_database_V2(received_user_data):
+    try:
+        # Decode Base64 strings back into binary
+        user_name = received_user_data["username"]
+        hashed_password = received_user_data["hashed_password"]
+        prv_bytes = base64.b64decode(received_user_data['private_key'])
+        pbc_bytes = base64.b64decode(received_user_data['public_key'])
+
+        private_key = prv_bytes
+        public_key = pbc_bytes
 
         con = Context.db_connection if Context.db_connection else get_connection()
         c = con.cursor()

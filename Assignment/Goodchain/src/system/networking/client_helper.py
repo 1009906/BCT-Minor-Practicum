@@ -25,6 +25,10 @@ def create_database_client_and_send_create_user(formatted_data_string, client_na
     database_client = DatabaseClient()
     database_client.handle_server(formatted_data_string, client_name)
 
+def create_database_client_and_send_create_user_V2(serialized_data, client_name = None):
+    database_client = DatabaseClient()
+    database_client.handle_server_create_user(serialized_data, client_name)
+
 def create_database_client_and_send_update_last_login_date_user(formatted_data_string, client_name = None):
     database_client = DatabaseClient()
     database_client.handle_server(formatted_data_string, client_name)
