@@ -38,60 +38,60 @@ def handle_client(conn, addr):
 
                 print("Received message length: ", msg_length)
 
-                try:
-                    received_user_data = pickle.loads(msg)
-                    print(f"[{client_name}@{addr}]>> Received User Data: {received_user_data}")
+                # try:
+                #     received_user_data = pickle.loads(msg)
+                #     print(f"[{client_name}@{addr}]>> Received User Data: {received_user_data}")
 
-                    result = add_user_to_database_V2(received_user_data)
+                #     result = add_user_to_database_V2(received_user_data)
+                #     if result:
+                #         print(f'User {received_user_data["username"]} is successfully created!')
+                #     else:
+                #         print(f'Error while creating user {received_user_data["username"]}!')
+
+                #     return_message = f'Server received and processed your user data: {received_user_data}'
+                #     conn.send(return_message.encode(FORMAT))
+
+                # except:
+                msg = msg.decode(FORMAT)
+
+                #TODO: Old version, remove after testing
+                if msg.startswith(CREATE_USER_MESSAGE):
+                    print("Create user message received.")
+
+                    msg = msg.replace(CREATE_USER_MESSAGE + " ", "")
+                    parsed_user_data = parse_formatted_string(msg)
+                    result = add_user_to_database(parsed_user_data)
                     if result:
-                        print(f'User {received_user_data["username"]} is successfully created!')
+                        print(f'User {parsed_user_data["username"]} is successfully created!')
                     else:
-                        print(f'Error while creating user {received_user_data["username"]}!')
+                        print(f'Error while creating user {parsed_user_data["username"]}!')
 
-                    return_message = f'Server received and processed your user data: {received_user_data}'
-                    conn.send(return_message.encode(FORMAT))
+                elif msg.startswith(UPDATE_LAST_LOGIN_DATE_MESSAGE):
+                    print("Update last login date message received.")
+                    msg = msg.replace(UPDATE_LAST_LOGIN_DATE_MESSAGE + " ", "")
+                    parsed_user_data = parse_formatted_string(msg)
+                    result = update_last_login_date_user(parsed_user_data["username"], parsed_user_data["last_login_date"])
+                    if result:
+                        print(f'User {parsed_user_data["username"]} is successfully updated!')
+                    else:
+                        print(f'Error while updating user {parsed_user_data["username"]}!')
 
-                except:
-                    msg = msg.decode(FORMAT)
+                elif msg.startswith(EDIT_PASSWORD_MESSAGE):
+                    print("Edit password message received.")
+                    msg = msg.replace(EDIT_PASSWORD_MESSAGE + " ", "")
+                    parsed_user_data = parse_formatted_string(msg)
+                    result = update_password_user(parsed_user_data)
+                    if result:
+                        print(f'User {parsed_user_data["username"]} is successfully updated!')
+                    else:
+                        print(f'Error while updating user {parsed_user_data["username"]}!')
 
-                    #TODO: Old version, remove after testing
-                    # if msg.startswith(CREATE_USER_MESSAGE):
-                    #     print("Create user message received.")
+                elif msg == DISCONNECT_MESSAGE:
+                    connected = False
 
-                        # msg = msg.replace(CREATE_USER_MESSAGE + " ", "")
-                        # parsed_user_data = parse_formatted_string(msg)
-                        # result = add_user_to_database(parsed_user_data)
-                        # if result:
-                        #     print(f'User {parsed_user_data["username"]} is successfully created!')
-                        # else:
-                        #     print(f'Error while creating user {parsed_user_data["username"]}!')
-
-                    if msg.startswith(UPDATE_LAST_LOGIN_DATE_MESSAGE):
-                        print("Update last login date message received.")
-                        msg = msg.replace(UPDATE_LAST_LOGIN_DATE_MESSAGE + " ", "")
-                        parsed_user_data = parse_formatted_string(msg)
-                        result = update_last_login_date_user(parsed_user_data["username"], parsed_user_data["last_login_date"])
-                        if result:
-                            print(f'User {parsed_user_data["username"]} is successfully updated!')
-                        else:
-                            print(f'Error while updating user {parsed_user_data["username"]}!')
-
-                    elif msg.startswith(EDIT_PASSWORD_MESSAGE):
-                        print("Edit password message received.")
-                        msg = msg.replace(EDIT_PASSWORD_MESSAGE + " ", "")
-                        parsed_user_data = parse_formatted_string(msg)
-                        result = update_password_user(parsed_user_data)
-                        if result:
-                            print(f'User {parsed_user_data["username"]} is successfully updated!')
-                        else:
-                            print(f'Error while updating user {parsed_user_data["username"]}!')
-
-                    elif msg == DISCONNECT_MESSAGE:
-                        connected = False
-
-                    print(f"[{client_name}@{addr}]>> {msg}")
-                    return_message = f'Server received your message: "{msg}"'
-                    conn.send(return_message.encode(FORMAT))
+                print(f"[{client_name}@{addr}]>> {msg}")
+                return_message = f'Server received your message: "{msg}"'
+                conn.send(return_message.encode(FORMAT))
         else:
             connected = False
             return_message = f'\nTimeout! You are disconnected.'

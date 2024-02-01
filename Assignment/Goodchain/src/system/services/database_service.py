@@ -10,11 +10,16 @@ def add_user_to_database(parsed_user_data):
     try:
         user_name = parsed_user_data["username"]
         hashed_password = parsed_user_data["hashed_password"]
-        prv_ser = parsed_user_data["private_key"]
-        pbc_ser = parsed_user_data["public_key"]
+        # prv_ser = parsed_user_data["private_key"]
+        # pbc_ser = parsed_user_data["public_key"]
 
-        public_key = bytes(pbc_ser[2:-1], 'utf-8')
-        private_key = bytes(prv_ser[2:-1], 'utf-8')
+        # public_key = bytes(pbc_ser[2:-1], 'utf-8')
+        # private_key = bytes(prv_ser[2:-1], 'utf-8')
+        prv_bytes = base64.b64decode(parsed_user_data['private_key'])
+        pbc_bytes = base64.b64decode(parsed_user_data['public_key'])
+
+        private_key = prv_bytes
+        public_key = pbc_bytes
 
         con = Context.db_connection if Context.db_connection else get_connection()
         c = con.cursor()

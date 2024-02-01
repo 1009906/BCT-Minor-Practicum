@@ -45,9 +45,11 @@ def create_user(user_name, password):
             "public_key": pbc_base64
         }
 
+        formatted_string = create_formatted_string(CREATE_USER_MESSAGE, user_data)
+
         try:
-            # create_database_client_and_send_create_user(formatted_string, "System")
-            create_database_client_and_send_create_user_V2(user_data, "System")
+            create_database_client_and_send_create_user(formatted_string, "System")
+            # create_database_client_and_send_create_user_V2(user_data, "System")
         except:
             return False, "Error while sending create user message over the network."
 
