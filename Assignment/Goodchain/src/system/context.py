@@ -11,12 +11,12 @@ class Context:
     db_connection = None  # database connection
 
     #All used paths, depends on current_node
-    database_path = f"data/{current_node}/database.db"
-    ledger_path = f"data/{current_node}/ledger.dat"
-    temp_ledger_path = f"data/{current_node}/templedger.dat"
-    pool_path = f"data/{current_node}/pooltx.dat"
-    temp_pool_path = f"data/{current_node}/temppooltx.dat"
-    hash_file_path = f"data/{current_node}/hash_file.txt"
+    database_path = f"data/database.db"
+    ledger_path = f"data/ledger.dat"
+    temp_ledger_path = f"data/templedger.dat"
+    pool_path = f"data/pooltx.dat"
+    temp_pool_path = f"data/temppooltx.dat"
+    hash_file_path = f"data/hash_file.txt"
 
     #All used addresses, depends on current_node
     HOST_IP_NODE_1 = 'localhost'
