@@ -1,5 +1,5 @@
 import base64
-from src.system.networking.client_helper import create_database_client_and_send_create_user, create_database_client_and_send_create_user_V2, create_wallet_client_and_send_transaction
+from src.system.networking.client_helper import create_database_client_and_send_create_user, create_wallet_client_and_send_transaction
 from src.system.networking.database_client import CREATE_USER_MESSAGE
 from src.system.security.hashing import hash_password
 from cryptography.hazmat.primitives import serialization
@@ -29,15 +29,6 @@ def create_user(user_name, password):
         return False, "User already exists."
     
     try:
-        # user_data = {
-        #     "username": user_name,
-        #     "hashed_password": hashed_password,
-        #     "private_key": prv_ser,
-        #     "public_key": pbc_ser
-        # }
-
-        # formatted_string = create_formatted_string(CREATE_USER_MESSAGE, user_data)
-
         user_data = {
             "username": user_name,
             "hashed_password": hashed_password,
@@ -49,7 +40,6 @@ def create_user(user_name, password):
 
         try:
             create_database_client_and_send_create_user(formatted_string, "System")
-            # create_database_client_and_send_create_user_V2(user_data, "System")
         except:
             return False, "Error while sending create user message over the network."
 

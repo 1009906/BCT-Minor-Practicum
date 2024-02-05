@@ -52,8 +52,9 @@ def start_servers():
 
 """
 How to run the application:
+-> Clone the project two times (for localhost) or run on different machines.
 -> Navigate to the Goodchain folder.
--> Make sure that in the Context class (context.py) the current_node is set to "node1".
+-> Make sure that in the Context class (context.py) the current_node is set to "node1" and the IP addresses are correctly set.
 -> Run the following command: python goodchain.py
 -> The application is now running on node1. And all the servers are running.
 

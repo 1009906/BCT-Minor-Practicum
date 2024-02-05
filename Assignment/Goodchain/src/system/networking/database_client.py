@@ -1,4 +1,3 @@
-import pickle
 import socket
 from threading import Timer
 
@@ -32,15 +31,6 @@ class DatabaseClient:
         client_socket.send(message)
         client_socket.recv(2048).decode(FORMAT)
 
-    def send_create_user(self, serialized_data, client_socket: socket.socket ):
-        serialized_user_data = pickle.dumps(serialized_data)
-        msg_length = len(serialized_user_data)
-        send_length = str(msg_length).encode(FORMAT)
-        send_length += b' ' * (HEADER - len(send_length))
-        client_socket.send(send_length)
-        client_socket.send(serialized_user_data)
-        client_socket.recv(2048).decode(FORMAT)
-
     def stop_the_client(self, client_socket: socket.socket):
         mes = DISCONNECT_MESSAGE
         self.send(mes, client_socket)
@@ -67,33 +57,6 @@ class DatabaseClient:
 
                 try:
                     self.send(message, client_socket)
-                    cont_flag = self.stop_the_client(client_socket)
-                except:
-                    print('The connection has already terminated.')
-                    cont_flag = False
-
-                timeout_thread.cancel()
-
-    def handle_server_create_user(self, serialized_data, client_name = None):
-        for addr in Context.DB_SERVER_ADDRESSES:
-            try:
-                client_socket = self.initialize_socket(addr, client_name)
-            except:
-                continue
-            
-            cont_flag = True
-            while cont_flag:
-
-                timeout = 15
-                timeout_thread = Timer(timeout, self.stop_the_client, [client_socket])
-                timeout_thread.start()
-
-                if not cont_flag:
-                    print('The connection has already terminated.')
-                    break
-
-                try:
-                    self.send_create_user(serialized_data, client_socket)
                     cont_flag = self.stop_the_client(client_socket)
                 except:
                     print('The connection has already terminated.')

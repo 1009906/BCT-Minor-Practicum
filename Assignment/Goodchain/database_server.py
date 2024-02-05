@@ -1,4 +1,3 @@
-import pickle
 import select
 import socket 
 import threading
@@ -38,23 +37,8 @@ def handle_client(conn, addr):
 
                 print("Received message length: ", msg_length)
 
-                # try:
-                #     received_user_data = pickle.loads(msg)
-                #     print(f"[{client_name}@{addr}]>> Received User Data: {received_user_data}")
-
-                #     result = add_user_to_database_V2(received_user_data)
-                #     if result:
-                #         print(f'User {received_user_data["username"]} is successfully created!')
-                #     else:
-                #         print(f'Error while creating user {received_user_data["username"]}!')
-
-                #     return_message = f'Server received and processed your user data: {received_user_data}'
-                #     conn.send(return_message.encode(FORMAT))
-
-                # except:
                 msg = msg.decode(FORMAT)
 
-                #TODO: Old version, remove after testing
                 if msg.startswith(CREATE_USER_MESSAGE):
                     print("Create user message received.")
 
